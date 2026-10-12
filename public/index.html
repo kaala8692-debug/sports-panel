@@ -21,13 +21,19 @@
             justify-content: center;
         }
 
-        .logo-title {
-            color: #ffffff;
-            font-size: 50px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-            text-transform: uppercase;
+        /* Logo Styling */
+        .logo-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 3px solid rgba(255, 255, 255, 0.2);
         }
 
         .login-card {
@@ -93,8 +99,10 @@
 </head>
 <body>
 
-    <!-- Main Title -->
-    <h1 class="logo-title">Soni</h1>
+    <!-- Main Logo Image -->
+    <div class="logo-container">
+        <img src="/1791832141704.png" alt="Soni Logo" class="logo-img">
+    </div>
 
     <!-- Login Box -->
     <div class="login-card">
