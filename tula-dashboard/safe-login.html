@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TULA111 - Secure Login</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #234d58 0%, #17363e 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* ऊपर का बड़ा ब्रांड नेम */
+        .brand-title {
+            font-size: 54px;
+            font-weight: 900;
+            font-style: italic;
+            color: #ffffff;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        /* मुख्य सफ़ेद लॉगिन कार्ड */
+        .login-card {
+            background-color: #ffffff;
+            width: 90%;
+            max-width: 360px;
+            border-radius: 6px;
+            padding: 24px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-card h3 {
+            margin-top: 0;
+            color: #17363e;
+            font-size: 26px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* इनपुट बॉक्स और आइकॉन का ग्रुप */
+        .input-container {
+            margin-bottom: 16px;
+            display: flex;
+            border: 1px solid #b3b3b3;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .input-container input {
+            width: 85%;
+            padding: 12px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+            background-color: #fcfcfc;
+        }
+
+        /* दाईं तरफ दिखने वाले आइकॉन बॉक्स */
+        .input-icon {
+            width: 15%;
+            background-color: #e6e6e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid #b3b3b3;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* बटन्स का स्टाइल */
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #1d3c45;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: #142b32;
+        }
+
+        .btn-demo {
+            background-color: #17363e;
+        }
+
+        /* नीचे के फुटर लिंक्स */
+        .footer-nav {
+            position: absolute;
+            bottom: 65px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .footer-nav a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .support-banner {
+            position: absolute;
+            bottom: 20px;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ब्रांड नेम -->
+    <div class="brand-title">TULA111</div>
+
+    <!-- सफ़ेद बॉक्स -->
+    <div class="login-card">
+        <h3>Login 👤</h3>
+        
+        <!-- यूजरनेम इनपुट -->
+        <div class="input-container">
+            <input type="text" id="userField" placeholder="Username">
+            <div class="input-icon">👤</div>
+        </div>
+        
+        <!-- पासवर्ड इनपुट -->
+        <div class="input-container">
+            <input type="password" id="passField" placeholder="Password">
+            <div class="input-icon">🔑</div>
+        </div>
+        
+        <!-- बटन -->
+        <button class="btn-submit" onclick="testLogin()">Login ➜</button>
+        <button class="btn-submit btn-demo" onclick="alert('डेमो मोड एक्टिव है!')">Login with demo ID ➜</button>
+    </div>
+
+    <!-- नीचे के लिंक्स -->
+    <div class="footer-nav">
+        <a href="#">Terms and Conditions</a>
+        <a href="#">Responsible Gaming</a>
+    </div>
+
+    <div class="support-banner">24X7 Support</div>
+
+    <script>
+        function testLogin() {
+            const u = document.getElementById('userField').value;
+            const p = document.getElementById('passField').value;
+            if(!u || !p) {
+                alert("कृपया यूजरनेम और पासवर्ड दोनों भरें!");
+            } else {
+                alert("डिज़ाइन टेस्ट सफल! यूजरनेम: " + u);
+            }
+        }
+    </script>
+</body>
+</html>

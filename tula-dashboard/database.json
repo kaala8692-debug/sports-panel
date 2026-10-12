@@ -1,0 +1,27 @@
+{
+    "username": "superadmin",
+    "role": "SUPER_ADMIN",
+    "totalSystemPoints": 1029000,
+    "masterAccounts": [
+        {
+            "username": "Master777",
+            "points": 59000,
+            "players": [
+                {
+                    "username": "Player1",
+                    "points": 12000
+                }
+            ],
+            "status": "ACTIVE"
+        },
+        {
+            "username": "Subhas12",
+            "password": "123",
+            "points": 500,
+            "firstLogin": true,
+            "status": "ACTIVE",
+            "players": []
+        }
+    ],
+    "logs": []
+}

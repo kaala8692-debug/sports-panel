@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TULA111 - MASTER DASHBOARD</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #0b1622; color: white; }
+        .header { background-color: #1a2d3b; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #0f9377; }
+        .logo { font-size: 18px; font-weight: bold; font-style: italic; }
+        .back-btn { background-color: #e74c3c; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold; }
+        .container { padding: 15px; max-width: 400px; margin: auto; }
+        .card { background: linear-gradient(135deg, #162534, #24374a); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #0f9377; }
+        .box { background-color: #162534; padding: 15px; border-radius: 8px; border: 1px solid #24374a; margin-bottom: 20px; }
+        input, button { width: 100%; padding: 12px; margin-top: 8px; border-radius: 4px; border: none; box-sizing: border-box; font-size: 15px; }
+        button { background-color: #0f9377; color: white; font-weight: bold; cursor: pointer; }
+        .pwd-box { border: 1px solid #ffcc00; display: none; }
+        .main-content { display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">TULA111 MASTER</div>
+        <a href="/" class="back-btn">← बैक टू एडमिन</a>
+    </div>
+    
+    <div class="container">
+        <!-- 🔒 ऑटो-पासवर्ड सेव डिब्बा -->
+        <div class="box pwd-box" id="passwordChangeBox">
+            <h3 style="margin:0; color:#ffcc00; border-bottom:1px solid #24374a; padding-bottom:5px;">🔒 Change Your Password</h3>
+            <p style="font-size:12px; color:#cbd5e1; margin-top:5px;">सुरक्षा के लिए कृपया पासवर्ड एक्टिवेट करें।</p>
+            <input type="text" id="newPassword" value="tula777" readonly style="background:#0b1622; color:#ffcc00; font-weight:bold; text-align:center;">
+            <button style="background-color:#ffcc00; color:#0b1622; font-weight: bold; font-size: 16px;" onclick="updateMasterPassword()">⚡ पासवर्ड एक्टिवेट और लॉगिन करें</button>
+        </div>
+
+        <!-- 🎮 असली मास्टर पैनल (प्लेयर बनाने वाला) -->
+        <div id="masterMainPanel" class="main-content">
+            <div class="card">
+                <div style="font-size:12px; color:#b3c6d4; font-weight:bold;" id="welcomeMsg">Welcome, Master</div>
+                <div style="font-size:28px; font-weight:bold; color:#ffcc00; margin-top:5px;" id="masterPoints">Loading...</div>
+            </div>
+
+            <div class="box">
+                <h3 style="margin:0; color:#0f9377; border-bottom:1px solid #24374a; padding-bottom:5px;">➕ Create New Player ID</h3>
+                <input type="text" id="pUser" placeholder="खिलाड़ी का यूजरनेम (उदा. player1)">
+                <input type="number" id="pPoints" placeholder="शुरुआती पॉइंट्स दें">
+                <button onclick="createPlayer()">ACTIVE PLAYER ID</button>
+            </div>
+
+            <div class="box">
+                <h3 style="margin:0; color:#ffcc00; border-bottom:1px solid #24374a; padding-bottom:5px;">📋 My Active Players List</h3>
+                <div id="playersList" style="margin-top:10px; font-size:14px; color:#b3c6d4; line-height:1.6;">
+                    अभी कोई खिलाड़ी (Player) नहीं बना है
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const masterName = urlParams.get('user') || 'Master777';
+
+        async function loadMasterData() {
+            document.getElementById('welcomeMsg').innerText = "👤 Welcome: " + masterName;
+            const res = await fetch('/api/admin/dashboard');
+            const data = await res.json();
+            
+            const currentMaster = data.admin.masterAccounts.find(m => m.username.toLowerCase() === masterName.toLowerCase());
+            
+            if(currentMaster) {
+                // 🛡️ अगर पासवर्ड बदल चुका है (यानी firstLogin: false है) तो सीधे पैनल दिखाओ
+                if(currentMaster.firstLogin === false) {
+                    document.getElementById('passwordChangeBox').style.display = 'none';
+                    document.getElementById('masterMainPanel').style.display = 'block';
+                    
+                    document.getElementById('masterPoints').innerText = currentMaster.points.toLocaleString() + " Pts";
+                    const list = document.getElementById('playersList');
+                    if(currentMaster.players && currentMaster.players.length > 0) {
+                        list.innerHTML = '';
+                        currentMaster.players.forEach(p => {
+                            list.innerHTML += '<div style="padding:5px 0; border-bottom:1px solid #20354b;">🎮 <b>' + p.username + '</b> | पॉइंट्स: <span style="color:#ffcc00;">' + p.points.toLocaleString() + ' Pts</span></div>';
+                        });
+                    }
+                } else {
+                    // पहली बार आने पर ताला दिखाओ
+                    document.getElementById('passwordChangeBox').style.display = 'block';
+                    document.getElementById('masterMainPanel').style.display = 'none';
+                }
+            }
+        }
+
+        async function updateMasterPassword() {
+            // बैकएंड इंजन को खबर भेजो कि पासवर्ड बदल दो
+            await fetch('/api/master/change-password', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: masterName, newPassword: "tula777" })
+            });
+            
+            // 🚀 जादू: अलर्ट हटाकर सीधे बिना रुके क्रोम को नए लिंक पर धक्का मारो!
+            window.location.href = "/master-dashboard?user=" + masterName;
+        }
+
+        async function createPlayer() {
+            const playerUser = document.getElementById('pUser').value;
+            const points = document.getElementById('pPoints').value;
+            if(!playerUser || !points) return alert("कृपया सब भरें!");
+
+            const res = await fetch('/api/master/create-player', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ masterName: masterName, playerUser: playerUser, points: parseInt(points) })
+            });
+            const d = await res.json();
+            if(d.success) {
+                alert("सफलतापूर्वक खिलाड़ी बन गया!");
+                location.reload();
+            } else { alert("गलती: " + d.message); }
+        }
+        loadMasterData();
+    </script>
+</body>
+</html>

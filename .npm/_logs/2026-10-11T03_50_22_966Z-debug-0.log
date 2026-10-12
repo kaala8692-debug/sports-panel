@@ -1,0 +1,272 @@
+0 verbose cli /data/data/com.termux/files/usr/bin/node /data/data/com.termux/files/usr/lib/node_modules/npm/bin/npm-cli.js
+1 info using npm@11.17.0
+2 info using node@v26.3.1
+3 silly config load:file:/data/data/com.termux/files/usr/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/data/com.termux/files/home/tula-dashboard/.npmrc
+5 silly config load:file:/data/data/com.termux/files/home/.npmrc
+6 silly config load:file:/data/data/com.termux/files/usr/etc/npmrc
+7 verbose title npm exec localtunnel --port 3000 --no-open
+8 verbose argv "exec" "--" "localtunnel" "--port" "3000" "--no-open"
+9 verbose logfile logs-max:10 dir:/data/data/com.termux/files/home/.npm/_logs/2026-10-11T03_50_22_966Z-
+10 verbose logfile /data/data/com.termux/files/home/.npm/_logs/2026-10-11T03_50_22_966Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:1174405120 maxSize:293601280 maxEntrySize:146800640
+13 http fetch GET 200 https://registry.npmjs.org/localtunnel 671ms (cache revalidated)
+14 silly packumentCache heap:1174405120 maxSize:293601280 maxEntrySize:146800640
+15 silly packumentCache heap:1174405120 maxSize:293601280 maxEntrySize:146800640
+16 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules/openurl
+17 silly idealTree buildDeps
+18 silly fetch manifest localtunnel@2.0.2
+19 silly packumentCache full:https://registry.npmjs.org/localtunnel cache-miss
+20 http cache https://registry.npmjs.org/localtunnel 11ms (cache hit)
+21 silly packumentCache full:https://registry.npmjs.org/localtunnel set size:55691 disposed:false
+22 silly placeDep ROOT localtunnel@2.0.2 REPLACE for:  want: 2.0.2
+23 silly reify moves {}
+24 silly audit bulk request {
+24 silly audit   'ansi-regex': [ '5.0.1' ],
+24 silly audit   'ansi-styles': [ '4.3.0' ],
+24 silly audit   axios: [ '0.21.4' ],
+24 silly audit   cliui: [ '7.0.4' ],
+24 silly audit   'color-convert': [ '2.0.1' ],
+24 silly audit   'color-name': [ '1.1.4' ],
+24 silly audit   debug: [ '4.3.2' ],
+24 silly audit   'emoji-regex': [ '8.0.0' ],
+24 silly audit   escalade: [ '3.2.0' ],
+24 silly audit   'follow-redirects': [ '1.16.1' ],
+24 silly audit   'get-caller-file': [ '2.0.5' ],
+24 silly audit   'is-fullwidth-code-point': [ '3.0.0' ],
+24 silly audit   ms: [ '2.1.2' ],
+24 silly audit   openurl: [ '1.1.1' ],
+24 silly audit   'require-directory': [ '2.1.1' ],
+24 silly audit   'string-width': [ '4.2.3' ],
+24 silly audit   'strip-ansi': [ '6.0.1' ],
+24 silly audit   'wrap-ansi': [ '7.0.0' ],
+24 silly audit   y18n: [ '5.0.8' ],
+24 silly audit   yargs: [ '17.1.1' ],
+24 silly audit   'yargs-parser': [ '20.2.9' ],
+24 silly audit   localtunnel: [ '2.0.2' ]
+24 silly audit }
+25 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 483ms
+26 silly audit report {
+26 silly audit report   axios: [
+26 silly audit report     {
+26 silly audit report       id: 1111034,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-jr5f-v2jv-69x6',
+26 silly audit report       title: 'axios Requests Vulnerable To Possible SSRF and Credential Leakage via Absolute URL',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<0.30.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1119403,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-fvcv-3m26-pcqx',
+26 silly audit report       title: 'Axios has Unrestricted Cloud Metadata Exfiltration via Header Injection Chain',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1120124,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-62hf-57xw-28j9',
+26 silly audit report       title: 'Axios: unbounded recursion in toFormData causes DoS via deeply nested request data',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1120546,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-hfxv-24rg-xrqf',
+26 silly audit report       title: 'Axios: Regular Expression Denial of Service (ReDoS) via Cookie Name Injection',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.31.1',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1120644,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-p92q-9vqr-4j8v',
+26 silly audit report       title: 'Axios: Proxy-Authorization Credential Leak to Origin Server Across HTTP-to-HTTPS Redirect in Axios Node.js HTTP Adapter',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.31.1',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1120646,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-j5f8-grm9-p9fc',
+26 silly audit report       title: 'Axios: Proxy-Authorization header leaks to redirect target when proxy is re-evaluated to direct connection',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.31.1',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1120648,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-3g43-6gmg-66jw',
+26 silly audit report       title: 'axios Vulnerable to Credential Theft and Response Hijacking via Prototype Pollution Gadget in Config Merge',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '>=0.19.0 <0.31.1',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1120651,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-898c-q2cr-xwhg',
+26 silly audit report       title: 'axios has DoS & Header Injection via Prototype Pollution Read-Side Gadgets in axios merge functions',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<=0.31.1',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1116672,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-3p68-rc4w-qgx5',
+26 silly audit report       title: 'Axios has a NO_PROXY Hostname Normalization Bypass that Leads to SSRF',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117573,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-w9j2-pvgh-6h63',
+26 silly audit report       title: 'Axios: Authentication Bypass via Prototype Pollution Gadget in `validateStatus` Merge Strategy',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117575,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-pmwg-cvhr-8vh7',
+26 silly audit report       title: 'Axios: Incomplete Fix for CVE-2025-62718 — NO_PROXY Protection Bypassed via RFC 1122 Loopback Subnet (127.0.0.0/8) in Axios 1.15.0',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117579,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-xhjh-pmcv-23jw',
+26 silly audit report       title: 'Axios: Null Byte Injection via Reverse-Encoding in AxiosURLSearchParams',
+26 silly audit report       severity: 'low',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117582,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-m7pr-hjqh-92cm',
+26 silly audit report       title: 'Axios: no_proxy bypass via IP alias allows SSRF',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117586,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-5c9x-8gcm-mpgx',
+26 silly audit report       title: "Axios' HTTP adapter-streamed uploads bypass maxBodyLength when maxRedirects: 0",
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117588,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-vf2m-468p-8v99',
+26 silly audit report       title: 'Axios: HTTP adapter streamed responses bypass maxContentLength',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117590,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-pf86-5x62-jrwf',
+26 silly audit report       title: 'Axios: Prototype Pollution Gadgets - Response Tampering, Data Exfiltration, and Request Hijacking',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117592,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-6chq-wfr3-2hj9',
+26 silly audit report       title: 'Axios: Header Injection via Prototype Pollution',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117594,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-xx6v-rp6x-q39c',
+26 silly audit report       title: 'Axios: XSRF Token Cross-Origin Leakage via Prototype Pollution Gadget in `withXSRFToken` Boolean Coercion',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<=0.31.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1117857,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-43fc-jf86-j433',
+26 silly audit report       title: 'Axios is Vulnerable to Denial of Service via __proto__ Key in mergeConfig',
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.30.2',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1123825,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-pjwm-pj3p-43mv',
+26 silly audit report       title: "axios's shouldBypassProxy does not recognize IPv4-mapped IPv6 addresses, allowing NO_PROXY bypass (incomplete fix for CVE-2025-62718)",
+26 silly audit report       severity: 'high',
+26 silly audit report       vulnerable_versions: '<=0.31.1',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1097679,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-wf5p-g6vw-rhxx',
+26 silly audit report       title: 'Axios Cross-Site Request Forgery Vulnerability',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '>=0.8.1 <0.28.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1147948,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-mmx7-hfxf-jppx',
+26 silly audit report       title: 'Axios: Prototype pollution gadgets can alter axios request construction',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '<0.33.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     },
+26 silly audit report     {
+26 silly audit report       id: 1153181,
+26 silly audit report       url: 'https://github.com/advisories/GHSA-7q8q-rj6j-mhjq',
+26 silly audit report       title: 'Axios: Nested axios option objects can consume polluted prototype values',
+26 silly audit report       severity: 'moderate',
+26 silly audit report       vulnerable_versions: '>=0.8.0 <0.33.0',
+26 silly audit report       cwe: [Array],
+26 silly audit report       cvss: [Object]
+26 silly audit report     }
+26 silly audit report   ]
+26 silly audit report }
+27 silly packumentCache corgi:https://registry.npmjs.org/axios cache-miss
+28 http cache https://registry.npmjs.org/axios 43ms (cache hit)
+29 silly packumentCache corgi:https://registry.npmjs.org/axios set size:303552 disposed:false
+30 silly packumentCache corgi:https://registry.npmjs.org/localtunnel cache-miss
+31 http cache https://registry.npmjs.org/localtunnel 12ms (cache hit)
+32 silly packumentCache corgi:https://registry.npmjs.org/localtunnel set size:25176 disposed:false
+33 verbose cwd /data/data/com.termux/files/home/tula-dashboard
+34 verbose os Linux 5.15.197-android13-8-00005-g2d8ad9139b89-ab15063902
+35 verbose node v26.3.1
+36 verbose npm  v11.17.0
+37 verbose exit 1
+38 verbose code 1

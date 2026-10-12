@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TULA111 CONTROL - SUPER ADMIN</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #0b1622; color: white; }
+        .header { background-color: #1a2d3b; padding: 15px; text-align: center; border-bottom: 3px solid #0f9377; font-weight: bold; font-style: italic; }
+        .container { padding: 15px; max-width: 400px; margin: auto; }
+        .card { background: linear-gradient(135deg, #0f9377, #116954); padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        .box { background-color: #162534; padding: 15px; border-radius: 8px; border: 1px solid #24374a; margin-bottom: 20px; }
+        input, button { width: 100%; padding: 12px; margin-top: 8px; border-radius: 4px; border: none; box-sizing: border-box; font-size: 15px; }
+        button { background-color: #0f9377; color: white; font-weight: bold; cursor: pointer; }
+        .yellow-btn { background-color: #ffcc00; color: #0b1622; }
+        .blue-btn { background-color: #2980b9; color: white; }
+        .action-btns { float: right; display: flex; gap: 5px; margin-top: -4px; }
+        .btn-sm { display: inline-block; padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; text-decoration: none; border: none; cursor: pointer; }
+        .view-btn { background-color: #2980b9; color: white; }
+        .block-btn { background-color: #e74c3c; color: white; }
+        .unblock-btn { background-color: #2ecc71; color: white; }
+        .search-box { background-color: #1c2d42; border: 1px solid #ffcc00; }
+        .search-input { background-color: #0b1622; color: white; border: 1px solid #24374a; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">TULA111 CONTROL PANEL</div>
+    <div class="container">
+        <div class="card">
+            <div style="font-size:12px;">TOTAL SYSTEM POINTS</div>
+            <div style="font-size:28px; font-weight:bold; color:#ffcc00;" id="sysPoints">Loading...</div>
+        </div>
+
+        <div class="box" style="border: 1px solid #2980b9;">
+            <h3 style="margin:0; color:#2980b9;">🪙 Add System Points (अपनेि पॉइंट्स बढ़ाएं)</h3>
+            <input type="number" id="addSysPointsInput" placeholder="कितने पॉइंट्स और जोड़ने हैं?">
+            <button class="blue-btn" onclick="addSystemPoints()">➕ खुद के पॉइंट्स बढ़ाएं</button>
+        </div>
+        
+        <div class="box">
+            <h3 style="margin:0; color:#ffcc00;">🪙 Recharge Master (पॉइंट्स बढ़ाएं)</h3>
+            <input type="text" id="rUser" placeholder="मास्टर यूजरनेम">
+            <input type="number" id="rPoints" placeholder="कितने पॉइंट्स देने हैं?">
+            <button class="yellow-btn" onclick="rechargeMaster()">⚡ पॉइंट रीचार्ज करें</button>
+        </div>
+
+        <div class="box">
+            <h3 style="margin:0; color:#0f9377;">➕ Create Master ID</h3>
+            <input type="text" id="mUser" placeholder="नया मास्टर यूजरनेम">
+            <input type="number" id="mPoints" placeholder="शुरुआती पॉइंट्स">
+            <button onclick="createMaster()">ACTIVATE MASTER</button>
+        </div>
+
+        <div class="box search-box">
+            <h3 style="margin:0; color:#ffcc00;">🔍 Search Master (मास्टर आईडी खोजें)</h3>
+            <input type="text" id="searchInput" class="search-input" placeholder="मास्टर का नाम लिखें..." onkeyup="filterMasters()">
+        </div>
+
+        <div class="box">
+            <h3 style="margin:0; color:#ffcc00; padding-bottom:5px; border-bottom:1px solid #24374a;">📋 Active Masters Balance</h3>
+            <div id="mastersList" style="margin-top:10px; font-size:14px; color:#b3c6d4;"></div>
+        </div>
+    </div>
+    <script>
+        let allMasters = [];
+
+        async function loadData() {
+            const res = await fetch('/api/admin/dashboard');
+            const data = await res.json();
+            document.getElementById('sysPoints').innerText = data.admin.totalSystemPoints.toLocaleString() + " Pts";
+            
+            allMasters = data.admin.masterAccounts;
+            displayMasters(allMasters);
+        }
+
+        function displayMasters(masters) {
+            const list = document.getElementById('mastersList');
+            list.innerHTML = '';
+            if(masters.length > 0) {
+                masters.forEach(m => {
+                    let uName = m.username;
+                    let blockBtnHTML = m.status === "ACTIVE" ? 
+                        '<button class="btn-sm block-btn" onclick="toggleBlock(\'' + uName + '\')">🚫 Block</button>' : 
+                        '<button class="btn-sm unblock-btn" onclick="toggleBlock(\'' + uName + '\')">🟢 Unblock</button>';
+                    
+                    let strikeHTML = m.status === "BLOCKED" ? 'style="text-decoration: line-through; color: #e74c3c;"' : '';
+                    let statusText = m.status === "BLOCKED" ? ' <b style="color:#e74c3c; font-size:10px;">[SUSPENDED]</b>' : '';
+
+                    list.innerHTML += ' \
+                    <div style="padding:10px 0; border-bottom:1px solid #20354b; overflow:hidden;"> \
+                        <span ' + strikeHTML + '>👤 <b>' + m.username + '</b>' + statusText + ' | <span style="color:#ffcc00;">' + m.points.toLocaleString() + ' Pts</span></span> \
+                        <div class="action-btns"> \
+                            <a class="btn-sm view-btn" href="/master-dashboard?user=' + m.username + '">पैनल →</a> \
+                            ' + blockBtnHTML + ' \
+                        </div> \
+                    </div>';
+                });
+            } else { list.innerHTML = 'कोई मास्टर आईडी नहीं मिली'; }
+        }
+
+        async function toggleBlock(username) {
+            const res = await fetch('/api/admin/toggle-master-status', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: username })
+            });
+            const d = await res.json();
+            if(d.success) {
+                loadData();
+            }
+        }
+
+        function filterMasters() {
+            const text = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allMasters.filter(m => m.username.toLowerCase().includes(text));
+            displayMasters(filtered);
+        }
+
+        async function addSystemPoints() {
+            const amount = document.getElementById('addSysPointsInput').value;
+            if(!amount || amount <= 0) return alert("संख्या डालें!");
+            const res = await fetch('/api/admin/add-points', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ amount: parseInt(amount) })
+            });
+            const d = await res.json();
+            if(d.success) location.reload();
+        }
+
+        async function createMaster() {
+            const username = document.getElementById('mUser').value;
+            const points = document.getElementById('mPoints').value;
+            if(!username || !points) return alert("सब भरें!");
+            await fetch('/api/admin/create-master', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: username, points: parseInt(points) })
+            });
+            location.reload();
+        }
+
+        async function rechargeMaster() {
+            const username = document.getElementById('rUser').value;
+            const points = document.getElementById('rPoints').value;
+            if(!username || !points) return alert("सब भरें!");
+            const res = await fetch('/api/admin/recharge-master', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: username, points: parseInt(points) })
+            });
+            const d = await res.json();
+            if(d.success) location.reload(); else alert(d.message);
+        }
+        loadData();
+    </script>
+</body>
+</html>

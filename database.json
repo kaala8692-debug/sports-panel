@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "username": "SuperAdmin",
+      "password": "AdminPassword123",
+      "role": "ADMIN",
+      "points": 1000000000,
+      "createdBy": "SYSTEM"
+    }
+  ]
+}
