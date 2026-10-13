@@ -8,6 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase App & Firestore CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
     <style>
         body { font-family: Arial, Helvetica, sans-serif; background-color: #f8f9fa; color: #333; margin: 0; }
         .top-navbar { background-color: #0088cc; color: white; font-size: 11px; }
@@ -240,7 +245,7 @@
                     </div>
                 </div>
 
-                <!-- CREATE ACCOUNT BUTTON (NO TPIN REQUIRED FOR ADMIN) -->
+                <!-- CREATE ACCOUNT BUTTON -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm p-4 flex justify-end">
                     <button type="submit" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
                         Create Account
@@ -308,8 +313,21 @@
     </div>
     <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 hidden z-40"></div>
 
-    <!-- SCRIPT CONTROL LOGIC -->
+    <!-- SCRIPT CONTROL LOGIC WITH FIREBASE FIRESTORE -->
     <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
+            authDomain: "soniexchange.firebaseapp.com",
+            projectId: "soniexchange",
+            storageBucket: "soniexchange.firebasestorage.app",
+            messagingSenderId: "731423101248",
+            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5",
+            measurementId: "G-BX7NTH157B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sportsSidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -346,7 +364,7 @@
             }
         }
 
-        function handleCreateAccount(event) {
+        async function handleCreateAccount(event) {
             event.preventDefault();
             let username = document.getElementById('clientNameInput').value.trim();
             let pass = document.getElementById('clientPassInput').value;
@@ -359,19 +377,33 @@
                 return;
             }
 
-            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
-            if(clients.some(c => c.username === username)) {
-                alert("Client username already exists!");
-                return;
+            try {
+                // Check if username already exists in Firestore
+                let docRef = db.collection("soni_clients").doc(username);
+                let doc = await docRef.get();
+                if(doc.exists) {
+                    alert("Client username already exists!");
+                    return;
+                }
+
+                let newClient = { 
+                    username, 
+                    pass, 
+                    creditRef, 
+                    accType, 
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp() 
+                };
+
+                // Save to Firestore
+                await docRef.set(newClient);
+
+                alert("Account '" + username + "' created successfully in Firestore!");
+                document.getElementById('addAccountForm').reset();
+                switchTab('clients');
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                alert("Error saving account to cloud database. Check console.");
             }
-
-            let newClient = { username, pass, creditRef, accType };
-            clients.unshift(newClient);
-            localStorage.setItem('soni_clients', JSON.stringify(clients));
-
-            alert("Account '" + username + "' created successfully!");
-            document.getElementById('addAccountForm').reset();
-            switchTab('clients');
         }
 
         function resetSearch() {
@@ -379,48 +411,60 @@
             renderClientsTable();
         }
 
-        function renderClientsTable() {
+        async function renderClientsTable() {
             let tbody = document.getElementById('clientTableBody');
             let searchQuery = document.getElementById('clientSearchInput') ? document.getElementById('clientSearchInput').value.toLowerCase().trim() : "";
-            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
+            
+            tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500">Loading clients from cloud database...</td></tr>`;
 
-            if(searchQuery) {
-                clients = clients.filter(c => c.username.toLowerCase().includes(searchQuery));
+            try {
+                let snapshot = await db.collection("soni_clients").get();
+                let clients = [];
+                snapshot.forEach(doc => {
+                    clients.push(doc.data());
+                });
+
+                if(searchQuery) {
+                    clients = clients.filter(c => c.username.toLowerCase().includes(searchQuery));
+                }
+
+                if(clients.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                clients.forEach((client) => {
+                    let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 border-b border-gray-200">
+                            <td class="p-2 border-r border-gray-200">
+                                <span class="bg-[#3a3a3a] text-white px-2.5 py-1 rounded font-bold inline-block text-[11px]">${client.username}</span>
+                            </td>
+                            <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
+                            <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
+                            <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
+                            <td class="p-2 border-r border-gray-200">${formattedCr}</td>
+                            <td class="p-2 border-r border-gray-200">0</td>
+                            <td class="p-2 border-r border-gray-200">${client.accType || 'User'}</td>
+                            <td class="p-2 text-center whitespace-nowrap">
+                                <div class="inline-flex space-x-1">
+                                    <button class="action-btn">D</button>
+                                    <button class="action-btn">W</button>
+                                    <button class="action-btn">L</button>
+                                    <button class="action-btn">C</button>
+                                    <button class="action-btn">P</button>
+                                    <button class="action-btn">S</button>
+                                    <button class="action-btn">MORE</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error fetching clients: ", error);
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-500">Failed to load data from Firebase.</td></tr>`;
             }
-
-            if(clients.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = "";
-            clients.forEach((client) => {
-                let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
-                tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50 border-b border-gray-200">
-                        <td class="p-2 border-r border-gray-200">
-                            <span class="bg-[#3a3a3a] text-white px-2.5 py-1 rounded font-bold inline-block text-[11px]">${client.username}</span>
-                        </td>
-                        <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
-                        <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
-                        <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
-                        <td class="p-2 border-r border-gray-200">${formattedCr}</td>
-                        <td class="p-2 border-r border-gray-200">0</td>
-                        <td class="p-2 border-r border-gray-200">${client.accType || 'User'}</td>
-                        <td class="p-2 text-center whitespace-nowrap">
-                            <div class="inline-flex space-x-1">
-                                <button class="action-btn">D</button>
-                                <button class="action-btn">W</button>
-                                <button class="action-btn">L</button>
-                                <button class="action-btn">C</button>
-                                <button class="action-btn">P</button>
-                                <button class="action-btn">S</button>
-                                <button class="action-btn">MORE</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
         }
     </script>
 </body>
