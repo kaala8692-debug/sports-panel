@@ -101,7 +101,7 @@
                 </div>
             </div>
 
-            <!-- Account List Table (Dynamic + Sample Clients) -->
+            <!-- Account List Table (Clean, empty and ready for your created accounts) -->
             <div class="bg-white border border-gray-200 rounded shadow overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
@@ -117,16 +117,16 @@
                         </tr>
                     </thead>
                     <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-700">
-                        <!-- Sample Clients -->
-                        <tr class="hover:bg-gray-50"><td class="p-2.5 border-r font-semibold">KARAN7260</td><td class="p-2.5 border-r">0,000</td><td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td><td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td><td class="p-2.5 border-r">0</td><td class="p-2.5 border-r">0</td><td class="p-2.5 border-r">User</td><td class="p-2.5 space-x-1 whitespace-nowrap"><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">D</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">W</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">C</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">P</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">S</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">MORE</button></td></tr>
-                        <tr class="hover:bg-gray-50"><td class="p-2.5 border-r font-semibold">RADHEY1187</td><td class="p-2.5 border-r">50,000</td><td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td><td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td><td class="p-2.5 border-r">50,000</td><td class="p-2.5 border-r">0</td><td class="p-2.5 border-r">User</td><td class="p-2.5 space-x-1 whitespace-nowrap"><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">D</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">W</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">C</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">P</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">S</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">MORE</button></td></tr>
-                        <tr class="hover:bg-gray-50"><td class="p-2.5 border-r font-semibold">SONAM8774</td><td class="p-2.5 border-r">100</td><td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td><td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td><td class="p-2.5 border-r">1000000</td><td class="p-2.5 border-r">0</td><td class="p-2.5 border-r">User</td><td class="p-2.5 space-x-1 whitespace-nowrap"><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">D</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">W</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">C</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">P</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">S</button><button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">MORE</button></td></tr>
+                        <!-- Dynamically added accounts will appear here -->
+                        <tr id="emptyClientRow">
+                            <td colspan="8" class="p-6 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Add Account Form View (Without TPIN requirement) -->
+        <!-- Add Account Form View -->
         <div id="viewAddAccount" class="hidden max-w-4xl mx-auto space-y-4">
             <h2 class="font-bold text-gray-800 text-base">Add Account</h2>
             
@@ -212,7 +212,7 @@
                     </div>
                 </div>
 
-                <!-- Section 5: Submit Button (No TPIN required) -->
+                <!-- Section 5: Submit Button -->
                 <div class="flex justify-end bg-white p-4 border border-gray-200 rounded shadow-sm">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
                         Create Account
@@ -231,7 +231,7 @@
 
     </main>
 
-    <!-- Left Sports Sidebar Drawer (Completed & Locked with 39 Sports)[span_1](start_span)[span_1](end_span) -->
+    <!-- Left Sports Sidebar Drawer (Completed & Locked with 39 Sports)[span_0](start_span)[span_0](end_span) -->
     <div id="sportsSidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 overflow-y-auto border-r border-gray-200">
         <div class="p-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center sticky top-0">
             <h3 class="font-bold text-gray-800 text-base">Sports</h3>
@@ -357,7 +357,13 @@
                 return;
             }
 
-            // Append new account dynamically to the client table without TPIN check
+            // Remove empty placeholder row if present
+            let emptyRow = document.getElementById('emptyClientRow');
+            if(emptyRow) {
+                emptyRow.remove();
+            }
+
+            // Append new account dynamically to the client table
             let tbody = document.getElementById('clientTableBody');
             let newRow = document.createElement('tr');
             newRow.className = "hover:bg-gray-50";
@@ -375,7 +381,7 @@
                     <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button>
                     <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">C</button>
                     <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">P</button>
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">S</button>
+                    <button class="bg-gray-700text-white px-1.5 py-0.5 rounded text-[10px] font-bold">S</button>
                     <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">MORE</button>
                 </td>
             `;
