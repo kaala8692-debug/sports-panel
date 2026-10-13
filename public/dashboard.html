@@ -70,7 +70,7 @@
                         <th>Credit Ref</th>
                         <th>Actions</th>
                     </tr>
-                plitude>
+                </thead>
                 <tbody id="clientTableBody">
                     <!-- Dynamic Cloud Data will load here -->
                 </tbody>
@@ -206,7 +206,7 @@
         import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyD-YOUR-CONFIG-KEY", // Aapki purani firebase config
+            apiKey: "AIzaSyD-YOUR-CONFIG-KEY",
             authDomain: "soniexchange.firebaseapp.com",
             projectId: "soniexchange",
             storageBucket: "soniexchange.appspot.com",
@@ -343,7 +343,6 @@
             window.location.href = 'index.html';
         };
 
-        // Auto load list on start
         window.onload = function() {
             loadClients();
         };
