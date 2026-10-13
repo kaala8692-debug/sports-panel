@@ -1,1 +1,334 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soni Exchange - Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; }
+        .top-navbar { background-color: #0088cc; color: white; }
+        .nav-btn { cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; outline: none; border: none; background: transparent; color: white; display: inline-flex; align-items: center; }
+        .nav-btn:hover, .nav-btn.active { background-color: #006699; }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col">
+
+    <!-- Top Blue Exchange Navbar -->
+    <header class="top-navbar flex items-center justify-between px-2 py-1.5 shadow-md sticky top-0 z-30">
+        <div class="flex items-center space-x-2 overflow-x-auto py-0.5">
+            <!-- Soni Logo -->
+            <div class="flex items-center space-x-1.5 shrink-0">
+                <div class="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-sm text-white shadow-md">
+                    S
+                </div>
+                <span class="font-extrabold tracking-wider text-sm text-white">SONI</span>
+            </div>
+
+            <!-- Menu Icon for 39 Sports Sidebar -->
+            <button onclick="toggleSidebar()" class="text-white hover:text-yellow-300 text-lg px-2 focus:outline-none shrink-0" title="Open Sports Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Navigation Buttons -->
+            <nav class="flex items-center space-x-1 text-xs shrink-0">
+                <button id="navClients" onclick="switchTab('clients')" class="nav-btn rounded">List of Clients</button>
+                <button id="navAssignAgent" onclick="switchTab('assignAgent')" class="nav-btn rounded">Assign Agent</button>
+                <button id="navMarketAnalysis" onclick="switchTab('marketAnalysis')" class="nav-btn rounded font-bold bg-blue-800">Market Analysis</button>
+                <button class="nav-btn rounded">Live Market <i class="fa-solid fa-caret-down text-[10px] ml-1"></i></button>
+                <button class="nav-btn rounded">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px] ml-1"></i></button>
+                <button class="nav-btn rounded">Reports <i class="fa-solid fa-caret-down text-[10px] ml-1"></i></button>
+                <button class="nav-btn rounded">Multi Login</button>
+            </nav>
+        </div>
+
+        <!-- Right Logout -->
+        <div class="flex items-center space-x-3 text-xs shrink-0 ml-2">
+            <span class="font-semibold text-yellow-300">SuperAdmin</span>
+            <button onclick="window.location.href='index.html'" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded font-bold">Logout</button>
+        </div>
+    </header>
+
+    <!-- Sub Header Bar -->
+    <div class="bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center text-sm shadow-sm z-20">
+        <div class="flex items-center space-x-2 font-bold text-gray-700">
+            <span id="subHeaderTitle">Market Analysis</span>
+            <i class="fa-solid fa-rotate text-xs cursor-pointer hover:text-blue-600" title="Refresh"></i>
+        </div>
+        <div class="w-48 sm:w-64">
+            <input type="text" placeholder="Search Event" class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none">
+        </div>
+    </div>
+
+    <!-- Main Content Body -->
+    <main class="flex-1 p-3 sm:p-4 z-10">
+        
+        <!-- Market Analysis View -->
+        <div id="viewMarketAnalysis" class="space-y-4">
+            <div class="bg-white p-4 rounded border border-gray-200 shadow-sm text-center text-gray-500 text-xs">
+                Market Analysis Events & Live Odds will be loaded here.
+            </div>
+        </div>
+
+        <!-- List of Clients View -->
+        <div id="viewListOfClients" class="hidden space-y-3">
+            <div class="flex justify-between items-center">
+                <h2 class="font-bold text-gray-800 text-base">Account List</h2>
+                <button onclick="switchTab('addAccount')" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold px-3 py-1.5 rounded shadow focus:outline-none">
+                    Add Account
+                </button>
+            </div>
+
+            <!-- Total CR Box -->
+            <div class="bg-blue-900 text-white p-3 rounded-lg shadow flex justify-between items-center text-xs">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-wallet text-yellow-300 text-sm"></i>
+                    <span class="font-semibold uppercase tracking-wider">Total Allocated CR (Points):</span>
+                </div>
+                <div id="totalCrBox" class="text-sm font-extrabold text-yellow-300 bg-blue-950 px-3 py-1 rounded border border-blue-800">
+                    0
+                </div>
+            </div>
+
+            <!-- Account List Table -->
+            <div class="bg-white border border-gray-200 rounded shadow overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 border-b border-gray-200 font-bold">
+                            <th class="p-2.5 border-r">User Name</th>
+                            <th class="p-2.5 border-r">CR</th>
+                            <th class="p-2.5 border-r">U St</th>
+                            <th class="p-2.5 border-r">B St</th>
+                            <th class="p-2.5 border-r">Exposure Limit</th>
+                            <th class="p-2.5 border-r">Default (%)</th>
+                            <th class="p-2.5 border-r">Account Type</th>
+                            <th class="p-2.5">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-700">
+                        <!-- Accounts list -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add Account Form View -->
+        <div id="viewAddAccount" class="hidden max-w-4xl mx-auto space-y-4">
+            <h2 class="font-bold text-gray-800 text-base">Add Account</h2>
+            
+            <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
+                <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+                    <div class="bg-slate-800 text-white font-bold px-3 py-2">Personal Detail</div>
+                    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-600 mb-1">Client Name:</label>
+                            <input type="text" id="clientNameInput" required placeholder="Enter Client Username" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-600 mb-1">Password:</label>
+                            <input type="password" id="clientPassInput" required placeholder="Password" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+                    <div class="bg-slate-800 text-white font-bold px-3 py-2">Account Detail</div>
+                    <div class="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-semibold text-gray-600 mb-1">Account Type:</label>
+                            <select id="clientAccountType" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
+                                <option value="User">User</option>
+                                <option value="Master">Master</option>
+                                <option value="Super">Super</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-600 mb-1">Credit Reference (CR):</label>
+                            <input type="number" id="clientCreditRef" value="0" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end bg-white p-4 border border-gray-200 rounded shadow-sm">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
+                        Create Account
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Assign Agent View -->
+        <div id="viewAssignAgent" class="hidden space-y-3">
+            <div class="bg-white p-4 rounded border border-gray-200 shadow-sm">
+                <h2 class="font-bold text-gray-800 text-base mb-2">Assign Agent Module</h2>
+                <p class="text-xs text-gray-500">Agent management settings.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Left Sports Sidebar Drawer -->
+    <div id="sportsSidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 overflow-y-auto border-r border-gray-200">
+        <div class="p-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center sticky top-0">
+            <h3 class="font-bold text-gray-800 text-base">Sports</h3>
+            <button onclick="toggleSidebar()" class="text-gray-600 hover:text-red-600 text-lg font-bold px-2">&times;</button>
+        </div>
+        <ul class="text-xs text-gray-700 divide-y divide-gray-100">
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Football</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Tennis</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-bold text-blue-600"><span>Cricket</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Golf</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Boxing</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Basketball</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Table Tennis</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Horse Racing</span> <span>+</span></li>
+        </ul>
+    </div>
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 hidden z-40"></div>
+
+    <!-- TPIN Verification Modal -->
+    <div id="tpinModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 px-4">
+        <div class="bg-white p-5 rounded-xl shadow-2xl max-w-xs w-full space-y-3 text-xs">
+            <h3 class="font-bold text-gray-800 text-sm border-b pb-2"><i class="fa-solid fa-lock text-blue-600 mr-1"></i> Transaction Password (TPIN)</h3>
+            <p class="text-gray-500 text-[11px]">Enter TPIN to verify account creation.</p>
+            <input type="password" id="tpinInput" placeholder="Enter TPIN (Default: 1234)" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
+            <div class="flex space-x-2 pt-2">
+                <button type="button" onclick="closeTpinModal()" class="flex-1 bg-gray-300 text-gray-700 py-1.5 rounded font-bold">Cancel</button>
+                <button type="button" onclick="verifyAndCreateAccount()" class="flex-1 bg-blue-600 text-white py-1.5 rounded font-bold">Verify & Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pendingAccountData = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            renderClientsTable();
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sportsSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tab) {
+            document.getElementById('viewMarketAnalysis').classList.add('hidden');
+            document.getElementById('viewListOfClients').classList.add('hidden');
+            document.getElementById('viewAddAccount').classList.add('hidden');
+            document.getElementById('viewAssignAgent').classList.add('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-blue-800', 'font-bold'));
+
+            if(tab === 'clients') {
+                document.getElementById('viewListOfClients').classList.remove('hidden');
+                document.getElementById('navClients').classList.add('bg-blue-800', 'font-bold');
+                document.getElementById('subHeaderTitle').innerText = 'Account List';
+                renderClientsTable();
+            } else if(tab === 'addAccount') {
+                document.getElementById('viewAddAccount').classList.remove('hidden');
+                document.getElementById('subHeaderTitle').innerText = 'Add Account';
+            } else if(tab === 'assignAgent') {
+                document.getElementById('viewAssignAgent').classList.remove('hidden');
+                document.getElementById('navAssignAgent').classList.add('bg-blue-800', 'font-bold');
+                document.getElementById('subHeaderTitle').innerText = 'Assign Agent';
+            } else {
+                document.getElementById('viewMarketAnalysis').classList.remove('hidden');
+                document.getElementById('navMarketAnalysis').classList.add('bg-blue-800', 'font-bold');
+                document.getElementById('subHeaderTitle').innerText = 'Market Analysis';
+            }
+        }
+
+        function handleCreateAccount(event) {
+            event.preventDefault();
+            let username = document.getElementById('clientNameInput').value.trim();
+            let pass = document.getElementById('clientPassInput').value;
+            let creditRef = parseFloat(document.getElementById('clientCreditRef').value) || 0;
+            let accType = document.getElementById('clientAccountType').value;
+
+            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
+            if(clients.some(c => c.username === username)) {
+                alert("Client username already exists!");
+                return;
+            }
+
+            pendingAccountData = { username, pass, creditRef, accType };
+            document.getElementById('tpinInput').value = "";
+            document.getElementById('tpinModal').classList.remove('hidden');
+            document.getElementById('tpinModal').classList.add('flex');
+        }
+
+        function closeTpinModal() {
+            document.getElementById('tpinModal').classList.remove('flex');
+            document.getElementById('tpinModal').classList.add('hidden');
+            pendingAccountData = null;
+        }
+
+        function verifyAndCreateAccount() {
+            let tpin = document.getElementById('tpinInput').value.trim();
+            if(tpin !== "1234") {
+                alert("Incorrect Transaction Password (TPIN)!");
+                return;
+            }
+
+            if(!pendingAccountData) return;
+
+            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
+            clients.unshift(pendingAccountData);
+            localStorage.setItem('soni_clients', JSON.stringify(clients));
+
+            alert("Account '" + pendingAccountData.username + "' created successfully!");
+            closeTpinModal();
+            document.getElementById('addAccountForm').reset();
+            switchTab('clients');
+        }
+
+        function renderClientsTable() {
+            let tbody = document.getElementById('clientTableBody');
+            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
+            let totalCr = 0;
+
+            if(clients.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td></tr>`;
+                document.getElementById('totalCrBox').innerText = '0';
+                return;
+            }
+
+            tbody.innerHTML = "";
+            clients.forEach(client => {
+                let crValue = parseFloat(client.creditRef) || 0;
+                totalCr += crValue;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-2.5 border-r font-semibold">${client.username}</td>
+                        <td class="p-2.5 border-r font-bold text-blue-600">${client.creditRef}</td>
+                        <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
+                        <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
+                        <td class="p-2.5 border-r">${client.creditRef}</td>
+                        <td class="p-2.5 border-r">0</td>
+                        <td class="p-2.5 border-r">${client.accType}</td>
+                        <td class="p-2.5 space-x-1 whitespace-nowrap">
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">D</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">W</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('totalCrBox').innerText = totalCr.toLocaleString();
+        }
+    </script>
+</body>
+</html>
