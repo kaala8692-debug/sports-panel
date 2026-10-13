@@ -8,6 +8,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase App & Firestore CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
     <style>
         body { background-color: #0088cc; font-family: Arial, sans-serif; }
     </style>
@@ -66,7 +71,7 @@
                 </form>
             </div>
 
-            <!-- Step 2: TPIN Display Success Screen (Matching Screenshot Style) -->
+            <!-- Step 2: TPIN Display Success Screen -->
             <div id="stepShowTpin" class="hidden space-y-4 text-center">
                 <div class="text-green-700 font-bold text-sm">
                     Your password has been updated successfully.
@@ -79,7 +84,6 @@
                     <p class="font-bold text-gray-700">Thank you, Team allpanelexch.com</p>
                 </div>
                 
-                <!-- Hindi Translation Text matching screenshot -->
                 <div class="border-t pt-2 text-[10px] text-gray-500 text-left space-y-1">
                     <p class="text-green-600 font-semibold">Success! आपका पासवर्ड बदला जा चुका है।</p>
                     <p>आपका लेनदेन पासवर्ड <span id="generatedTpinTextHi" class="text-blue-600 font-bold"></span> है।</p>
@@ -95,10 +99,24 @@
         </div>
     </div>
 
+    <!-- SCRIPT CONTROL LOGIC WITH FIREBASE -->
     <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
+            authDomain: "soniexchange.firebaseapp.com",
+            projectId: "soniexchange",
+            storageBucket: "soniexchange.firebasestorage.app",
+            messagingSenderId: "731423101248",
+            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5",
+            measurementId: "G-BX7NTH157B"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
         let currentLoggingUser = "";
 
-        function handleLogin(event) {
+        async function handleLogin(event) {
             event.preventDefault();
             let u = document.getElementById('loginUser').value.trim();
             let p = document.getElementById('loginPass').value;
@@ -109,33 +127,38 @@
                 return;
             }
 
-            // Check client from localStorage
-            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
-            let client = clients.find(c => c.username === u);
+            try {
+                // Fetch client from Firestore database
+                let docRef = db.collection("soni_clients").doc(u);
+                let doc = await docRef.get();
 
-            if(client) {
-                // Check if password matches
-                if(client.pass === p) {
-                    currentLoggingUser = u;
-                    // Check if client already changed password / has TPIN
-                    if(!client.hasChangedPass) {
-                        // Open password change modal
-                        document.getElementById('securityModal').classList.remove('hidden');
-                        document.getElementById('stepChangePass').classList.remove('hidden');
-                        document.getElementById('stepShowTpin').classList.add('hidden');
+                if(doc.exists) {
+                    let client = doc.data();
+                    if(client.pass === p) {
+                        currentLoggingUser = u;
+                        // Check if client already changed password / has TPIN
+                        if(!client.hasChangedPass) {
+                            // Open password change modal
+                            document.getElementById('securityModal').classList.remove('hidden');
+                            document.getElementById('stepChangePass').classList.remove('hidden');
+                            document.getElementById('stepShowTpin').classList.add('hidden');
+                        } else {
+                            alert("Login Successful! Welcome " + u);
+                            // Normal client portal routing can happen here
+                        }
                     } else {
-                        alert("Login Successful! Welcome " + u);
-                        // Normal client portal routing can happen here
+                        alert("Galat Password hai!");
                     }
                 } else {
-                    alert("Galat Password hai!");
+                    alert("Client ID nahi mili!");
                 }
-            } else {
-                alert("Client ID nahi mili!");
+            } catch (error) {
+                console.error("Login error: ", error);
+                alert("Database connection error during login.");
             }
         }
 
-        function handlePasswordChange(event) {
+        async function handlePasswordChange(event) {
             event.preventDefault();
             let newPass = document.getElementById('newPassInput').value;
             let confirmPass = document.getElementById('confirmPassInput').value;
@@ -148,22 +171,25 @@
             // Generate random 6-digit TPIN
             let randomTpin = Math.floor(100000 + Math.random() * 900000);
 
-            // Update client data in localStorage
-            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
-            let clientIndex = clients.findIndex(c => c.username === currentLoggingUser);
-            if(clientIndex !== -1) {
-                clients[clientIndex].pass = newPass;
-                clients[clientIndex].hasChangedPass = true;
-                clients[clientIndex].tpin = randomTpin;
-                localStorage.setItem('soni_clients', JSON.stringify(clients));
+            try {
+                // Update client data in Firestore database
+                let docRef = db.collection("soni_clients").doc(currentLoggingUser);
+                await docRef.update({
+                    pass: newPass,
+                    hasChangedPass: true,
+                    tpin: randomTpin
+                });
+
+                // Show TPIN in popup modal matching the reference screenshot
+                document.getElementById('generatedTpinText').innerText = randomTpin;
+                document.getElementById('generatedTpinTextHi').innerText = randomTpin;
+
+                document.getElementById('stepChangePass').classList.add('hidden');
+                document.getElementById('stepShowTpin').classList.remove('hidden');
+            } catch (error) {
+                console.error("Error updating password: ", error);
+                alert("Failed to update password in cloud database.");
             }
-
-            // Show TPIN in popup modal matching the reference screenshot
-            document.getElementById('generatedTpinText').innerText = randomTpin;
-            document.getElementById('generatedTpinTextHi').innerText = randomTpin;
-
-            document.getElementById('stepChangePass').classList.add('hidden');
-            document.getElementById('stepShowTpin').classList.remove('hidden');
         }
 
         function closeTpinModal() {
