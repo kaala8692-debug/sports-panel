@@ -119,7 +119,7 @@
                         </tr>
                     </thead>
                     <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-700">
-                        <!-- Saved accounts will load dynamically here -->
+                        <!-- Saved accounts will load here -->
                     </tbody>
                 </table>
             </div>
@@ -129,7 +129,7 @@
         <div id="viewAddAccount" class="hidden max-w-4xl mx-auto space-y-4">
             <h2 class="font-bold text-gray-800 text-base">Add Account</h2>
             
-            <form onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
+            <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
                 <!-- Section 1: Personal Detail -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
                     <div class="bg-slate-800 text-white font-bold px-3 py-2">Personal Detail</div>
@@ -137,7 +137,6 @@
                         <div>
                             <label class="block font-semibold text-gray-600 mb-1">Client Name:</label>
                             <input type="text" id="clientNameInput" required placeholder="Enter Client Username" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none focus:border-blue-500">
-                            <p class="text-[10px] text-red-500 mt-0.5">User name must only contain alphanumeric characters.</p>
                         </div>
                         <div>
                             <label class="block font-semibold text-gray-600 mb-1">User Password:</label>
@@ -294,9 +293,8 @@
         </div>
     </div>
 
-    <!-- JavaScript Control Logic with LocalStorage Persistence -->
+    <!-- JavaScript Control Logic -->
     <script>
-        // Load saved clients on page start
         document.addEventListener("DOMContentLoaded", () => {
             renderClientsTable();
         });
@@ -367,31 +365,26 @@
                 return;
             }
 
-            // Get existing clients from localStorage or empty array
             let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
 
-            // Check if username already exists
             if(clients.some(c => c.username === username)) {
                 alert("Client username already exists!");
                 return;
             }
 
-            // Push new client
             clients.unshift({
                 username: username,
                 creditRef: creditRef,
                 accType: accType
             });
 
-            // Save back to localStorage
             localStorage.setItem('soni_clients', JSON.stringify(clients));
 
-            alert("Account '" + username + "' created and saved successfully!");
+            alert("Account '" + username + "' created successfully!");
             
-            // Clear form inputs
-            event.target.reset();
-
-            // Switch to client list view and render
+            // Completely reset/clear the form so no old data remains
+            document.getElementById('addAccountForm').reset();
+            
             switchTab('clients');
         }
 
