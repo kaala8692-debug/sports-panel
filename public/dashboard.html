@@ -52,14 +52,17 @@
         </div>
     </header>
 
-    <!-- Sub Header Bar with Search, Load, Reset -->
-    <div class="bg-white border-b border-gray-200 px-4 py-3 flex flex-wrap justify-between items-center text-sm shadow-sm z-20 gap-2">
-        <div class="flex items-center space-x-2">
+    <!-- Sub Header Section -->
+    <div class="bg-white border-b border-gray-200 px-4 py-3 flex flex-col gap-3 shadow-sm z-20">
+        <!-- Row 1: Add Account Button strictly on the RIGHT side -->
+        <div class="flex justify-end items-center">
             <button onclick="switchTab('addAccount')" class="bg-[#0088cc] hover:bg-[#006699] text-white text-xs font-bold px-4 py-2 rounded shadow">
                 Add Account
             </button>
         </div>
-        <div class="flex items-center space-x-2 text-xs">
+
+        <!-- Row 2: Search Controls -->
+        <div class="flex flex-wrap items-center justify-start gap-2 text-xs">
             <span class="font-semibold text-gray-700">Search:</span>
             <input type="text" id="clientSearchInput" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded focus:outline-none w-44">
             <button onclick="renderClientsTable()" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-4 py-1.5 rounded shadow">Load</button>
