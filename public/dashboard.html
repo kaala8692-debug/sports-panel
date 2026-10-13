@@ -12,7 +12,7 @@
         body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; }
         .top-navbar { background-color: #0088cc; color: white; }
         .nav-item { cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
-        .nav-item:hover { background-color: #006699; }
+        .nav-item:hover, .nav-item.active { background-color: #006699; }
         .sidebar { transition: transform 0.3s ease-in-out; }
     </style>
 </head>
@@ -36,13 +36,13 @@
 
             <!-- Menu Navigation Links -->
             <nav class="flex items-center space-x-1 text-xs">
-                <span class="nav-item">List of Clients</span>
-                <span class="nav-item">Assign Agent</span>
-                <span class="nav-item font-bold bg-blue-800 rounded px-2 py-1">Market Analysis</span>
-                <span class="nav-item">Live Market <i class="fa-solid fa-caret-down text-[10px]"></i></span>
-                <span class="nav-item">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px]"></i></span>
-                <span class="nav-item">Reports <i class="fa-solid fa-caret-down text-[10px]"></i></span>
-                <span class="nav-item">Multi Login</span>
+                <span id="menuListOfClients" onclick="switchTab('clients')" class="nav-item active rounded">List of Clients</span>
+                <span onclick="switchTab('assignAgent')" class="nav-item rounded">Assign Agent</span>
+                <span onclick="switchTab('marketAnalysis')" class="nav-item rounded font-bold bg-blue-800">Market Analysis</span>
+                <span class="nav-item rounded">Live Market <i class="fa-solid fa-caret-down text-[10px]"></i></span>
+                <span class="nav-item rounded">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px]"></i></span>
+                <span class="nav-item rounded">Reports <i class="fa-solid fa-caret-down text-[10px]"></i></span>
+                <span class="nav-item rounded">Multi Login</span>
             </nav>
         </div>
 
@@ -57,19 +57,86 @@
     </header>
 
     <!-- Sub Header Bar -->
-    <div class="bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center text-sm shadow-sm">
+    <div id="subHeaderBar" class="bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center text-sm shadow-sm">
         <div class="flex items-center space-x-2 font-bold text-gray-700">
-            <span>Market Analysis</span>
+            <span id="subHeaderTitle">Market Analysis</span>
             <i class="fa-solid fa-rotate text-xs cursor-pointer hover:text-blue-600" title="Refresh"></i>
         </div>
-        <div class="w-64">
+        <div id="subHeaderRight" class="w-64">
             <input type="text" placeholder="Search Event" class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none">
         </div>
     </div>
 
     <!-- Main Content Body -->
     <main class="flex-1 p-4">
-        <!-- Dashboard content -->
+        
+        <!-- Market Analysis View (Default) -->
+        <div id="viewMarketAnalysis" class="space-y-4">
+            <!-- Market content placeholder -->
+        </div>
+
+        <!-- List of Clients View (Account List Page) -->
+        <div id="viewListOfClients" class="hidden space-y-3">
+            <div class="flex justify-between items-center">
+                <h2 class="font-bold text-gray-800 text-base">Account List</h2>
+                <button class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold px-3 py-1.5 rounded shadow">
+                    <i class="fa-solid fa-plus mr-1"></i> Add Account
+                </button>
+            </div>
+
+            <!-- Table Actions bar -->
+            <div class="bg-white p-3 rounded border border-gray-200 flex flex-wrap justify-between items-center gap-2 text-xs">
+                <div class="flex items-center space-x-2">
+                    <button class="bg-red-700 hover:bg-red-800 text-white px-2.5 py-1 rounded font-bold"><i class="fa-solid fa-file-pdf mr-1"></i> PDF</button>
+                    <button class="bg-green-700 hover:bg-green-800 text-white px-2.5 py-1 rounded font-bold"><i class="fa-solid fa-file-excel mr-1"></i> Excel</button>
+                    <span class="text-gray-600 ml-2">Show 
+                        <select class="border border-gray-300 rounded px-1 py-0.5 mx-1">
+                            <option>25</option>
+                            <option>50</option>
+                        </select> entries
+                    </span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span>Search:</span>
+                    <input type="text" class="border border-gray-300 rounded px-2 py-1 focus:outline-none" placeholder="">
+                    <button class="bg-blue-600 text-white px-3 py-1 rounded">Load</button>
+                    <button class="bg-gray-200 text-gray-700 px-3 py-1 rounded">Reset</button>
+                </div>
+            </div>
+
+            <!-- Account List Table -->
+            <div class="bg-white border border-gray-200 rounded shadow overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 border-b border-gray-200 font-bold">
+                            <th class="p-2.5 border-r">User Name</th>
+                            <th class="p-2.5 border-r">CR</th>
+                            <th class="p-2.5 border-r">U St</th>
+                            <th class="p-2.5 border-r">B St</th>
+                            <th class="p-2.5 border-r">Exposure Limit</th>
+                            <th class="p-2.5 border-r">Dafault (%)</th>
+                            <th class="p-2.5 border-r">Account Type</th>
+                            <th class="p-2.5">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-700">
+                        <!-- Dynamic or empty state. User asked to clear sample clients, ready for real data -->
+                        <tr>
+                            <td colspan="8" class="p-6 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Assign Agent View -->
+        <div id="viewAssignAgent" class="hidden space-y-3">
+            <div class="bg-white p-4 rounded border border-gray-200 shadow-sm">
+                <h2 class="font-bold text-gray-800 text-base mb-2">Assign Agent Module</h2>
+                <p class="text-xs text-gray-500">Manage and assign hierarchical downline agents and masters here.</p>
+            </div>
+        </div>
+
     </main>
 
     <!-- Left Sports Sidebar Drawer (All 39 Sports included) -->
@@ -141,7 +208,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Interactions -->
+    <!-- JavaScript Interactions & Tab Switcher -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sportsSidebar');
@@ -164,6 +231,31 @@
         function closeLogoModal() {
             document.getElementById('logoModal').classList.remove('flex');
             document.getElementById('logoModal').classList.add('hidden');
+        }
+
+        function switchTab(tab) {
+            // Hide all views
+            document.getElementById('viewMarketAnalysis').classList.add('hidden');
+            document.getElementById('viewListOfClients').classList.add('hidden');
+            document.getElementById('viewAssignAgent').classList.add('hidden');
+
+            // Remove active styling from navbar items
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('bg-blue-800', 'font-bold'));
+
+            // Show selected view & update subheader
+            if(tab === 'clients') {
+                document.getElementById('viewListOfClients').classList.remove('hidden');
+                document.getElementById('subHeaderTitle').innerText = 'Account List';
+                document.getElementById('subHeaderRight').innerHTML = `<span class="text-xs text-gray-500">Manage downline client accounts</span>`;
+            } else if(tab === 'assignAgent') {
+                document.getElementById('viewAssignAgent').classList.remove('hidden');
+                document.getElementById('subHeaderTitle').innerText = 'Assign Agent';
+                document.getElementById('subHeaderRight').innerHTML = `<span class="text-xs text-gray-500">Agent assignment settings</span>`;
+            } else {
+                document.getElementById('viewMarketAnalysis').classList.remove('hidden');
+                document.getElementById('subHeaderTitle').innerText = 'Market Analysis';
+                document.getElementById('subHeaderRight').innerHTML = `<input type="text" placeholder="Search Event" class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none">`;
+            }
         }
     </script>
 </body>
