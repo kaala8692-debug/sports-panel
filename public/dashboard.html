@@ -17,7 +17,7 @@
         .tbl-header { background-color: #f2f2f2; color: #333; font-weight: bold; border-bottom: 2px solid #ccc; }
         .action-btn { background-color: #4a4a4a; color: white; padding: 3px 6px; font-size: 10px; font-weight: bold; border-radius: 2px; }
         .action-btn:hover { background-color: #333; }
-        .section-header { background-color: #334155; color: white; font-weight: bold; padding: 6px 10px; font-size: 11px; }
+        .section-box-header { background-color: #2b3e50; color: white; font-weight: bold; padding: 6px 10px; font-size: 11px; }
     </style>
 </head>
 <body class="relative min-h-screen flex flex-col bg-[#f8f9fa]">
@@ -130,55 +130,57 @@
             </div>
         </div>
 
-        <!-- ADD ACCOUNT FORM VIEW (HUBAHU SCREENSHOT MATCH) -->
-        <div id="viewAddAccount" class="hidden max-w-4xl mx-auto space-y-4">
-            <div class="flex justify-between items-center bg-white p-3 rounded border border-gray-200 shadow-sm">
-                <h2 class="font-bold text-gray-800 text-sm">Add Account</h2>
-                <button onclick="switchTab('clients')" class="text-xs text-[#0088cc] font-semibold hover:underline">&larr; Back to Account List</button>
+        <!-- ADD ACCOUNT FORM VIEW (HUBAHU MATCHING LAYOUT) -->
+        <div id="viewAddAccount" class="hidden max-w-5xl mx-auto space-y-3">
+            
+            <!-- TOP TITLE BAR WITH BACK LINK -->
+            <div class="flex justify-between items-center bg-white p-2.5 rounded border border-gray-200 shadow-sm text-xs">
+                <span class="font-bold text-gray-800 text-sm">Add Account</span>
+                <button onclick="switchTab('clients')" class="text-[#0088cc] font-semibold hover:underline">Back to Account List</button>
             </div>
 
-            <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
+            <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-3 text-xs">
                 
-                <!-- SECTION 1: PERSONAL DETAIL & ACCOUNT DETAIL (2 Columns Grid) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- TOP SECTION: PERSONAL DETAIL & ACCOUNT DETAIL -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     
-                    <!-- Left Box: Personal Detail -->
-                    <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                        <div class="section-header">Personal Detail</div>
-                        <div class="p-3 space-y-2.5">
+                    <!-- Left Personal Detail Box (Takes 2 columns) -->
+                    <div class="md:col-span-2 bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
+                        <div class="section-box-header">Personal Detail</div>
+                        <div class="p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">Client Name:</label>
-                                <input type="text" id="clientNameInput" required placeholder="Client Name" class="w-full border border-red-400 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <label class="block font-semibold text-gray-600 mb-1">Client Name:</label>
+                                <input type="text" id="clientNameInput" required placeholder="Client Name" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">User Password:</label>
-                                <input type="password" id="clientPassInput" required placeholder="User Password" class="w-full border border-red-400 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <label class="block font-semibold text-gray-600 mb-1">User Password:</label>
+                                <input type="password" id="clientPassInput" required placeholder="User Password" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">Retype Password:</label>
+                                <label class="block font-semibold text-gray-600 mb-1">Retype Password:</label>
                                 <input type="password" id="retypePassInput" required placeholder="Retype Password" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">Full Name:</label>
+                                <label class="block font-semibold text-gray-600 mb-1">Full Name:</label>
                                 <input type="text" id="fullNameInput" placeholder="Full Name" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">City:</label>
+                                <label class="block font-semibold text-gray-600 mb-1">City:</label>
                                 <input type="text" id="cityInput" placeholder="City" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">Phone:</label>
+                                <label class="block font-semibold text-gray-600 mb-1">Phone:</label>
                                 <input type="text" id="phoneInput" placeholder="Phone Number" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Box: Account Detail -->
+                    <!-- Right Account Detail Box (Takes 1 column) -->
                     <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden h-fit">
-                        <div class="section-header">Account Detail</div>
-                        <div class="p-3 space-y-2.5">
+                        <div class="section-box-header">Account Detail</div>
+                        <div class="p-3 space-y-3">
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">Account Type:</label>
+                                <label class="block font-semibold text-gray-600 mb-1">Account Type:</label>
                                 <select id="clientAccountType" class="w-full border border-gray-300 rounded px-2.5 py-1.5 bg-white focus:outline-none">
                                     <option value="User">Select Account Type</option>
                                     <option value="User">User</option>
@@ -187,22 +189,22 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-600 mb-0.5">Credit Reference:</label>
+                                <label class="block font-semibold text-gray-600 mb-1">Credit Reference:</label>
                                 <input type="number" id="clientCreditRef" value="0" placeholder="Credit Reference" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- SECTION 2: COMMISSION SETTINGS -->
+                <!-- COMMISSION SETTINGS TABLE BOX -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                    <div class="section-header">Commission Settings</div>
+                    <div class="section-box-header">Commission Settings</div>
                     <div class="p-3">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-gray-100 text-gray-700 border-b">
-                                    <th class="p-2 border-r w-1/3">Upline</th>
-                                    <th class="p-2 w-2/3">0</th>
+                                    <th class="p-2 border-r w-1/4 font-semibold">Upline</th>
+                                    <th class="p-2 w-3/4 font-semibold">0</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y">
@@ -219,15 +221,15 @@
                     </div>
                 </div>
 
-                <!-- SECTION 3: PARTNERSHIP -->
+                <!-- PARTNERSHIP TABLE BOX -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                    <div class="section-header">Partnership</div>
+                    <div class="section-box-header">Partnership</div>
                     <div class="p-3">
                         <table class="w-full text-left border-collapse text-xs">
                             <thead>
                                 <tr class="bg-gray-100 text-gray-700 border-b">
-                                    <th class="p-2 border-r w-1/3">Upline</th>
-                                    <th class="p-2 w-2/3">0</th>
+                                    <th class="p-2 border-r w-1/4 font-semibold">Upline</th>
+                                    <th class="p-2 w-3/4 font-semibold">0</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y">
@@ -244,9 +246,9 @@
                     </div>
                 </div>
 
-                <!-- SECTION 4: TRANSACTION PASSWORD & CREATE BUTTON -->
+                <!-- TRANSACTION PASSWORD & CREATE ACCOUNT BUTTON -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm p-4 flex flex-col sm:flex-row justify-between items-end gap-3">
-                    <div class="w-full sm:w-72">
+                    <div class="w-full sm:w-80">
                         <label class="block font-semibold text-gray-600 mb-1">Transaction Password:</label>
                         <input type="password" id="tpinInput" required placeholder="Transaction Password" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
                     </div>
@@ -371,7 +373,7 @@
                 return;
             }
 
-            if(tpin !== "1234" && tpin === "") {
+            if(tpin === "") {
                 alert("Please enter Transaction Password!");
                 return;
             }
