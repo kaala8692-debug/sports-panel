@@ -89,6 +89,14 @@
     .login-btn:hover {
       background-color: #006699;
     }
+    .error-msg {
+      color: #d9534f;
+      font-size: 13px;
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: bold;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -100,20 +108,31 @@
   <div class="login-card">
     <div class="divider">Sign In</div>
     
+    <div id="errorMsg" class="error-msg">Galat Username ya Password hai!</div>
+
     <div>
       <div class="input-group">
         <input type="text" placeholder="Username" id="username">
       </div>
       <div class="input-group">
-        <input type="password" placeholder="password" id="password">
+        <input type="password" placeholder="Password" id="password">
       </div>
-      <button type="button" class="login-btn" onclick="openDashboard()">Login ➔</button>
+      <button type="button" class="login-btn" onclick="checkLogin()">Login ➔</button>
     </div>
   </div>
 
   <script>
-    function openDashboard() {
-      window.location.href = 'dashboard.html';
+    function checkLogin() {
+      var user = document.getElementById('username').value.trim();
+      var pass = document.getElementById('password').value.trim();
+      var errorBox = document.getElementById('errorMsg');
+
+      // Check credentials
+      if (user === 'Soniexchange' && pass === 'Lyy@5656') {
+        window.location.href = 'dashboard.html';
+      } else {
+        errorBox.style.display = 'block';
+      }
     }
   </script>
 
