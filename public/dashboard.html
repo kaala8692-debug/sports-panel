@@ -86,6 +86,17 @@
                 </button>
             </div>
 
+            <!-- Total CR Calculation Box -->
+            <div class="bg-blue-900 text-white p-3 rounded-lg shadow flex justify-between items-center text-xs">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-wallet text-yellow-300 text-sm"></i>
+                    <span class="font-semibold uppercase tracking-wider">Total Allocated CR (Points):</span>
+                </div>
+                <div id="totalCrBox" class="text-sm font-extrabold text-yellow-300 bg-blue-950 px-3 py-1 rounded border border-blue-800">
+                    0
+                </div>
+            </div>
+
             <!-- Table Actions bar -->
             <div class="bg-white p-2.5 rounded border border-gray-200 flex flex-wrap justify-between items-center gap-2 text-xs">
                 <div class="flex items-center space-x-2">
@@ -119,7 +130,7 @@
                         </tr>
                     </thead>
                     <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-700">
-                        <!-- Saved accounts will load here -->
+                        <!-- Persistent accounts load here -->
                     </tbody>
                 </table>
             </div>
@@ -293,7 +304,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Control Logic -->
+    <!-- JavaScript Control Logic with Auto CR Summation -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             renderClientsTable();
@@ -357,7 +368,7 @@
             let username = document.getElementById('clientNameInput').value.trim();
             let pass = document.getElementById('clientPassInput').value;
             let repass = document.getElementById('clientRepassInput').value;
-            let creditRef = document.getElementById('clientCreditRef').value || "0";
+            let creditRef = parseFloat(document.getElementById('clientCreditRef').value) || 0;
             let accType = document.getElementById('clientAccountType').value;
 
             if(pass !== repass) {
@@ -380,9 +391,9 @@
 
             localStorage.setItem('soni_clients', JSON.stringify(clients));
 
-            alert("Account '" + username + "' created successfully!");
+            alert("Account '" + username + "' created and permanently saved!");
             
-            // Completely reset/clear the form so no old data remains
+            // Completely reset form
             document.getElementById('addAccountForm').reset();
             
             switchTab('clients');
@@ -391,18 +402,23 @@
         function renderClientsTable() {
             let tbody = document.getElementById('clientTableBody');
             let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
+            let totalCr = 0;
 
             if(clients.length === 0) {
                 tbody.innerHTML = `<tr id="emptyClientRow"><td colspan="8" class="p-6 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td></tr>`;
+                document.getElementById('totalCrBox').innerText = '0';
                 return;
             }
 
             tbody.innerHTML = "";
             clients.forEach(client => {
+                let crValue = parseFloat(client.creditRef) || 0;
+                totalCr += crValue;
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-50">
                         <td class="p-2.5 border-r font-semibold">${client.username}</td>
-                        <td class="p-2.5 border-r">${client.creditRef}</td>
+                        <td class="p-2.5 border-r font-bold text-blue-600">${client.creditRef}</td>
                         <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
                         <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
                         <td class="p-2.5 border-r">${client.creditRef}</td>
@@ -420,6 +436,9 @@
                     </tr>
                 `;
             });
+
+            // Update Total CR Box
+            document.getElementById('totalCrBox').innerText = totalCr.toLocaleString();
         }
     </script>
 </body>
