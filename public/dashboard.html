@@ -1,390 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soni Exchange - Super Admin Panel</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    body {
-      background-color: #f4f6f9;
-    }
-
-    /* Top Blue Navbar Styling */
-    .top-navbar {
-      background-color: #0088cc;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 12px;
-      color: white;
-      font-size: 12px;
-      height: 45px;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* Soni Logo Styling (Circular & Clickable) */
-    .logo-img {
-      height: 35px;
-      width: 35px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      object-fit: cover;
-      cursor: pointer;
-      background: white;
-      transition: transform 0.2s ease;
-    }
-    .logo-img:active {
-      transform: scale(0.92);
-    }
-
-    .hamburger-icon {
-      font-size: 16px;
-      cursor: pointer;
-      margin-right: 2px;
-    }
-
-    /* Navigation Links */
-    .nav-menu {
-      display: flex;
-      list-style: none;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .nav-menu li {
-      cursor: pointer;
-      color: #e6f7ff;
-      white-space: nowrap;
-      font-weight: 600;
-      font-size: 11px;
-      padding: 4px 6px;
-      border-radius: 2px;
-    }
-
-    .nav-menu li:hover, .nav-menu li.active {
-      background-color: #006699;
-      color: white;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .user-dropdown {
-      font-size: 11px;
-      font-weight: bold;
-      color: white;
-      cursor: pointer;
-    }
-
-    .nav-search-box {
-      display: flex;
-      align-items: center;
-      background: white;
-      border-radius: 2px;
-      overflow: hidden;
-    }
-
-    .nav-search-input {
-      border: none;
-      outline: none;
-      padding: 3px 6px;
-      font-size: 11px;
-      width: 80px;
-    }
-
-    .nav-search-btn {
-      background: #333;
-      color: white;
-      border: none;
-      padding: 3px 6px;
-      cursor: pointer;
-      font-size: 11px;
-    }
-
-    /* Sub Header Bar */
-    .sub-header {
-      background-color: #f8f9fa;
-      border-bottom: 1px solid #e0e0e0;
-      padding: 8px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    }
-
-    .sub-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: #333;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .event-search-input {
-      padding: 4px 8px;
-      font-size: 11px;
-      border: 1px solid #ccc;
-      border-radius: 2px;
-      outline: none;
-      width: 140px;
-    }
-
-    /* Content Area */
-    .content-area {
-      padding: 15px;
-    }
-
-    .table-card {
-      background: white;
-      border-radius: 4px;
-      border: 1px solid #ddd;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      text-align: left;
-    }
-
-    th, td {
-      padding: 8px 12px;
-      border-bottom: 1px solid #eee;
-    }
-
-    th {
-      background-color: #f1f3f5;
-      color: #444;
-      font-weight: bold;
-    }
-
-    .btn-action {
-      padding: 3px 6px;
-      border: none;
-      border-radius: 2px;
-      cursor: pointer;
-      font-size: 10px;
-      font-weight: bold;
-      color: white;
-      margin-right: 2px;
-    }
-
-    .btn-add { background: #007bff; }
-    .btn-sub { background: #ffc107; color: black; }
-    .btn-del { background: #dc3545; }
-
-    /* Logo Zoom Modal Overlay */
-    .logo-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      cursor: pointer;
-    }
-
-    .logo-modal img {
-      width: 240px;
-      height: 240px;
-      border-radius: 50%;
-      border: 4px solid #fff;
-      object-fit: cover;
-      box-shadow: 0 0 25px rgba(255,255,255,0.4);
-      animation: zoomIn 0.25s ease-out;
-    }
-
-    @keyframes zoomIn {
-      from { transform: scale(0.4); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* Tab Display Toggle */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soni Exchange - Admin Panel</title>
+    <!-- Tailwind CSS for Layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; }
+        .top-navbar { background-color: #0088cc; color: white; }
+        .nav-item { cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .nav-item:hover { background-color: #006699; }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+    </style>
 </head>
-<body>
+<body class="relative min-h-screen flex flex-col">
 
-  <!-- Top Blue Navbar -->
-  <header class="top-navbar">
-    <div class="nav-left">
-      <!-- Sirf Soni ka Gol Logo (No 'ALL' text) -->
-      <img src="1791832141704.png" alt="Soni Logo" class="logo-img" onclick="openLogoZoom()">
-      <span class="hamburger-icon">☰</span>
-      <ul class="nav-menu">
-        <li class="active" onclick="switchTab('clientTab', this, 'Client & Points Management')">List of Clients</li>
-        <li onclick="switchTab('agentTab', this, 'Assign Agent')">Assign Agent</li>
-        <li onclick="switchTab('marketTab', this, 'Market Analysis')">Market Analysis</li>
-        <li onclick="switchTab('liveMarketTab', this, 'Live Market')">Live Market ▾</li>
-        <li onclick="switchTab('virtualTab', this, 'Live Virtual Market')">Live Virtual Market ▾</li>
-        <li onclick="switchTab('reportsTab', this, 'Reports')">Reports ▾</li>
-        <li onclick="switchTab('multiLoginTab', this, 'Multi Login')">Multi Login</li>
-      </ul>
+    <!-- Top Blue Exchange Navbar -->
+    <header class="top-navbar flex items-center justify-between px-3 py-1.5 shadow-md sticky top-0 z-40">
+        <div class="flex items-center space-x-3 overflow-x-auto">
+            <!-- SONI Logo (Replaces 'ALL') -->
+            <div onclick="openLogoModal()" class="cursor-pointer flex items-center space-x-1 bg-white/10 px-2 py-1 rounded hover:bg-white/20 transition" title="Click to View Logo">
+                <div class="w-6 h-6 rounded-full bg-yellow-400 text-blue-900 font-extrabold flex items-center justify-center text-xs shadow">
+                    S
+                </div>
+                <span class="font-extrabold tracking-wider text-sm text-white">SONI</span>
+            </div>
+
+            <!-- 3-Line Menu Icon -->
+            <button onclick="toggleSidebar()" class="text-white hover:text-yellow-300 text-lg px-2 focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Menu Navigation Links -->
+            <nav class="flex items-center space-x-1 text-xs">
+                <span class="nav-item">List of Clients</span>
+                <span class="nav-item">Assign Agent</span>
+                <span class="nav-item font-bold bg-blue-800 rounded px-2 py-1">Market Analysis</span>
+                <span class="nav-item">Live Market <i class="fa-solid fa-caret-down text-[10px]"></i></span>
+                <span class="nav-item">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px]"></i></span>
+                <span class="nav-item">Reports <i class="fa-solid fa-caret-down text-[10px]"></i></span>
+                <span class="nav-item">Multi Login</span>
+            </nav>
+        </div>
+
+        <!-- Right Side User & Search Box -->
+        <div class="flex items-center space-x-2 text-xs">
+            <span class="font-semibold hidden sm:inline">SuperAdmin <i class="fa-solid fa-caret-down"></i></span>
+            <div class="relative">
+                <input type="text" placeholder="All Client" class="px-2 py-1 text-black text-xs rounded border border-gray-300 w-28 sm:w-36 focus:outline-none">
+                <button class="absolute right-1 top-1 text-gray-500"><i class="fa-solid fa-magnifying-glass text-xs"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub Header Bar -->
+    <div class="bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center text-sm shadow-sm">
+        <div class="flex items-center space-x-2 font-bold text-gray-700">
+            <span>Market Analysis</span>
+            <i class="fa-solid fa-rotate text-xs cursor-pointer hover:text-blue-600" title="Refresh"></i>
+        </div>
+        <div class="w-64">
+            <input type="text" placeholder="Search Event" class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none">
+        </div>
     </div>
 
-    <div class="nav-right">
-      <span class="user-dropdown">Soniexchange ▾</span>
-      <div class="nav-search-box">
-        <input type="text" placeholder="All Client" class="nav-search-input">
-        <button class="nav-search-btn">🔍</button>
-      </div>
-    </div>
-  </header>
+    <!-- Main Content Body -->
+    <main class="flex-1 p-4">
+        <!-- Super Admin Control Panel Summary Card -->
+        <div class="bg-white p-4 rounded shadow border border-gray-200 mb-4">
+            <h2 class="text-base font-bold text-gray-800 border-b pb-2 mb-3">Super Admin System Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                <div class="bg-blue-50 p-3 rounded border border-blue-200">
+                    <p class="text-gray-500 font-semibold">Central Bank Reserve</p>
+                    <p class="text-lg font-bold text-blue-700">10,000,000 pts</p>
+                </div>
+                <div class="bg-green-50 p-3 rounded border border-green-200">
+                    <p class="text-gray-500 font-semibold">Total Active Supers</p>
+                    <p class="text-lg font-bold text-green-700">2 Supers</p>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded border border-yellow-200">
+                    <p class="text-gray-500 font-semibold">System Security Status</p>
+                    <p class="text-lg font-bold text-yellow-700">TPIN + Forced Login Active</p>
+                </div>
+            </div>
+        </div>
+    </main>
 
-  <!-- Sub Header Bar -->
-  <div class="sub-header">
-    <div class="sub-title" id="pageTitle">
-      Client & Points Management 🔄
-    </div>
-    <div>
-      <input type="text" placeholder="Search Event" class="event-search-input">
-    </div>
-  </div>
+    <!-- Left Sports Sidebar Drawer (Triggers on 3-line Menu click) -->
+    <div id="sportsSidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 overflow-y-auto border-r border-gray-200">
+        <!-- Sidebar Header -->
+        <div class="p-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center sticky top-0">
+            <h3 class="font-bold text-gray-800 text-base">Sports</h3>
+            <button onclick="toggleSidebar()" class="text-gray-600 hover:text-red-600 text-lg font-bold px-2">
+                &times;
+            </button>
+        </div>
 
-  <!-- Big Logo Zoom Pop-up Modal -->
-  <div id="logoZoomModal" class="logo-modal" onclick="closeLogoZoom()">
-    <img src="1791832141704.png" alt="Soni Logo Zoomed">
-  </div>
-
-  <!-- Content Container -->
-  <div class="content-area">
-
-    <!-- Tab 1: Client Management -->
-    <div id="clientTab" class="tab-content active">
-      <div class="table-card">
-        <table>
-          <thead>
-            <tr>
-              <th>Client ID</th>
-              <th>Username</th>
-              <th>Agent</th>
-              <th>Points / Balance</th>
-              <th>Status</th>
-              <th>Point Control</th>
-            </tr>
-          </thead>
-          <tbody id="clientTableBody">
-            <!-- Dynamic Client Data -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Other Tab Placeholders -->
-    <div id="agentTab" class="tab-content">
-      <div class="table-card" style="padding:15px;">Assign Agent details yahan rahengi.</div>
-    </div>
-
-    <div id="marketTab" class="tab-content">
-      <div class="table-card" style="padding:15px;">Market Analysis data active hai.</div>
-    </div>
-
-    <div id="liveMarketTab" class="tab-content">
-      <div class="table-card" style="padding:15px;">Live Market tracking section.</div>
+        <!-- Sports Category List -->
+        <ul class="text-xs text-gray-700 divide-y divide-gray-100">
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Football</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Tennis</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Mixed Martial Arts</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-bold text-blue-600"><span>Cricket</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Golf</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Boxing</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Beach Volleyball</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Table Tennis</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Futsal</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Horse Racing</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>E Games</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Basketball</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>MotoGP</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Chess</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Volleyball</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Ice Hockey</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Badminton</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Cycling</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Virtual sports</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Kabaddi</span> <span>+</span></li>
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Greyhound Racing</span> <span>+</span></li>
+        </ul>
     </div>
 
-    <div id="virtualTab" class="tab-content">
-      <div class="table-card" style="padding:15px;">Live Virtual Market section.</div>
+    <!-- Sidebar Overlay Background -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 hidden z-40"></div>
+
+    <!-- SONI Logo Tap-to-Zoom Modal -->
+    <div id="logoModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50" onclick="closeLogoModal()">
+        <div class="bg-white p-6 rounded-xl shadow-2xl flex flex-col items-center space-y-3 max-w-xs mx-auto border border-gray-200" onclick="event.stopPropagation()">
+            <div class="w-20 h-20 rounded-full bg-blue-600 text-yellow-400 font-extrabold flex items-center justify-center text-4xl shadow-lg">
+                S
+            </div>
+            <h2 class="text-xl font-bold text-gray-800 tracking-wider">SONI EXCHANGE</h2>
+            <p class="text-xs text-gray-500 text-center">Virtual Entertainment Platform</p>
+            <button onclick="closeLogoModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1.5 rounded text-xs font-semibold transition">Close</button>
+        </div>
     </div>
 
-    <div id="reportsTab" class="tab-content">
-      <div class="table-card" style="padding:15px;">Account reports & logs.</div>
-    </div>
-
-    <div id="multiLoginTab" class="tab-content">
-      <div class="table-card" style="padding:15px;">Multi Login control section.</div>
-    </div>
-
-  </div>
-
-  <script>
-    // Logo Zoom Functions
-    function openLogoZoom() {
-      document.getElementById('logoZoomModal').style.display = 'flex';
-    }
-    function closeLogoZoom() {
-      document.getElementById('logoZoomModal').style.display = 'none';
-    }
-
-    // Tab Switch Function
-    function switchTab(tabId, element, titleText) {
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.nav-menu li').forEach(l => l.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      element.classList.add('active');
-      document.getElementById('pageTitle').innerHTML = titleText + ' 🔄';
-    }
-
-    // Default Client Data
-    let clients = JSON.parse(localStorage.getItem('soni_clients')) || [
-      { id: 'CL1001', username: 'Rahul_Exchange', agent: 'Agent_1', points: 5000, status: 'Active' },
-      { id: 'CL1002', username: 'Amit_Player', agent: 'Agent_1', points: 12500, status: 'Active' }
-    ];
-
-    function renderClients() {
-      const tbody = document.getElementById('clientTableBody');
-      tbody.innerHTML = '';
-      clients.forEach((c, index) => {
-        tbody.innerHTML += `
-          <tr>
-            <td><b>${c.id}</b></td>
-            <td>${c.username}</td>
-            <td>${c.agent}</td>
-            <td><b style="color:#007bff;">${c.points.toLocaleString()} PTS</b></td>
-            <td><span style="color:green; font-weight:bold;">${c.status}</span></td>
-            <td>
-              <button class="btn-action btn-add" onclick="updatePoints(${index}, 'add')">+ Add</button>
-              <button class="btn-action btn-sub" onclick="updatePoints(${index}, 'sub')">- Withdraw</button>
-              <button class="btn-action btn-del" onclick="deleteClient(${index})">Remove</button>
-            </td>
-          </tr>
-        `;
-      });
-      localStorage.setItem('soni_clients', JSON.stringify(clients));
-    }
-
-    function updatePoints(index, type) {
-      let amount = prompt(type === 'add' ? "Points ADD karein:" : "Points WITHDRAW karein:");
-      if (amount && !isNaN(amount) && Number(amount) > 0) {
-        amount = Number(amount);
-        if (type === 'add') {
-          clients[index].points += amount;
-        } else {
-          if (amount > clients[index].points) { alert("Insufficient Balance!"); return; }
-          clients[index].points -= amount;
+    <!-- JavaScript Interactions -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sportsSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
         }
-        renderClients();
-      }
-    }
 
-    function deleteClient(index) {
-      if (confirm(`Remove ${clients[index].username}?`)) {
-        clients.splice(index, 1);
-        renderClients();
-      }
-    }
+        function openLogoModal() {
+            document.getElementById('logoModal').classList.remove('hidden');
+            document.getElementById('logoModal').classList.add('flex');
+        }
 
-    renderClients();
-  </script>
+        function closeLogoModal() {
+            document.getElementById('logoModal').classList.remove('flex');
+            document.getElementById('logoModal').classList.add('hidden');
+        }
+    </script>
 </body>
 </html>
