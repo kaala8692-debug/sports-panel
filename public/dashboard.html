@@ -36,81 +36,58 @@
 
             <!-- Navigation Buttons -->
             <nav class="flex items-center space-x-1 text-xs shrink-0">
-                <button id="navClients" onclick="switchTab('clients')" class="nav-btn rounded">List of Clients</button>
+                <button id="navClients" onclick="switchTab('clients')" class="nav-btn rounded font-bold bg-blue-800">List of Clients</button>
                 <button id="navAssignAgent" onclick="switchTab('assignAgent')" class="nav-btn rounded">Assign Agent</button>
-                <button id="navMarketAnalysis" onclick="switchTab('marketAnalysis')" class="nav-btn rounded font-bold bg-blue-800">Market Analysis</button>
+                <button id="navMarketAnalysis" onclick="switchTab('marketAnalysis')" class="nav-btn rounded">Market Analysis</button>
                 <button class="nav-btn rounded">Live Market <i class="fa-solid fa-caret-down text-[10px] ml-1"></i></button>
-                <button class="nav-btn rounded">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px] ml-1"></i></button>
+                <button class="nav-btn rounded">Virtual Market <i class="fa-solid fa-caret-down text-[10px] ml-1"></i></button>
                 <button class="nav-btn rounded">Reports <i class="fa-solid fa-caret-down text-[10px] ml-1"></i></button>
-                <button class="nav-btn rounded">Multi Login</button>
             </nav>
         </div>
 
-        <!-- Right Logout -->
+        <!-- Right User & Logout -->
         <div class="flex items-center space-x-3 text-xs shrink-0 ml-2">
-            <span class="font-semibold text-yellow-300">SuperAdmin</span>
+            <span class="bg-blue-800 text-white px-2 py-1 rounded font-bold border border-blue-700">Z9dmo <i class="fa-solid fa-caret-down ml-1"></i></span>
             <button onclick="window.location.href='index.html'" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded font-bold">Logout</button>
         </div>
     </header>
 
-    <!-- Sub Header Bar -->
-    <div class="bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center text-sm shadow-sm z-20">
-        <div class="flex items-center space-x-2 font-bold text-gray-700">
-            <span id="subHeaderTitle">Market Analysis</span>
-            <i class="fa-solid fa-rotate text-xs cursor-pointer hover:text-blue-600" title="Refresh"></i>
+    <!-- Sub Header Bar with Search, Load, Reset -->
+    <div class="bg-white border-b border-gray-200 px-4 py-3 flex flex-wrap justify-between items-center text-sm shadow-sm z-20 gap-2">
+        <div class="flex items-center space-x-2">
+            <button onclick="switchTab('addAccount')" class="bg-[#0088cc] hover:bg-[#006699] text-white text-xs font-bold px-4 py-2 rounded shadow">
+                Add Account
+            </button>
         </div>
-        <div class="w-48 sm:w-64">
-            <input type="text" placeholder="Search Event" class="w-full px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none">
+        <div class="flex items-center space-x-2 text-xs">
+            <span class="font-semibold text-gray-700">Search:</span>
+            <input type="text" id="clientSearchInput" placeholder="Search..." class="px-3 py-1.5 border border-gray-300 rounded focus:outline-none w-44">
+            <button onclick="renderClientsTable()" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-4 py-1.5 rounded shadow">Load</button>
+            <button onclick="resetSearch()" class="bg-slate-500 hover:bg-slate-600 text-white font-bold px-4 py-1.5 rounded shadow">Reset</button>
         </div>
     </div>
 
     <!-- Main Content Body -->
     <main class="flex-1 p-3 sm:p-4 z-10">
         
-        <!-- Market Analysis View -->
-        <div id="viewMarketAnalysis" class="space-y-4">
-            <div class="bg-white p-4 rounded border border-gray-200 shadow-sm text-center text-gray-500 text-xs">
-                Market Analysis Events & Live Odds will be loaded here.
-            </div>
-        </div>
-
-        <!-- List of Clients View -->
-        <div id="viewListOfClients" class="hidden space-y-3">
-            <div class="flex justify-between items-center">
-                <h2 class="font-bold text-gray-800 text-base">Account List</h2>
-                <button onclick="switchTab('addAccount')" class="bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold px-3 py-1.5 rounded shadow focus:outline-none">
-                    Add Account
-                </button>
-            </div>
-
-            <!-- Total CR Box -->
-            <div class="bg-blue-900 text-white p-3 rounded-lg shadow flex justify-between items-center text-xs">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-solid fa-wallet text-yellow-300 text-sm"></i>
-                    <span class="font-semibold uppercase tracking-wider">Total Allocated CR (Points):</span>
-                </div>
-                <div id="totalCrBox" class="text-sm font-extrabold text-yellow-300 bg-blue-950 px-3 py-1 rounded border border-blue-800">
-                    0
-                </div>
-            </div>
-
-            <!-- Account List Table -->
+        <!-- List of Clients View (Default Active) -->
+        <div id="viewListOfClients" class="space-y-3">
             <div class="bg-white border border-gray-200 rounded shadow overflow-x-auto">
                 <table class="w-full text-left border-collapse text-xs">
                     <thead>
-                        <tr class="bg-gray-100 text-gray-600 border-b border-gray-200 font-bold">
-                            <th class="p-2.5 border-r">User Name</th>
-                            <th class="p-2.5 border-r">CR</th>
-                            <th class="p-2.5 border-r">U St</th>
-                            <th class="p-2.5 border-r">B St</th>
-                            <th class="p-2.5 border-r">Exposure Limit</th>
-                            <th class="p-2.5 border-r">Default (%)</th>
-                            <th class="p-2.5 border-r">Account Type</th>
-                            <th class="p-2.5">Action</th>
+                        <tr class="bg-gray-100 text-gray-700 border-b border-gray-300 font-bold">
+                            <th class="p-3 border-r">User Name</th>
+                            <th class="p-3 border-r">CR</th>
+                            <th class="p-3 border-r">U St</th>
+                            <th class="p-3 border-r">B St</th>
+                            <th class="p-3 border-r">Exposure Limit</th>
+                            <th class="p-3 border-r">Default (%)</th>
+                            <th class="p-3 border-r">Account Type</th>
+                            <th class="p-3 text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-700">
-                        <!-- Accounts list -->
+                        <!-- Dynamic rows with D W L C P S MORE buttons -->
                     </tbody>
                 </table>
             </div>
@@ -119,7 +96,6 @@
         <!-- Add Account Form View -->
         <div id="viewAddAccount" class="hidden max-w-4xl mx-auto space-y-4">
             <h2 class="font-bold text-gray-800 text-base">Add Account</h2>
-            
             <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
                 <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
                     <div class="bg-slate-800 text-white font-bold px-3 py-2">Personal Detail</div>
@@ -154,11 +130,18 @@
                 </div>
 
                 <div class="flex justify-end bg-white p-4 border border-gray-200 rounded shadow-sm">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
+                    <button type="submit" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
                         Create Account
                     </button>
                 </div>
             </form>
+        </div>
+
+        <!-- Market Analysis View -->
+        <div id="viewMarketAnalysis" class="hidden space-y-4">
+            <div class="bg-white p-4 rounded border border-gray-200 shadow-sm text-center text-gray-500 text-xs">
+                Market Analysis Events & Live Odds will be loaded here.
+            </div>
         </div>
 
         <!-- Assign Agent View -->
@@ -170,7 +153,7 @@
         </div>
     </main>
 
-    <!-- Left Sports Sidebar Drawer (Full 39 Sports) -->
+    <!-- Left Sports Sidebar Drawer (39 Sports) -->
     <div id="sportsSidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 overflow-y-auto border-r border-gray-200">
         <div class="p-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center sticky top-0">
             <h3 class="font-bold text-gray-800 text-base">Sports</h3>
@@ -253,9 +236,9 @@
         }
 
         function switchTab(tab) {
-            document.getElementById('viewMarketAnalysis').classList.add('hidden');
             document.getElementById('viewListOfClients').classList.add('hidden');
             document.getElementById('viewAddAccount').classList.add('hidden');
+            document.getElementById('viewMarketAnalysis').classList.add('hidden');
             document.getElementById('viewAssignAgent').classList.add('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-blue-800', 'font-bold'));
@@ -263,19 +246,15 @@
             if(tab === 'clients') {
                 document.getElementById('viewListOfClients').classList.remove('hidden');
                 document.getElementById('navClients').classList.add('bg-blue-800', 'font-bold');
-                document.getElementById('subHeaderTitle').innerText = 'Account List';
                 renderClientsTable();
             } else if(tab === 'addAccount') {
                 document.getElementById('viewAddAccount').classList.remove('hidden');
-                document.getElementById('subHeaderTitle').innerText = 'Add Account';
             } else if(tab === 'assignAgent') {
                 document.getElementById('viewAssignAgent').classList.remove('hidden');
                 document.getElementById('navAssignAgent').classList.add('bg-blue-800', 'font-bold');
-                document.getElementById('subHeaderTitle').innerText = 'Assign Agent';
-            } else {
+            } else if(tab === 'marketAnalysis') {
                 document.getElementById('viewMarketAnalysis').classList.remove('hidden');
                 document.getElementById('navMarketAnalysis').classList.add('bg-blue-800', 'font-bold');
-                document.getElementById('subHeaderTitle').innerText = 'Market Analysis';
             }
         }
 
@@ -323,41 +302,49 @@
             switchTab('clients');
         }
 
+        function resetSearch() {
+            document.getElementById('clientSearchInput').value = "";
+            renderClientsTable();
+        }
+
         function renderClientsTable() {
             let tbody = document.getElementById('clientTableBody');
+            let searchQuery = document.getElementById('clientSearchInput') ? document.getElementById('clientSearchInput').value.toLowerCase().trim() : "";
             let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
-            let totalCr = 0;
+
+            // Filter based on search input
+            if(searchQuery) {
+                clients = clients.filter(c => c.username.toLowerCase().includes(searchQuery));
+            }
 
             if(clients.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td></tr>`;
-                document.getElementById('totalCrBox').innerText = '0';
                 return;
             }
 
             tbody.innerHTML = "";
-            clients.forEach(client => {
-                let crValue = parseFloat(client.creditRef) || 0;
-                totalCr += crValue;
-
+            clients.forEach((client, index) => {
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-50">
-                        <td class="p-2.5 border-r font-semibold">${client.username}</td>
-                        <td class="p-2.5 border-r font-bold text-blue-600">${client.creditRef}</td>
-                        <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
-                        <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
-                        <td class="p-2.5 border-r">${client.creditRef}</td>
-                        <td class="p-2.5 border-r">0</td>
-                        <td class="p-2.5 border-r">${client.accType}</td>
-                        <td class="p-2.5 space-x-1 whitespace-nowrap">
-                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">D</button>
-                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">W</button>
-                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button>
+                        <td class="p-3 border-r font-semibold">${client.username}</td>
+                        <td class="p-3 border-r font-bold text-blue-600">${client.creditRef || 0}</td>
+                        <td class="p-3 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
+                        <td class="p-3 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
+                        <td class="p-3 border-r">${client.creditRef || 0}</td>
+                        <td class="p-3 border-r">0</td>
+                        <td class="p-3 border-r">${client.accType || 'User'}</td>
+                        <td class="p-3 text-center space-x-1 whitespace-nowrap">
+                            <button class="bg-slate-700 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">D</button>
+                            <button class="bg-slate-700 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">W</button>
+                            <button class="bg-slate-700 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">L</button>
+                            <button class="bg-slate-700 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">C</button>
+                            <button class="bg-slate-700 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">P</button>
+                            <button class="bg-slate-700 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">S</button>
+                            <button class="bg-slate-700 hover:bg-slate-800 text-white px-2 py-1 rounded text-[11px] font-bold">MORE</button>
                         </td>
                     </tr>
                 `;
             });
-
-            document.getElementById('totalCrBox').innerText = totalCr.toLocaleString();
         }
     </script>
 </body>
