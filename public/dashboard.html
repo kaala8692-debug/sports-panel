@@ -67,7 +67,7 @@
         <!-- DEFAULT CLEAN/BLANK VIEW UPON LOGIN -->
         <div id="viewWelcome" class="hidden"></div>
 
-        <!-- LIST OF CLIENTS VIEW (OPENS ONLY ON CLICK OF 'List of Clients') -->
+        <!-- LIST OF CLIENTS VIEW -->
         <div id="viewListOfClients" class="hidden bg-white p-3 sm:p-4 rounded border border-gray-200 shadow-sm space-y-3">
             <div class="flex justify-between items-center border-b pb-2">
                 <h1 class="text-base font-bold text-gray-800">Account List</h1>
@@ -407,7 +407,7 @@
                 let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-50 border-b border-gray-200">
-                        <td class="p-2 border-r border-gray-200 font-bold text-gray-800">${client.username}</td>
+                        <td class="p-2 border-r border-gray-200 font-bold text-white bg-black text-center">${client.username}</td>
                         <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
                         <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
                         <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
