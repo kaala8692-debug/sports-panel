@@ -11,7 +11,7 @@
     <style>
         body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; }
         .top-navbar { background-color: #0088cc; color: white; }
-        .nav-btn { cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; outline: none; border: none; background: transparent; color: white; display: inline-flex; items-center: center; }
+        .nav-btn { cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; outline: none; border: none; background: transparent; color: white; display: inline-flex; align-items: center; }
         .nav-btn:hover, .nav-btn.active { background-color: #006699; }
         .sidebar { transition: transform 0.3s ease-in-out; }
     </style>
@@ -119,9 +119,7 @@
                         </tr>
                     </thead>
                     <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-700">
-                        <tr id="emptyClientRow">
-                            <td colspan="8" class="p-6 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td>
-                        </tr>
+                        <!-- Saved accounts will load dynamically here -->
                     </tbody>
                 </table>
             </div>
@@ -296,8 +294,13 @@
         </div>
     </div>
 
-    <!-- JavaScript Control Logic -->
+    <!-- JavaScript Control Logic with LocalStorage Persistence -->
     <script>
+        // Load saved clients on page start
+        document.addEventListener("DOMContentLoaded", () => {
+            renderClientsTable();
+        });
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sportsSidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -321,21 +324,19 @@
         }
 
         function switchTab(tab) {
-            // Hide all views
             document.getElementById('viewMarketAnalysis').classList.add('hidden');
             document.getElementById('viewListOfClients').classList.add('hidden');
             document.getElementById('viewAddAccount').classList.add('hidden');
             document.getElementById('viewAssignAgent').classList.add('hidden');
 
-            // Reset navbar button styles
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-blue-800', 'font-bold'));
 
-            // Show selected view
             if(tab === 'clients') {
                 document.getElementById('viewListOfClients').classList.remove('hidden');
                 document.getElementById('navClients').classList.add('bg-blue-800', 'font-bold');
                 document.getElementById('subHeaderTitle').innerText = 'Account List';
                 document.getElementById('subHeaderRight').innerHTML = `<span class="text-xs text-gray-500">Manage client accounts</span>`;
+                renderClientsTable();
             } else if(tab === 'addAccount') {
                 document.getElementById('viewAddAccount').classList.remove('hidden');
                 document.getElementById('subHeaderTitle').innerText = 'Add Account';
@@ -366,36 +367,66 @@
                 return;
             }
 
-            let emptyRow = document.getElementById('emptyClientRow');
-            if(emptyRow) {
-                emptyRow.remove();
+            // Get existing clients from localStorage or empty array
+            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
+
+            // Check if username already exists
+            if(clients.some(c => c.username === username)) {
+                alert("Client username already exists!");
+                return;
             }
 
-            let tbody = document.getElementById('clientTableBody');
-            let newRow = document.createElement('tr');
-            newRow.className = "hover:bg-gray-50";
-            newRow.innerHTML = `
-                <td class="p-2.5 border-r font-semibold">${username}</td>
-                <td class="p-2.5 border-r">${creditRef}</td>
-                <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
-                <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
-                <td class="p-2.5 border-r">${creditRef}</td>
-                <td class="p-2.5 border-r">0</td>
-                <td class="p-2.5 border-r">${accType}</td>
-                <td class="p-2.5 space-x-1 whitespace-nowrap">
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">D</button>
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">W</button>
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button>
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">C</button>
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">P</button>
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">S</button>
-                    <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">MORE</button>
-                </td>
-            `;
-            tbody.prepend(newRow);
+            // Push new client
+            clients.unshift({
+                username: username,
+                creditRef: creditRef,
+                accType: accType
+            });
 
-            alert("Account '" + username + "' created successfully!");
+            // Save back to localStorage
+            localStorage.setItem('soni_clients', JSON.stringify(clients));
+
+            alert("Account '" + username + "' created and saved successfully!");
+            
+            // Clear form inputs
+            event.target.reset();
+
+            // Switch to client list view and render
             switchTab('clients');
+        }
+
+        function renderClientsTable() {
+            let tbody = document.getElementById('clientTableBody');
+            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
+
+            if(clients.length === 0) {
+                tbody.innerHTML = `<tr id="emptyClientRow"><td colspan="8" class="p-6 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = "";
+            clients.forEach(client => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-2.5 border-r font-semibold">${client.username}</td>
+                        <td class="p-2.5 border-r">${client.creditRef}</td>
+                        <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
+                        <td class="p-2.5 border-r text-center"><input type="checkbox" checked class="accent-black"></td>
+                        <td class="p-2.5 border-r">${client.creditRef}</td>
+                        <td class="p-2.5 border-r">0</td>
+                        <td class="p-2.5 border-r">${client.accType}</td>
+                        <td class="p-2.5 space-x-1 whitespace-nowrap">
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">D</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">W</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">L</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">C</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">P</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">S</button>
+                            <button class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">MORE</button>
+                        </td>
+                    </tr>
+                `;
+            });
         }
     </script>
 </body>
