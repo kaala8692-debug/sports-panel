@@ -23,40 +23,14 @@
         .btn-c { background: #f59e0b; }
         .btn-p { background: #10b981; }
         .btn-s { background: #64748b; }
-        
-        /* Modal Popup Styling */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 90%; max-width: 480px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); overflow: hidden; }
-        .modal-header { background: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
-        .modal-header h3 { font-size: 16px; color: #333; }
-        .close-btn { background: #0088cc; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .modal-body { padding: 20px; }
-        .form-group { margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; }
-        .form-group label { font-size: 13px; color: #555; width: 35%; }
-        .form-control { width: 60%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; background: #fff; }
-        .form-control[readonly] { background: #e9ecef; }
-        .client-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .client-box { background: #e9ecef; padding: 8px; border-radius: 4px; text-align: center; font-size: 13px; border: 1px solid #ccc; }
-        .modal-footer { padding: 12px 20px; background: #fff; display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #eee; }
-        .btn-back { background: #334155; color: white; border: none; padding: 8px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-        .btn-submit { background: #0088cc; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 5px; }
-        
-        /* Toggle Switch for Status */
-        .toggle-container { display: flex; gap: 20px; align-items: center; margin-bottom: 15px; }
-        .toggle-item { display: flex; flex-direction: column; align-items: center; font-size: 12px; }
-        .switch { position: relative; display: inline-block; width: 44px; height: 22px; margin-top: 5px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 22px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #0088cc; }
-        input:checked + .slider:before { transform: translateX(22px); }
+        .logout-btn { background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Soni Exchange - Admin Panel</h1>
-        <button onclick="logout()" style="background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer;">Logout</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </header>
 
     <div class="container">
@@ -72,138 +46,16 @@
                     </tr>
                 </thead>
                 <tbody id="clientTableBody">
-                    <!-- Dynamic Cloud Data will load here -->
+                    <tr><td colspan="4">Loading cloud data...</td></tr>
                 </tbody>
             </table>
-        </div>
-    </div>
-
-    <!-- 1. Deposit Modal (D) -->
-    <div id="depositModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Deposit</h3>
-                <button class="close-btn" onclick="closeModal('depositModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="client-grid" id="depositClientsGrid"></div>
-                <div class="form-group"><label>Amount</label><input type="number" id="depAmount" class="form-control" placeholder="0"></div>
-                <div class="form-group"><label>Remark</label><input type="text" id="depRemark" class="form-control"></div>
-                <div class="form-group"><label>Transaction Password</label><input type="password" id="depTpass" class="form-control"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-back" onclick="closeModal('depositModal')">BACK</button>
-                <button class="btn-submit" onclick="submitDeposit()">submit ➔</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. Withdraw Modal (W) -->
-    <div id="withdrawModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Withdraw</h3>
-                <button class="close-btn" onclick="closeModal('withdrawModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="client-grid" id="withdrawClientsGrid"></div>
-                <div class="form-group"><label>Amount</label><input type="number" id="wdAmount" class="form-control" placeholder="0"></div>
-                <div class="form-group"><label>Remark</label><input type="text" id="wdRemark" class="form-control"></div>
-                <div class="form-group"><label>Transaction Password</label><input type="password" id="wdTpass" class="form-control"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-back" onclick="closeModal('withdrawModal')">BACK</button>
-                <button class="btn-submit" onclick="submitWithdraw()">submit ➔</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Ledger Modal (L) -->
-    <div id="ledgerModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="ledgerTitle">Ledger Statement</h3>
-                <button class="close-btn" onclick="closeModal('ledgerModal')">×</button>
-            </div>
-            <div class="modal-body" style="max-height: 300px; overflow-y: auto;">
-                <p id="ledgerContent" style="font-size: 13px; color: #555;">Loading statement history...</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-back" onclick="closeModal('ledgerModal')">BACK</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. Credit Modal (C) -->
-    <div id="creditModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Credit</h3>
-                <button class="close-btn" onclick="closeModal('creditModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group"><label>Old Credit</label><input type="text" id="oldCredit" class="form-control" readonly></div>
-                <div class="form-group"><label>New Credit</label><input type="number" id="newCredit" class="form-control"></div>
-                <div class="form-group"><label>Transaction Password</label><input type="password" id="credTpass" class="form-control"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-back" onclick="closeModal('creditModal')">BACK</button>
-                <button class="btn-submit" onclick="submitCredit()">submit ➔</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 5. Password Modal (P) -->
-    <div id="passwordModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Password</h3>
-                <button class="close-btn" onclick="closeModal('passwordModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group"><label>New Password</label><input type="password" id="newPassInput" class="form-control"></div>
-                <div class="form-group"><label>Confirm Password</label><input type="password" id="confirmPassInput" class="form-control"></div>
-                <div class="form-group"><label>Transaction Password</label><input type="password" id="passTpass" class="form-control"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-back" onclick="closeModal('passwordModal')">BACK</button>
-                <button class="btn-submit" onclick="submitPasswordChange()">submit ➔</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 6. Status Modal (S) -->
-    <div id="statusModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Change Status</h3>
-                <button class="close-btn" onclick="closeModal('statusModal')">×</button>
-            </div>
-            <div class="modal-body">
-                <p id="statusClientName" style="color: #d97706; font-weight: bold; font-size: 13px; margin-bottom: 15px;"></p>
-                <div class="toggle-container">
-                    <div class="toggle-item">
-                        <span>User Active</span>
-                        <label class="switch"><input type="checkbox" id="userActiveToggle"><span class="slider"></span></label>
-                    </div>
-                    <div class="toggle-item">
-                        <span>Bet Active</span>
-                        <label class="switch"><input type="checkbox" id="betActiveToggle"><span class="slider"></span></label>
-                    </div>
-                </div>
-                <div class="form-group"><label>Transaction Password</label><input type="password" id="statusTpass" class="form-control"></div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-back" onclick="closeModal('statusModal')">BACK</button>
-                <button class="btn-submit" onclick="submitStatusChange()">submit ➔</button>
-            </div>
         </div>
     </div>
 
     <!-- Firebase SDK Scripts -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD-YOUR-CONFIG-KEY",
@@ -217,12 +69,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let activeClientUsername = null;
-        let activeClientData = null;
-
-        window.loadClients = async function() {
+        async function loadClients() {
             const tableBody = document.getElementById('clientTableBody');
-            tableBody.innerHTML = `<tr><td colspan="4">Loading cloud data...</td></tr>`;
             try {
                 const querySnapshot = await getDocs(collection(db, "soni_clients"));
                 tableBody.innerHTML = "";
@@ -230,21 +78,21 @@
                     tableBody.innerHTML = `<tr><td colspan="4">No clients found in cloud database.</td></tr>`;
                     return;
                 }
-                querySnapshot.forEach((documentSnap) => {
-                    const data = documentSnap.data();
-                    const username = documentSnap.id;
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const username = docSnap.id;
                     const row = `<tr>
                         <td><b>${username}</b></td>
                         <td>${data.accType || 'User'}</td>
                         <td>${data.creditRef || 0}</td>
                         <td>
                             <div class="btn-group">
-                                <button class="action-btn btn-d" onclick="openModal('depositModal', '${username}')">D</button>
-                                <button class="action-btn btn-w" onclick="openModal('withdrawModal', '${username}')">W</button>
-                                <button class="action-btn btn-l" onclick="openModal('ledgerModal', '${username}')">L</button>
-                                <button class="action-btn btn-c" onclick="openModal('creditModal', '${username}')">C</button>
-                                <button class="action-btn btn-p" onclick="openModal('passwordModal', '${username}')">P</button>
-                                <button class="action-btn btn-s" onclick="openModal('statusModal', '${username}')">S</button>
+                                <button class="action-btn btn-d">D</button>
+                                <button class="action-btn btn-w">W</button>
+                                <button class="action-btn btn-l">L</button>
+                                <button class="action-btn btn-c">C</button>
+                                <button class="action-btn btn-p">P</button>
+                                <button class="action-btn btn-s">S</button>
                             </div>
                         </td>
                     </tr>`;
@@ -254,90 +102,7 @@
                 console.error("Error loading clients:", error);
                 tableBody.innerHTML = `<tr><td colspan="4" style="color:red;">Error loading data from cloud.</td></tr>`;
             }
-        };
-
-        window.openModal = async function(modalId, username) {
-            activeClientUsername = username;
-            const querySnapshot = await getDocs(collection(db, "soni_clients"));
-            querySnapshot.forEach((docSnap) => {
-                if(docSnap.id === username) {
-                    activeClientData = docSnap.data();
-                }
-            });
-
-            if (modalId === 'depositModal') {
-                document.getElementById('depositClientsGrid').innerHTML = `<div class="client-box"><b>${username}</b><br>0</div><div class="client-box"><b>Admin</b><br>0</div>`;
-                document.getElementById('depAmount').value = '';
-                document.getElementById('depRemark').value = '';
-                document.getElementById('depTpass').value = '';
-            } else if (modalId === 'withdrawModal') {
-                document.getElementById('withdrawClientsGrid').innerHTML = `<div class="client-box"><b>${username}</b><br>0</div><div class="client-box"><b>Admin</b><br>0</div>`;
-                document.getElementById('wdAmount').value = '';
-                document.getElementById('wdRemark').value = '';
-                document.getElementById('wdTpass').value = '';
-            } else if (modalId === 'creditModal') {
-                document.getElementById('oldCredit').value = activeClientData?.creditRef || 0;
-                document.getElementById('newCredit').value = '';
-                document.getElementById('credTpass').value = '';
-            } else if (modalId === 'passwordModal') {
-                document.getElementById('newPassInput').value = '';
-                document.getElementById('confirmPassInput').value = '';
-                document.getElementById('passTpass').value = '';
-            } else if (modalId === 'statusModal') {
-                document.getElementById('statusClientName').innerText = username;
-                document.getElementById('userActiveToggle').checked = true;
-                document.getElementById('betActiveToggle').checked = true;
-                document.getElementById('statusTpass').value = '';
-            } else if (modalId === 'ledgerModal') {
-                document.getElementById('ledgerTitle').innerText = `Ledger - ${username}`;
-                document.getElementById('ledgerContent').innerText = `No recent points transaction recorded yet for ${username}.`;
-            }
-
-            document.getElementById(modalId).style.display = 'flex';
-        };
-
-        window.closeModal = function(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        };
-
-        window.submitCredit = async function() {
-            const newCred = document.getElementById('newCredit').value;
-            if(!newCred) { alert("Please enter new credit limit"); return; }
-            try {
-                const clientRef = doc(db, "soni_clients", activeClientUsername);
-                await updateDoc(clientRef, { creditRef: Number(newCred) });
-                alert("Credit limit updated successfully in Firebase!");
-                closeModal('creditModal');
-                loadClients();
-            } catch (err) { alert("Error updating credit: " + err.message); }
-        };
-
-        window.submitPasswordChange = async function() {
-            const newPass = document.getElementById('newPassInput').value;
-            const confirmPass = document.getElementById('confirmPassInput').value;
-            if(!newPass || newPass !== confirmPass) { alert("Passwords do not match!"); return; }
-            try {
-                const clientRef = doc(db, "soni_clients", activeClientUsername);
-                await updateDoc(clientRef, { pass: newPass });
-                alert("Password updated successfully in Firebase!");
-                closeModal('passwordModal');
-            } catch (err) { alert("Error updating password: " + err.message); }
-        };
-
-        window.submitDeposit = function() {
-            alert("Deposit points submitted for " + activeClientUsername);
-            closeModal('depositModal');
-        };
-
-        window.submitWithdraw = function() {
-            alert("Withdraw points submitted for " + activeClientUsername);
-            closeModal('withdrawModal');
-        };
-
-        window.submitStatusChange = function() {
-            alert("Status updated for " + activeClientUsername);
-            closeModal('statusModal');
-        };
+        }
 
         window.logout = function() {
             window.location.href = 'index.html';
