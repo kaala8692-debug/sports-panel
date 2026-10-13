@@ -21,9 +21,9 @@
     <!-- Top Blue Exchange Navbar -->
     <header class="top-navbar flex items-center justify-between px-3 py-1.5 shadow-md sticky top-0 z-40">
         <div class="flex items-center space-x-3 overflow-x-auto">
-            <!-- SONI Logo (Replaces 'ALL') -->
-            <div onclick="openLogoModal()" class="cursor-pointer flex items-center space-x-1 bg-white/10 px-2 py-1 rounded hover:bg-white/20 transition" title="Click to View Logo">
-                <div class="w-6 h-6 rounded-full bg-yellow-400 text-blue-900 font-extrabold flex items-center justify-center text-xs shadow">
+            <!-- Original Circular Soni Logo with Zoom Modal -->
+            <div onclick="openLogoModal()" class="cursor-pointer flex items-center space-x-1.5 group" title="Click to View Logo">
+                <div class="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-sm text-white shadow-md transition-transform duration-300 group-hover:scale-110">
                     S
                 </div>
                 <span class="font-extrabold tracking-wider text-sm text-white">SONI</span>
@@ -67,26 +67,9 @@
         </div>
     </div>
 
-    <!-- Main Content Body -->
+    <!-- Main Content Body (Clean & Empty like real exchange layout) -->
     <main class="flex-1 p-4">
-        <!-- Super Admin Control Panel Summary Card -->
-        <div class="bg-white p-4 rounded shadow border border-gray-200 mb-4">
-            <h2 class="text-base font-bold text-gray-800 border-b pb-2 mb-3">Super Admin System Overview</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                <div class="bg-blue-50 p-3 rounded border border-blue-200">
-                    <p class="text-gray-500 font-semibold">Central Bank Reserve</p>
-                    <p class="text-lg font-bold text-blue-700">10,000,000 pts</p>
-                </div>
-                <div class="bg-green-50 p-3 rounded border border-green-200">
-                    <p class="text-gray-500 font-semibold">Total Active Supers</p>
-                    <p class="text-lg font-bold text-green-700">2 Supers</p>
-                </div>
-                <div class="bg-yellow-50 p-3 rounded border border-yellow-200">
-                    <p class="text-gray-500 font-semibold">System Security Status</p>
-                    <p class="text-lg font-bold text-yellow-700">TPIN + Forced Login Active</p>
-                </div>
-            </div>
-        </div>
+        <!-- Market analysis content or data tables will load here -->
     </main>
 
     <!-- Left Sports Sidebar Drawer (Triggers on 3-line Menu click) -->
@@ -130,13 +113,13 @@
 
     <!-- SONI Logo Tap-to-Zoom Modal -->
     <div id="logoModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50" onclick="closeLogoModal()">
-        <div class="bg-white p-6 rounded-xl shadow-2xl flex flex-col items-center space-y-3 max-w-xs mx-auto border border-gray-200" onclick="event.stopPropagation()">
-            <div class="w-20 h-20 rounded-full bg-blue-600 text-yellow-400 font-extrabold flex items-center justify-center text-4xl shadow-lg">
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-2xl flex flex-col items-center space-y-4 max-w-sm mx-auto" onclick="event.stopPropagation()">
+            <div class="w-24 h-24 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-5xl text-white shadow-2xl ring-4 ring-indigo-500/50">
                 S
             </div>
-            <h2 class="text-xl font-bold text-gray-800 tracking-wider">SONI EXCHANGE</h2>
-            <p class="text-xs text-gray-500 text-center">Virtual Entertainment Platform</p>
-            <button onclick="closeLogoModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-1.5 rounded text-xs font-semibold transition">Close</button>
+            <h2 class="text-xl font-extrabold tracking-wider bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">SONI EXCHANGE</h2>
+            <p class="text-xs text-slate-400 text-center">Virtual Entertainment Platform • Secure Admin Hub</p>
+            <button onclick="closeLogoModal()" class="w-full bg-slate-700 hover:bg-slate-600 text-white py-2 rounded-lg text-sm font-semibold transition">Close</button>
         </div>
     </div>
 
