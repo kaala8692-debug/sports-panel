@@ -407,7 +407,9 @@
                 let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-50 border-b border-gray-200">
-                        <td class="p-2 border-r border-gray-200 font-bold text-white bg-black text-center">${client.username}</td>
+                        <td class="p-2 border-r border-gray-200">
+                            <span class="bg-[#3a3a3a] text-white px-2.5 py-1 rounded font-bold inline-block text-[11px]">${client.username}</span>
+                        </td>
                         <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
                         <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
                         <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
