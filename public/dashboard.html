@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soni Exchange - Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #f4f6f9;
+    }
+    /* Top Navbar Layout matching Soni Exchange */
+    .navbar {
+      background-color: #0088cc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 15px;
+      color: white;
+    }
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      object-fit: cover;
+    }
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 15px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .nav-links li {
+      cursor: pointer;
+      color: #ffffff;
+    }
+    .nav-links li:hover {
+      text-decoration: underline;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .search-input {
+      padding: 4px 8px;
+      border-radius: 3px;
+      border: none;
+      outline: none;
+      font-size: 12px;
+    }
+    /* Main Content Area */
+    .content-header {
+      padding: 15px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      font-weight: bold;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-left">
+      <img src="1791832141704.png" alt="Soni Logo" class="logo-img">
+      <ul class="nav-links">
+        <li>List of Clients</li>
+        <li>Assign Agent</li>
+        <li>Market Analysis</li>
+        <li>Live Market ▾</li>
+        <li>Live Virtual Market ▾</li>
+        <li>Reports ▾</li>
+        <li>Multi Login</li>
+      </ul>
+    </div>
+    <div class="nav-right">
+      <span>29dmo ▾</span>
+      <input type="text" placeholder="All Client" class="search-input">
+    </div>
+  </header>
+
+  <div class="content-header">
+    Market Analysis 🔄
+  </div>
+
+  <div style="padding: 20px;">
+    <h3>Welcome to Soni Exchange Admin Panel</h3>
+  </div>
+
+</body>
+</html>
 
