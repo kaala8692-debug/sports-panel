@@ -1,124 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Sign In - Soni</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(to bottom, #0088cc 0%, #004466 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Logo Styling */
-        .logo-container {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .logo-img {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border: 3px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .login-card {
-            background-color: #f2f2f2;
-            width: 90%;
-            max-width: 380px;
-            padding: 25px 20px;
-            border-radius: 6px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            text-align: center;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            color: #333;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .card-header::before, .card-header::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px solid #777;
-            margin: 0 10px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            font-size: 14px;
-            outline: none;
-        }
-
-        .btn-login {
-            width: 100%;
-            background-color: #0088cc;
-            color: white;
-            border: none;
-            padding: 10px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 3px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-login:hover {
-            background-color: #006699;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soni Admin - Sign In</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #0077b6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .logo-container {
+      margin-bottom: -35px;
+      z-index: 2;
+    }
+    .logo-img {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      border: 3px solid #005f8d;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      object-fit: cover;
+      background-color: #fff;
+    }
+    .login-card {
+      background: #ffffff;
+      width: 90%;
+      max-width: 380px;
+      padding: 45px 25px 25px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #333;
+      font-weight: bold;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #aaa;
+    }
+    .divider::before {
+      margin-right: .5em;
+    }
+    .divider::after {
+      margin-left: .5em;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #0088cc;
+      border: none;
+      color: white;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .login-btn:hover {
+      background-color: #006699;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Main Logo Image -->
-    <div class="logo-container">
-        <img src="/1791832141704.png" alt="Soni Logo" class="logo-img">
-    </div>
+  <div class="logo-container">
+    <img src="1791832141704.png" alt="Soni Admin Logo" class="logo-img">
+  </div>
 
-    <!-- Login Box -->
-    <div class="login-card">
-        <div class="card-header">Sign In</div>
-        <form id="loginForm">
-            <div class="input-group">
-                <input type="text" placeholder="Username" required>
-            </div>
-            <div class="input-group">
-                <input type="password" placeholder="password" required>
-            </div>
-            <button type="submit" class="btn-login">
-                Login ➜
-            </button>
-        </form>
+  <div class="login-card">
+    <div class="divider">Sign In</div>
+    
+    <div>
+      <div class="input-group">
+        <input type="text" placeholder="Username" id="username">
+      </div>
+      <div class="input-group">
+        <input type="password" placeholder="password" id="password">
+      </div>
+      <button type="button" class="login-btn" onclick="openDashboard()">Login ➔</button>
     </div>
+  </div>
+
+  <script>
+    function openDashboard() {
+      window.location.href = 'dashboard.html';
+    }
+  </script>
 
 </body>
 </html>
