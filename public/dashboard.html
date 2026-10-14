@@ -3,282 +3,454 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soni Exchange - Dashboard</title>
-    <!-- Tailwind CSS -->
+    <title>SoniExchange - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, Helvetica, sans-serif; background-color: #f8f9fa; color: #333; margin: 0; }
-        .top-navbar { background-color: #0088cc; color: white; font-size: 11px; }
-        .nav-btn { cursor: pointer; padding: 4px 8px; font-size: 11px; font-weight: 600; white-space: nowrap; color: white; display: inline-flex; align-items: center; border-radius: 2px; }
-        .nav-btn:hover, .nav-btn.active { background-color: #006699; }
-        .sidebar { transition: transform 0.3s ease-in-out; }
-        .tbl-header { background-color: #f2f2f2; color: #333; font-weight: bold; border-bottom: 2px solid #ccc; }
-        .action-btn { background-color: #4a4a4a; color: white; padding: 3px 6px; font-size: 10px; font-weight: bold; border-radius: 2px; }
-        .action-btn:hover { background-color: #333; }
-        .section-box-header { background-color: #2b3e50; color: white; font-weight: bold; padding: 6px 10px; font-size: 11px; }
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; }
+        .action-btn { background: #e2e8f0; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .action-btn:hover { background: #cbd5e1; }
     </style>
 </head>
-<body class="relative min-h-screen flex flex-col bg-[#f8f9fa]">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-    <!-- TOP BLUE NAVBAR -->
-    <header class="top-navbar flex items-center justify-between px-2 py-1 shadow-sm sticky top-0 z-30">
-        <div class="flex items-center space-x-1 overflow-x-auto py-0.5">
-            <!-- SONI LOGO -->
-            <div class="flex items-center space-x-1 shrink-0 pr-2">
-                <div class="w-6 h-6 rounded-full bg-indigo-700 flex items-center justify-center font-bold text-xs text-white shadow">
-                    S
-                </div>
-                <span class="font-extrabold tracking-wider text-sm text-white">SONI</span>
-            </div>
-
-            <!-- 3-LINE MENU ICON FOR 39 SPORTS SIDEBAR -->
-            <button onclick="toggleSidebar()" class="text-white hover:text-yellow-300 text-sm px-1.5 focus:outline-none shrink-0" title="Open Sports Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-            <!-- NAVIGATION BUTTONS -->
-            <nav class="flex items-center space-x-1 text-[11px] shrink-0">
-                <button id="navClients" onclick="switchTab('clients')" class="nav-btn">List of Clients</button>
-                <button id="navAssignAgent" onclick="switchTab('assignAgent')" class="nav-btn">Assign Agent</button>
-                <button id="navMarketAnalysis" onclick="switchTab('marketAnalysis')" class="nav-btn">Market Analysis</button>
-                <button class="nav-btn">Live Market <i class="fa-solid fa-caret-down text-[9px] ml-1"></i></button>
-                <button class="nav-btn">Live Virtual Market <i class="fa-solid fa-caret-down text-[9px] ml-1"></i></button>
-                <button class="nav-btn">Reports <i class="fa-solid fa-caret-down text-[9px] ml-1"></i></button>
-                <button class="nav-btn">Multi Login</button>
-            </nav>
+    <!-- TOP HEADER -->
+    <header class="bg-[#0b3c5d] text-white p-2.5 flex flex-wrap justify-between items-center shadow-md text-xs gap-2">
+        <div class="flex items-center space-x-2">
+            <button onclick="toggleSidebar()" class="text-white text-base focus:outline-none px-1"><i class="fa-solid fa-bars"></i></button>
+            <span class="font-black text-sm tracking-wider bg-black/20 px-2 py-1 rounded">SONI</span>
+        </div>
+        
+        <!-- TOP NAVIGATION TABS -->
+        <div class="flex flex-wrap items-center gap-1">
+            <button onclick="switchTab('clients')" id="navClients" class="nav-btn bg-[#005580] hover:bg-[#004466] px-2.5 py-1.5 rounded font-bold transition">List of Clients</button>
+            <button onclick="switchTab('addAccount')" id="navAddAccount" class="nav-btn hover:bg-[#004466] px-2.5 py-1.5 rounded font-bold transition">Add Account</button>
+            <button onclick="switchTab('assignAgent')" id="navAssignAgent" class="nav-btn hover:bg-[#004466] px-2.5 py-1.5 rounded font-bold transition">Assign Agent</button>
+            <button onclick="switchTab('marketAnalysis')" id="navMarketAnalysis" class="nav-btn hover:bg-[#004466] px-2.5 py-1.5 rounded font-bold transition">Market Analysis</button>
         </div>
 
-        <!-- RIGHT TOP: Z9dmo & SEARCH DROPDOWN -->
-        <div class="flex items-center space-x-2 text-[11px] shrink-0 ml-2">
-            <span class="bg-[#006699] text-white px-2 py-0.5 rounded font-semibold cursor-pointer">Z9dmo <i class="fa-solid fa-caret-down ml-0.5"></i></span>
-            <div class="relative flex items-center">
-                <input type="text" placeholder="All Client" class="px-2 py-0.5 text-[11px] text-gray-800 border border-gray-300 rounded-l focus:outline-none w-24 sm:w-32">
-                <button class="bg-gray-800 text-white px-2 py-1 rounded-r text-[10px]"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
-            <button onclick="window.location.href='index.html'" class="bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded font-bold text-[10px]">Logout</button>
+        <div class="flex items-center space-x-3">
+            <span id="loggedInUserDisplay" class="bg-blue-900 px-2.5 py-1 rounded font-bold">User: Admin</span>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2.5 py-1 rounded font-bold transition">Logout</button>
         </div>
     </header>
 
-    <!-- MAIN BODY AREA -->
-    <main class="flex-1 p-2 sm:p-4 z-10 max-w-[1400px] w-full mx-auto">
+    <div class="flex flex-1 relative overflow-hidden">
         
-        <!-- DEFAULT CLEAN/BLANK VIEW UPON LOGIN -->
-        <div id="viewWelcome" class="hidden"></div>
-
-        <!-- LIST OF CLIENTS VIEW -->
-        <div id="viewListOfClients" class="hidden bg-white p-3 sm:p-4 rounded border border-gray-200 shadow-sm space-y-3">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h1 class="text-base font-bold text-gray-800">Account List</h1>
-                <button onclick="switchTab('addAccount')" class="bg-[#0088cc] hover:bg-[#006699] text-white text-xs font-semibold px-3 py-1.5 rounded shadow">
-                    Add Account
-                </button>
+        <!-- SIDEBAR (39 Sports & Navigation) -->
+        <aside id="sportsSidebar" class="w-64 bg-[#1d2731] text-white flex flex-col absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-2xl">
+            <div class="p-3 bg-[#111822] flex justify-between items-center border-b border-gray-700">
+                <span class="font-bold text-xs uppercase tracking-wider text-cyan-400"><i class="fa-solid fa-trophy mr-1.5"></i> Sports & Menu (39 Games)</span>
+                <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
             </div>
-
-            <div class="flex items-center space-x-2">
-                <button class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1 rounded flex items-center space-x-1">
-                    <i class="fa-solid fa-file-pdf"></i> <span>PDF</span>
-                </button>
-                <button class="bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-2.5 py-1 rounded flex items-center space-x-1">
-                    <i class="fa-solid fa-file-excel"></i> <span>Excel</span>
-                </button>
+            <div class="flex-1 overflow-y-auto p-2 space-y-1 text-xs">
+                <button onclick="switchTab('clients'); toggleSidebar();" class="w-full text-left px-3 py-2 rounded hover:bg-slate-800 font-semibold flex items-center"><i class="fa-solid fa-users w-5 mr-2 text-cyan-400"></i> List of Clients</button>
+                <button onclick="switchTab('addAccount'); toggleSidebar();" class="w-full text-left px-3 py-2 rounded hover:bg-slate-800 font-semibold flex items-center"><i class="fa-solid fa-user-plus w-5 mr-2 text-green-400"></i> Add Account</button>
+                <div class="border-t border-gray-700 my-2 pt-2 text-[10px] text-gray-400 uppercase font-bold px-2">Sports Categories</div>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Cricket</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Football</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Tennis</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Basketball</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Horse Racing</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Greyhound Racing</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Kabaddi</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Badminton</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Table Tennis</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-gray-300 hover:bg-slate-800">Volleyball</a>
+                <!-- Baki sports entries -->
             </div>
+        </aside>
 
-            <div class="flex flex-wrap justify-between items-center text-xs gap-2 pt-1">
-                <div class="flex items-center space-x-1 text-gray-600">
-                    <span>Show</span>
-                    <select class="border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                    </select>
-                    <span>entries</span>
+        <!-- SIDEBAR OVERLAY -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 hidden z-20"></div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 p-4 overflow-y-auto">
+
+            <!-- VIEW: LIST OF CLIENTS -->
+            <div id="viewListOfClients" class="bg-white rounded-lg shadow p-4">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                    <h2 class="font-bold text-sm text-gray-800 uppercase"><i class="fa-solid fa-address-book mr-1 text-cyan-600"></i> Account List</h2>
+                    <div class="flex space-x-2">
+                        <input type="text" id="clientSearchInput" onkeyup="renderClientsTable()" placeholder="Search username..." class="border px-3 py-1.5 text-xs rounded focus:outline-none focus:border-cyan-500">
+                        <button onclick="renderClientsTable()" class="bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded text-xs font-bold">Refresh</button>
+                    </div>
                 </div>
 
-                <div class="flex items-center space-x-1.5">
-                    <span class="text-gray-600 font-medium">Search:</span>
-                    <input type="text" id="clientSearchInput" placeholder="Search..." class="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none w-36 sm:w-48">
-                    <button onclick="renderClientsTable()" class="bg-[#0088cc] hover:bg-[#006699] text-white font-semibold px-3 py-1 rounded shadow">Load</button>
-                    <button onclick="resetSearch()" class="bg-slate-500 hover:bg-slate-600 text-white font-semibold px-3 py-1 rounded shadow">Reset</button>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-gray-100 border-b border-gray-300 text-gray-700">
+                                <th class="p-2 border-r">Account</th>
+                                <th class="p-2 border-r">Credit Ref.</th>
+                                <th class="p-2 border-r text-center">Partnership</th>
+                                <th class="p-2 border-r text-center">Status</th>
+                                <th class="p-2 border-r">Balance</th>
+                                <th class="p-2 border-r">Exposure</th>
+                                <th class="p-2 border-r">Type</th>
+                                <th class="p-2 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientTableBody">
+                            <tr><td colspan="8" class="p-4 text-center text-gray-500">Loading accounts...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="overflow-x-auto border border-gray-200 rounded">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="tbl-header text-gray-700">
-                            <th class="p-2 border-r border-gray-300 font-bold">User Name</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">CR</th>
-                            <th class="p-2 border-r border-gray-300 font-bold text-center">U st</th>
-                            <th class="p-2 border-r border-gray-300 font-bold text-center">B st</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">Exposure Limit</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">Default (%)</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">Account Type</th>
-                            <th class="p-2 font-bold text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-800">
-                        <!-- Dynamic Rows -->
-                    </tbody>
-                </table>
-            </div>
+            <!-- VIEW: ADD ACCOUNT -->
+            <div id="viewAddAccount" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto">
+                <h2 class="font-bold text-sm text-gray-800 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-1 text-green-600"></i> Add New Account</h2>
+                
+                <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
+                    
+                    <!-- Txn Password verification for sub-accounts -->
+                    <div id="txnPassContainer" class="hidden bg-yellow-50 border border-yellow-300 p-3 rounded">
+                        <label class="block font-bold text-yellow-800 mb-1">Enter Your 6-Digit Transaction Password:</label>
+                        <input type="password" id="clientTxnPassInput" maxlength="6" placeholder="Enter 6-digit pin" class="w-full border p-2 rounded bg-white">
+                    </div>
 
-            <div class="flex justify-end items-center space-x-1 text-xs pt-2">
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&laquo;</button>
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&lt;</button>
-                <button class="px-3 py-1 border border-[#0088cc] rounded bg-[#0088cc] text-white font-bold">1</button>
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&gt;</button>
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&raquo;</button>
-            </div>
-        </div>
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Client Username:</label>
+                        <input type="text" id="clientNameInput" oninput="validateClientName()" required placeholder="e.g. User123" class="w-full border p-2 rounded">
+                        <p id="clientNameError" class="text-red-500 text-[10px] mt-1 hidden">Must start with a capital letter.</p>
+                    </div>
 
-        <!-- ADD ACCOUNT FORM VIEW -->
-        <div id="viewAddAccount" class="hidden max-w-5xl mx-auto space-y-3">
-            <div class="flex justify-between items-center bg-white p-2.5 rounded border border-gray-200 shadow-sm text-xs">
-                <span class="font-bold text-gray-800 text-sm">Add Account</span>
-                <button onclick="switchTab('clients')" class="text-[#0088cc] font-semibold hover:underline">Back to Account List</button>
-            </div>
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Password:</label>
+                        <input type="password" id="clientPassInput" oninput="validatePassword()" required placeholder="Password" class="w-full border p-2 rounded">
+                        <p id="passwordError" class="text-red-500 text-[10px] mt-1 hidden">Must start with a capital letter and include a special character.</p>
+                    </div>
 
-            <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-3 text-xs">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="md:col-span-2 bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                        <div class="section-box-header">Personal Detail</div>
-                        <div class="p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Client Name:</label>
-                                <input type="text" id="clientNameInput" required placeholder="Client Name" oninput="validateClientName()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
-                                <p id="clientNameError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be a capital letter.</p>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">User Password:</label>
-                                <input type="password" id="clientPassInput" required placeholder="User Password" oninput="validatePassword()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
-                                <p id="passwordError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be capital, and password must include special characters like $¥§€@.</p>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Retype Password:</label>
-                                <input type="password" id="retypePassInput" required placeholder="Retype Password" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Full Name:</label>
-                                <input type="text" id="fullNameInput" placeholder="Full Name" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">City:</label>
-                                <input type="text" id="cityInput" placeholder="City" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Phone:</label>
-                                <input type="text" id="phoneInput" placeholder="Phone Number" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Retype Password:</label>
+                        <input type="password" id="retypePassInput" required placeholder="Confirm Password" class="w-full border p-2 rounded">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Credit Reference:</label>
+                            <input type="number" id="clientCreditRef" value="0" class="w-full border p-2 rounded">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Account Type:</label>
+                            <select id="clientAccountType" class="w-full border p-2 rounded">
+                                <option value="User">User</option>
+                                <option value="Master">Master</option>
+                                <option value="Super">Super</option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden h-fit">
-                        <div class="section-box-header">Account Detail</div>
-                        <div class="p-3 space-y-3">
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Account Type:</label>
-                                <select id="clientAccountType" class="w-full border border-gray-300 rounded px-2.5 py-1.5 bg-white focus:outline-none">
-                                    <option value="User">Select Account Type</option>
-                                    <option value="User">User</option>
-                                    <option value="Master">Master</option>
-                                    <option value="Super">Super</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Credit Reference:</label>
-                                <input type="number" id="clientCreditRef" value="0" placeholder="Credit Reference" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Full Name:</label>
+                            <input type="text" id="fullNameInput" placeholder="Name" class="w-full border p-2 rounded">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">City:</label>
+                            <input type="text" id="cityInput" placeholder="City" class="w-full border p-2 rounded">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Phone:</label>
+                            <input type="text" id="phoneInput" placeholder="Phone" class="w-full border p-2 rounded">
                         </div>
                     </div>
-                </div>
 
-                <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                    <div class="section-box-header">Commission Settings</div>
-                    <div class="p-3">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-700 border-b">
-                                    <th class="p-2 border-r w-1/4 font-semibold">Upline</th>
-                                    <th class="p-2 w-3/4 font-semibold">0</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Downline</td>
-                                    <td class="p-2"><input type="text" value="0" class="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none"></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Our</td>
-                                    <td class="p-2 bg-gray-50"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                    <button type="submit" id="btnCreateAccount" class="w-full bg-[#0088cc] hover:bg-[#006699] text-white font-bold py-2.5 rounded shadow transition">CREATE ACCOUNT</button>
+                </form>
+            </div>
 
-                <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                    <div class="section-box-header">Partnership</div>
-                    <div class="p-3">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-700 border-b">
-                                    <th class="p-2 border-r w-1/4 font-semibold">Upline</th>
-                                    <th class="p-2 w-3/4 font-semibold">0</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Downline</td>
-                                    <td class="p-2"><input type="text" value="0" class="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none"></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Our</td>
-                                    <td class="p-2 bg-gray-50"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <!-- VIEW: ASSIGN AGENT -->
+            <div id="viewAssignAgent" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto">
+                <h2 class="font-bold text-sm text-gray-800 uppercase mb-4 border-b pb-2">Assign Agent</h2>
+                <p class="text-xs text-gray-600">Assign agent module is active.</p>
+            </div>
 
-                <!-- Create Account Button Row -->
-                <div class="bg-white border border-gray-200 rounded shadow-sm p-4 flex justify-end">
-                    <button type="submit" id="btnCreateAccount" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
-                        Create Account
-                    </button>
-                </div>
+            <!-- VIEW: MARKET ANALYSIS -->
+            <div id="viewMarketAnalysis" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto">
+                <h2 class="font-bold text-sm text-gray-800 uppercase mb-4 border-b pb-2">Market Analysis</h2>
+                <p class="text-xs text-gray-600">Market analysis module is active.</p>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- FIRST TIME PASSWORD CHANGE MODAL -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg p-6 max-w-sm w-full text-xs shadow-2xl">
+            <h3 class="font-bold text-sm text-red-600 mb-2"><i class="fa-solid fa-lock mr-1"></i> First Time Password Change Required</h3>
+            <p class="text-gray-600 mb-4">Security ke liye apna naya password set karein.</p>
+            <form onsubmit="handleFirstTimePasswordChange(event)" class="space-y-3">
+                <input type="password" id="modalNewPassword" required placeholder="New Password" class="w-full border p-2 rounded">
+                <input type="password" id="modalConfirmPassword" required placeholder="Confirm New Password" class="w-full border p-2 rounded">
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded">Update Password</button>
             </form>
         </div>
+    </div>
 
-        <!-- OTHER TABS -->
-        <div id="viewMarketAnalysis" class="hidden bg-white p-4 rounded border border-gray-200 shadow-sm text-center text-gray-500 text-xs">
-            Market Analysis Events & Live Odds.
+    <!-- TRANSACTION PASSWORD DISPLAY SCREEN -->
+    <div id="txnPasswordDisplayScreen" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 p-4 text-white">
+        <div class="bg-slate-900 border border-cyan-500 rounded-xl p-6 max-w-sm w-full text-center space-y-4">
+            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto text-lg"><i class="fa-solid fa-check"></i></div>
+            <h3 class="font-bold text-sm text-cyan-400">Transaction Password Generated!</h3>
+            <p class="text-xs text-gray-300">Aapka 6-digit transaction password ye hai. Isse sambhal kar rakhein:</p>
+            <div id="generatedTxnPass" class="text-2xl font-mono font-black bg-slate-800 py-3 rounded text-yellow-400 tracking-widest border border-gray-700"></div>
+            <button onclick="location.reload()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 rounded text-xs">Continue to Dashboard</button>
         </div>
-        <div id="viewAssignAgent" class="hidden bg-white p-4 rounded border border-gray-200 shadow-sm text-center text-gray-500 text-xs">
-            Assign Agent Module.
-        </div>
-    </main>
+    </div>
 
-    <!-- LEFT SPORTS SIDEBAR DRAWER (39 SPORTS) -->
-    <div id="sportsSidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 overflow-y-auto border-r border-gray-200">
-        <div class="p-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center sticky top-0">
-            <h3 class="font-bold text-gray-800 text-sm">Sports Menu</h3>
-            <button onclick="toggleSidebar()" class="text-gray-600 hover:text-red-600 text-lg font-bold px-2">&times;</button>
-        </div>
-        <ul class="text-xs text-gray-700 divide-y divide-gray-100">
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Football</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Tennis</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Mixed Martial Arts</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-bold text-blue-600"><span>Cricket</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Golf</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Boxing</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Beach Volleyball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Table Tennis</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Futsal</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Horse Racing</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>E Games</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Basketball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>MotoGP</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Chess</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-med
+    <!-- FIREBASE & SCRIPT LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, updateDoc, getDocs, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
+            authDomain: "soniexchange.firebaseapp.com",
+            projectId: "soniexchange",
+            storageBucket: "soniexchange.firebasestorage.app",
+            messagingSenderId: "731423101248",
+            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5",
+            measurementId: "G-BX7NTH157B"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let currentUser = localStorage.getItem("loggedInUser") || "Admin";
+        document.getElementById('loggedInUserDisplay').innerText = "User: " + currentUser;
+
+        const adminList = ["admin", "superadmin", "z9dmo"];
+        let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
+
+        window.logout = function() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "index.html";
+        };
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sportsSidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        };
+
+        window.switchTab = function(tab) {
+            document.getElementById('viewListOfClients').classList.add('hidden');
+            document.getElementById('viewAddAccount').classList.add('hidden');
+            document.getElementById('viewAssignAgent').classList.add('hidden');
+            document.getElementById('viewMarketAnalysis').classList.add('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-[#005580]'));
+
+            if(tab === 'clients') {
+                document.getElementById('viewListOfClients').classList.remove('hidden');
+                document.getElementById('navClients').classList.add('bg-[#005580]');
+                renderClientsTable();
+            } else if(tab === 'addAccount') {
+                document.getElementById('viewAddAccount').classList.remove('hidden');
+                document.getElementById('navAddAccount').classList.add('bg-[#005580]');
+            } else if(tab === 'assignAgent') {
+                document.getElementById('viewAssignAgent').classList.remove('hidden');
+                document.getElementById('navAssignAgent').classList.add('bg-[#005580]');
+            } else if(tab === 'marketAnalysis') {
+                document.getElementById('viewMarketAnalysis').classList.remove('hidden');
+                document.getElementById('navMarketAnalysis').classList.add('bg-[#005580]');
+            }
+        };
+
+        window.validateClientName = function() {
+            const input = document.getElementById('clientNameInput');
+            const error = document.getElementById('clientNameError');
+            const val = input.value;
+            if (val.length === 0 || /^[A-Z]/.test(val)) {
+                input.classList.remove('border-red-300', 'bg-red-50');
+                error.classList.add('hidden');
+                return true;
+            } else {
+                input.classList.add('border-red-300', 'bg-red-50');
+                error.classList.remove('hidden');
+                return false;
+            }
+        };
+
+        window.validatePassword = function() {
+            const input = document.getElementById('clientPassInput');
+            const error = document.getElementById('passwordError');
+            const val = input.value;
+            const hasCapitalStart = /^[A-Z]/.test(val);
+            const hasSpecialChar = /[$¥§€@!#%^&*]/.test(val);
+
+            if (val.length === 0 || (hasCapitalStart && hasSpecialChar)) {
+                input.classList.remove('border-red-300', 'bg-red-50');
+                error.classList.add('hidden');
+                return true;
+            } else {
+                input.classList.add('border-red-300', 'bg-red-50');
+                error.classList.remove('hidden');
+                return false;
+            }
+        };
+
+        window.renderClientsTable = async function() {
+            let tbody = document.getElementById('clientTableBody');
+            let searchQuery = document.getElementById('clientSearchInput').value.toLowerCase().trim();
+
+            tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading accounts...</td></tr>`;
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "clients"));
+                let clients = [];
+
+                querySnapshot.forEach((docSnap) => {
+                    let data = docSnap.data();
+                    // ADMIN sees all, Non-admin sees only their own created accounts
+                    if (isUserAdmin || data.createdBy === currentUser) {
+                        clients.push({ id: docSnap.id, ...data });
+                    }
+                });
+
+                if(searchQuery) {
+                    clients = clients.filter(c => c.username && c.username.toLowerCase().includes(searchQuery));
+                }
+
+                if(clients.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No accounts found. Click 'Add Account' to create one.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                clients.forEach((client) => {
+                    let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 border-b border-gray-200">
+                            <td class="p-2 border-r border-gray-200">
+                                <span class="bg-[#3a3a3a] text-white px-2.5 py-1 rounded font-bold inline-block text-[11px]">${client.username}</span>
+                            </td>
+                            <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
+                            <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
+                            <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
+                            <td class="p-2 border-r border-gray-200">${formattedCr}</td>
+                            <td class="p-2 border-r border-gray-200">0</td>
+                            <td class="p-2 border-r border-gray-200">${client.accType || 'User'}</td>
+                            <td class="p-2 text-center whitespace-nowrap">
+                                <div class="inline-flex space-x-1">
+                                    <button class="action-btn">D</button>
+                                    <button class="action-btn">W</button>
+                                    <button class="action-btn">L</button>
+                                    <button class="action-btn">C</button>
+                                    <button class="action-btn">P</button>
+                                    <button class="action-btn">S</button>
+                                    <button class="action-btn">MORE</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error loading accounts: ", error);
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-500 font-bold">Failed to load accounts.</td></tr>`;
+            }
+        };
+
+        window.handleCreateAccount = async function(event) {
+            event.preventDefault();
+            if (!validateClientName() || !validatePassword()) {
+                alert("Please correct the Client Name and Password rules!");
+                return;
+            }
+
+            if(!isUserAdmin) {
+                const userTxnPass = document.getElementById('clientTxnPassInput').value.trim();
+                const userDoc = await getDoc(doc(db, "clients", currentUser));
+                if(!userDoc.exists() || userDoc.data().transactionPassword !== userTxnPass) {
+                    alert("Invalid 6-Digit Transaction Password!");
+                    return;
+                }
+            }
+
+            let username = document.getElementById('clientNameInput').value.trim();
+            let pass = document.getElementById('clientPassInput').value;
+            let retypePass = document.getElementById('retypePassInput').value;
+            let creditRef = parseFloat(document.getElementById('clientCreditRef').value) || 0;
+            let accType = document.getElementById('clientAccountType').value;
+
+            if(pass !== retypePass) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "clients", username);
+                const docSnap = await getDoc(docRef);
+
+                if(docSnap.exists()) {
+                    alert("Username already exists!");
+                    return;
+                }
+
+                await setDoc(docRef, {
+                    username: username,
+                    password: pass,
+                    creditRef: creditRef,
+                    accType: accType,
+                    isPasswordChanged: false,
+                    transactionPassword: "",
+                    createdBy: currentUser,
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Account created successfully!");
+                document.getElementById('addAccountForm').reset();
+                switchTab('clients');
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        };
+
+        window.handleFirstTimePasswordChange = async function(event) {
+            event.preventDefault();
+            const newPass = document.getElementById('modalNewPassword').value;
+            const confirmPass = document.getElementById('modalConfirmPassword').value;
+
+            if(newPass !== confirmPass) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            try {
+                const txnPass = Math.floor(100000 + Math.random() * 900000).toString();
+                await updateDoc(doc(db, "clients", currentUser), {
+                    password: newPass,
+                    transactionPassword: txnPass,
+                    isPasswordChanged: true
+                });
+
+                document.getElementById('changePasswordModal').classList.add('hidden');
+                document.getElementById('generatedTxnPass').innerText = txnPass;
+                document.getElementById('txnPasswordDisplayScreen').classList.remove('hidden');
+            } catch (e) {
+                alert("Error: " + e.message);
+            }
+        };
+
+        // Initial Load
+        window.addEventListener('DOMContentLoaded', async () => {
+            switchTab('clients');
+            if(!isUserAdmin) {
+                const txnContainer = document.getElementById('txnPassContainer');
+                if(txnContainer) txnContainer.classList.remove('hidden');
+                try {
+                    const uDoc = await getDoc(doc(db, "clients", currentUser));
+                    if(uDoc.exists() && uDoc.data().isPasswordChanged === false) {
+                        document.getElementById('changePasswordModal').classList.remove('hidden');
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
