@@ -41,14 +41,14 @@
         </div>
 
         <div class="flex items-center space-x-2">
-            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">29dmo</span>
+            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">User</span>
             <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded font-bold transition">Logout</button>
         </div>
     </header>
 
     <div class="flex flex-1 relative overflow-hidden">
         
-        <!-- SIDEBAR (39 SPORTS LIST WITH + ICONS AS PER SCREENSHOT) -->
+        <!-- SIDEBAR (39 SPORTS LIST WITH + ICONS) -->
         <aside id="sportsSidebar" class="w-64 bg-white text-gray-800 flex flex-col absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-2xl border-r">
             <div class="p-3 bg-[#0b3c5d] text-white flex justify-between items-center">
                 <span class="font-bold text-xs uppercase tracking-wider">Sports</span>
@@ -213,10 +213,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentUser = localStorage.getItem("loggedInUser") || "Admin";
+        let currentUser = localStorage.getItem("loggedInUser") || "User";
         document.getElementById('loggedInUserDisplay').innerText = currentUser;
 
-        const adminList = ["admin", "superadmin", "z9dmo"];
+        const adminList = ["admin", "superadmin", "z9dmo", "lyy@5656"];
         let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
 
         window.logout = function() {
@@ -227,8 +227,8 @@
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sportsSidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+            if(sidebar) sidebar.classList.toggle('-translate-x-full');
+            if(overlay) overlay.classList.toggle('hidden');
         };
 
         window.switchTab = function(tab) {
