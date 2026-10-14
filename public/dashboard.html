@@ -14,7 +14,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
-    <!-- TOP HEADER NAVBAR -->
+    <!-- TOP NAVBAR HEADER -->
     <header class="bg-[#0b3c5d] text-white p-2 flex flex-wrap justify-between items-center shadow-md text-xs gap-2">
         <div class="flex items-center space-x-2">
             <span class="font-black text-sm tracking-wider text-white px-2 py-0.5">ALL</span>
@@ -23,32 +23,26 @@
             </button>
         </div>
         
-        <!-- TOP NAVIGATION TABS -->
+        <!-- TOP TABS NAVIGATION -->
         <div class="flex flex-wrap items-center space-x-1">
             <button onclick="switchTab('clients')" id="navClients" class="nav-btn bg-[#005580] hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">List of Clients</button>
             <button onclick="switchTab('addAccount')" id="navAddAccount" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Add Account</button>
             <button onclick="switchTab('assignAgent')" id="navAssignAgent" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Assign Agent</button>
             <button onclick="switchTab('marketAnalysis')" id="navMarketAnalysis" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Market Analysis</button>
-            <div class="relative inline-block text-left">
-                <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
-            </div>
-            <div class="relative inline-block text-left">
-                <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
-            </div>
-            <div class="relative inline-block text-left">
-                <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Reports <i class="fa-solid fa-caret-down text-[10px]"></i></button>
-            </div>
+            <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
+            <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
+            <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Reports <i class="fa-solid fa-caret-down text-[10px]"></i></button>
         </div>
 
         <div class="flex items-center space-x-2">
-            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">Soniexchange</span>
+            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">User</span>
             <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded font-bold transition">Logout</button>
         </div>
     </header>
 
     <div class="flex flex-1 relative overflow-hidden">
         
-        <!-- SIDEBAR (39 SPORTS LIST WITH + ICONS) -->
+        <!-- 39 SPORTS SIDEBAR -->
         <aside id="sportsSidebar" class="w-64 bg-white text-gray-800 flex flex-col absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-2xl border-r">
             <div class="p-3 bg-[#0b3c5d] text-white flex justify-between items-center">
                 <span class="font-bold text-xs uppercase tracking-wider">Sports</span>
@@ -100,10 +94,10 @@
         <!-- OVERLAY -->
         <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 hidden z-20"></div>
 
-        <!-- MAIN PANEL CONTENT -->
+        <!-- MAIN VIEW -->
         <main class="flex-1 p-4 overflow-y-auto">
 
-            <!-- TAB 1: LIST OF CLIENTS -->
+            <!-- CLIENT LIST VIEW -->
             <div id="viewListOfClients" class="bg-white rounded-lg shadow p-4">
                 <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
                     <h2 class="font-bold text-sm text-gray-800 uppercase"><i class="fa-solid fa-address-book mr-1 text-cyan-600"></i> Account List</h2>
@@ -134,30 +128,23 @@
                 </div>
             </div>
 
-            <!-- TAB 2: ADD ACCOUNT -->
+            <!-- ADD ACCOUNT VIEW -->
             <div id="viewAddAccount" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto">
                 <h2 class="font-bold text-sm text-gray-800 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-1 text-green-600"></i> Add New Account</h2>
                 
                 <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
-                    <div id="txnPassContainer" class="hidden bg-yellow-50 border border-yellow-300 p-3 rounded">
-                        <label class="block font-bold text-yellow-800 mb-1">Enter Your 6-Digit Transaction Password:</label>
-                        <input type="password" id="clientTxnPassInput" maxlength="6" placeholder="Enter 6-digit pin" class="w-full border p-2 rounded bg-white">
-                    </div>
-
                     <div>
                         <label class="block font-semibold text-gray-700 mb-1">Client Username:</label>
-                        <input type="text" id="clientNameInput" oninput="validateClientName()" required placeholder="e.g. User123" class="w-full border p-2 rounded">
-                        <p id="clientNameError" class="text-red-500 text-[10px] mt-1 hidden">Must start with a capital letter.</p>
+                        <input type="text" id="clientNameInput" required placeholder="e.g. User123" class="w-full border p-2 rounded">
                     </div>
 
                     <div>
                         <label class="block font-semibold text-gray-700 mb-1">Password:</label>
-                        <input type="password" id="clientPassInput" oninput="validatePassword()" required placeholder="Password" class="w-full border p-2 rounded">
-                        <p id="passwordError" class="text-red-500 text-[10px] mt-1 hidden">Must start with a capital letter and include a special character.</p>
+                        <input type="password" id="clientPassInput" required placeholder="Password" class="w-full border p-2 rounded">
                     </div>
 
                     <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Retype Password:</label>
+                        <label class="block font-semibold text-gray-700 mb-1">Confirm Password:</label>
                         <input type="password" id="retypePassInput" required placeholder="Confirm Password" class="w-full border p-2 rounded">
                     </div>
 
@@ -176,29 +163,21 @@
                         </div>
                     </div>
 
-                    <button type="submit" id="btnCreateAccount" class="w-full bg-[#0088cc] hover:bg-[#006699] text-white font-bold py-2.5 rounded shadow transition">CREATE ACCOUNT</button>
+                    <button type="submit" class="w-full bg-[#0088cc] hover:bg-[#006699] text-white font-bold py-2.5 rounded shadow transition">CREATE ACCOUNT</button>
                 </form>
             </div>
 
-            <!-- TAB 3: ASSIGN AGENT -->
-            <div id="viewAssignAgent" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto">
-                <h2 class="font-bold text-sm text-gray-800 uppercase mb-2">Assign Agent</h2>
-                <p class="text-xs text-gray-600">Assign Agent features are enabled.</p>
-            </div>
-
-            <!-- TAB 4: MARKET ANALYSIS -->
-            <div id="viewMarketAnalysis" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto">
-                <h2 class="font-bold text-sm text-gray-800 uppercase mb-2">Market Analysis</h2>
-                <p class="text-xs text-gray-600">Market Analysis tools active.</p>
-            </div>
+            <!-- OTHER TAB PLACEHOLDERS -->
+            <div id="viewAssignAgent" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto"><h2 class="font-bold text-sm text-gray-800 uppercase">Assign Agent Module</h2></div>
+            <div id="viewMarketAnalysis" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto"><h2 class="font-bold text-sm text-gray-800 uppercase">Market Analysis Module</h2></div>
 
         </main>
     </div>
 
-    <!-- FIREBASE LOGIC -->
+    <!-- FIREBASE SERVICES -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, updateDoc, getDocs, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
@@ -206,8 +185,7 @@
             projectId: "soniexchange",
             storageBucket: "soniexchange.firebasestorage.app",
             messagingSenderId: "731423101248",
-            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5",
-            measurementId: "G-BX7NTH157B"
+            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -216,7 +194,6 @@
         let currentUser = localStorage.getItem("loggedInUser") || "Soniexchange";
         document.getElementById('loggedInUserDisplay').innerText = currentUser;
 
-        // Permanent Admin list with exact "Soniexchange" ID
         const adminList = ["admin", "superadmin", "z9dmo", "soniexchange"];
         let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
 
@@ -249,43 +226,8 @@
                 document.getElementById('navAddAccount').classList.add('bg-[#005580]');
             } else if(tab === 'assignAgent') {
                 document.getElementById('viewAssignAgent').classList.remove('hidden');
-                document.getElementById('navAssignAgent').classList.add('bg-[#005580]');
             } else if(tab === 'marketAnalysis') {
                 document.getElementById('viewMarketAnalysis').classList.remove('hidden');
-                document.getElementById('navMarketAnalysis').classList.add('bg-[#005580]');
-            }
-        };
-
-        window.validateClientName = function() {
-            const input = document.getElementById('clientNameInput');
-            const error = document.getElementById('clientNameError');
-            const val = input.value;
-            if (val.length === 0 || /^[A-Z]/.test(val)) {
-                input.classList.remove('border-red-300', 'bg-red-50');
-                error.classList.add('hidden');
-                return true;
-            } else {
-                input.classList.add('border-red-300', 'bg-red-50');
-                error.classList.remove('hidden');
-                return false;
-            }
-        };
-
-        window.validatePassword = function() {
-            const input = document.getElementById('clientPassInput');
-            const error = document.getElementById('passwordError');
-            const val = input.value;
-            const hasCapitalStart = /^[A-Z]/.test(val);
-            const hasSpecialChar = /[$¥§€@!#%^&*]/.test(val);
-
-            if (val.length === 0 || (hasCapitalStart && hasSpecialChar)) {
-                input.classList.remove('border-red-300', 'bg-red-50');
-                error.classList.add('hidden');
-                return true;
-            } else {
-                input.classList.add('border-red-300', 'bg-red-50');
-                error.classList.remove('hidden');
-                return false;
             }
         };
 
@@ -301,7 +243,7 @@
 
                 querySnapshot.forEach((docSnap) => {
                     let data = docSnap.data();
-                    if (isUserAdmin || data.createdBy === currentUser || !data.createdBy) {
+                    if (isUserAdmin || data.createdBy === currentUser) {
                         clients.push({ id: docSnap.id, ...data });
                     }
                 });
@@ -320,9 +262,7 @@
                     let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
                     tbody.innerHTML += `
                         <tr class="hover:bg-gray-50 border-b border-gray-200">
-                            <td class="p-2 border-r border-gray-200">
-                                <span class="bg-[#3a3a3a] text-white px-2.5 py-1 rounded font-bold inline-block text-[11px]">${client.username}</span>
-                            </td>
+                            <td class="p-2 border-r border-gray-200 font-bold">${client.username}</td>
                             <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
                             <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
                             <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
@@ -337,34 +277,18 @@
                                     <button class="action-btn">C</button>
                                     <button class="action-btn">P</button>
                                     <button class="action-btn">S</button>
-                                    <button class="action-btn">MORE</button>
                                 </div>
                             </td>
                         </tr>
                     `;
                 });
             } catch (error) {
-                console.error("Error loading accounts: ", error);
                 tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-500 font-bold">Failed to load accounts.</td></tr>`;
             }
         };
 
         window.handleCreateAccount = async function(event) {
             event.preventDefault();
-            if (!validateClientName() || !validatePassword()) {
-                alert("Please correct Client Name and Password format!");
-                return;
-            }
-
-            if(!isUserAdmin) {
-                const userTxnPass = document.getElementById('clientTxnPassInput').value.trim();
-                const userDoc = await getDoc(doc(db, "clients", currentUser));
-                if(!userDoc.exists() || userDoc.data().transactionPassword !== userTxnPass) {
-                    alert("Invalid 6-Digit Transaction Password!");
-                    return;
-                }
-            }
-
             let username = document.getElementById('clientNameInput').value.trim();
             let pass = document.getElementById('clientPassInput').value;
             let retypePass = document.getElementById('retypePassInput').value;
@@ -378,20 +302,11 @@
 
             try {
                 const docRef = doc(db, "clients", username);
-                const docSnap = await getDoc(docRef);
-
-                if(docSnap.exists()) {
-                    alert("Username already exists!");
-                    return;
-                }
-
                 await setDoc(docRef, {
                     username: username,
                     password: pass,
                     creditRef: creditRef,
                     accType: accType,
-                    isPasswordChanged: false,
-                    transactionPassword: "",
                     createdBy: currentUser,
                     createdAt: serverTimestamp()
                 });
@@ -406,10 +321,6 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             switchTab('clients');
-            if(!isUserAdmin) {
-                const txnPassBox = document.getElementById('txnPassContainer');
-                if(txnPassBox) txnPassBox.classList.remove('hidden');
-            }
         });
     </script>
 </body>
