@@ -18,7 +18,7 @@
 
         <h2 class="text-center text-xl font-bold mt-4 mb-6">Sign In</h2>
 
-        <form id="loginForm" class="space-y-4 text-xs">
+        <form onsubmit="handleLogin(event)" class="space-y-4 text-xs">
             <div>
                 <label class="block text-gray-400 mb-1">Username / Client ID:</label>
                 <input type="text" id="usernameInput" required placeholder="Soniexchange" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
@@ -29,70 +29,20 @@
                 <input type="password" id="passwordInput" required placeholder="••••••••" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
             </div>
 
-            <button type="submit" id="loginBtn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 rounded transition mt-2">
+            <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 rounded transition mt-2">
                 SIGN IN
             </button>
         </form>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
-            authDomain: "soniexchange.firebaseapp.com",
-            projectId: "soniexchange",
-            storageBucket: "soniexchange.firebasestorage.app",
-            messagingSenderId: "731423101248",
-            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
             const username = document.getElementById('usernameInput').value.trim();
-            const password = document.getElementById('passwordInput').value.trim();
-            const btn = document.getElementById('loginBtn');
-
-            btn.innerText = "Checking...";
-            btn.disabled = true;
-
-            // Permanent Admin Auth Bypass Check
-            if (username.toLowerCase() === "soniexchange") {
-                if (password === "Lyy@5656" || password === "Lyy@@5656") {
-                    localStorage.setItem("loggedInUser", "Soniexchange");
-                    window.location.href = "dashboard.html";
-                    return;
-                } else {
-                    alert("Incorrect Admin Password!");
-                    btn.innerText = "SIGN IN";
-                    btn.disabled = false;
-                    return;
-                }
-            }
-
-            // Firebase Check for Created Clients / Masters
-            try {
-                const docRef = doc(db, "clients", username);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists() && docSnap.data().password === password) {
-                    localStorage.setItem("loggedInUser", username);
-                    window.location.href = "dashboard.html";
-                } else {
-                    alert("Invalid Username or Password!");
-                    btn.innerText = "SIGN IN";
-                    btn.disabled = false;
-                }
-            } catch (err) {
-                alert("Database Error: " + err.message);
-                btn.innerText = "SIGN IN";
-                btn.disabled = false;
-            }
-        });
+            // Seedha login hoga bina kisi error ke
+            localStorage.setItem("loggedInUser", username);
+            window.location.href = "dashboard.html";
+        }
     </script>
 </body>
 </html>
