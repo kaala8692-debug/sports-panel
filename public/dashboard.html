@@ -240,9 +240,9 @@
                     </div>
                 </div>
 
-                <!-- Create Account Button Row (Transaction Password Removed) -->
+                <!-- Create Account Button Row (Transaction Password Field Removed) -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm p-4 flex justify-end">
-                    <button type="submit" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
+                    <button type="submit" id="btnCreateAccount" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
                         Create Account
                     </button>
                 </div>
@@ -308,9 +308,28 @@
     </div>
     <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 hidden z-40"></div>
 
-    <!-- SCRIPT CONTROL LOGIC -->
-    <script>
-        function toggleSidebar() {
+    <!-- FIREBASE & SCRIPT CONTROL LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
+            authDomain: "soniexchange.firebaseapp.com",
+            projectId: "soniexchange",
+            storageBucket: "soniexchange.firebasestorage.app",
+            messagingSenderId: "731423101248",
+            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5",
+            measurementId: "G-BX7NTH157B"
+        };
+
+        // Initialize Firebase & Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make helper functions globally accessible for inline HTML onclick events
+        window.toggleSidebar = function() {
             const sidebar = document.getElementById('sportsSidebar');
             const overlay = document.getElementById('sidebarOverlay');
             if (sidebar.classList.contains('-translate-x-full')) {
@@ -320,9 +339,9 @@
                 sidebar.classList.add('-translate-x-full');
                 overlay.classList.add('hidden');
             }
-        }
+        };
 
-        function switchTab(tab) {
+        window.switchTab = function(tab) {
             document.getElementById('viewWelcome').classList.add('hidden');
             document.getElementById('viewListOfClients').classList.add('hidden');
             document.getElementById('viewAddAccount').classList.add('hidden');
@@ -344,84 +363,127 @@
                 document.getElementById('viewMarketAnalysis').classList.remove('hidden');
                 document.getElementById('navMarketAnalysis').classList.add('bg-[#005580]');
             }
-        }
+        };
 
-        function handleCreateAccount(event) {
+        window.handleCreateAccount = async function(event) {
             event.preventDefault();
+            const btn = document.getElementById('btnCreateAccount');
+            
             let username = document.getElementById('clientNameInput').value.trim();
             let pass = document.getElementById('clientPassInput').value;
             let retypePass = document.getElementById('retypePassInput').value;
             let creditRef = parseFloat(document.getElementById('clientCreditRef').value) || 0;
             let accType = document.getElementById('clientAccountType').value;
+            let fullName = document.getElementById('fullNameInput').value.trim();
+            let city = document.getElementById('cityInput').value.trim();
+            let phone = document.getElementById('phoneInput').value.trim();
 
             if(pass !== retypePass) {
                 alert("Passwords do not match!");
                 return;
             }
 
-            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
-            if(clients.some(c => c.username === username)) {
-                alert("Client username already exists!");
-                return;
+            try {
+                btn.disabled = true;
+                btn.innerText = "Creating...";
+
+                // Check duplicate username in Firestore
+                const q = query(collection(db, "clients"), where("username", "==", username));
+                const querySnapshot = await getDocs(q);
+
+                if(!querySnapshot.empty) {
+                    alert("Client username already exists in SoniExchange database!");
+                    btn.disabled = false;
+                    btn.innerText = "CREATE ACCOUNT";
+                    return;
+                }
+
+                // Add to Firebase Firestore
+                await addDoc(collection(db, "clients"), {
+                    username: username,
+                    password: pass,
+                    creditRef: creditRef,
+                    accType: accType || 'User',
+                    fullName: fullName,
+                    city: city,
+                    phone: phone,
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Account '" + username + "' created successfully in Firestore!");
+                document.getElementById('addAccountForm').reset();
+                switchTab('clients');
+
+            } catch (error) {
+                console.error("Error creating account: ", error);
+                alert("Firebase Error: " + error.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "CREATE ACCOUNT";
             }
+        };
 
-            let newClient = { username, pass, creditRef, accType };
-            clients.unshift(newClient);
-            localStorage.setItem('soni_clients', JSON.stringify(clients));
-
-            alert("Account '" + username + "' created successfully!");
-            document.getElementById('addAccountForm').reset();
-            switchTab('clients');
-        }
-
-        function resetSearch() {
+        window.resetSearch = function() {
             document.getElementById('clientSearchInput').value = "";
             renderClientsTable();
-        }
+        };
 
-        function renderClientsTable() {
+        window.renderClientsTable = async function() {
             let tbody = document.getElementById('clientTableBody');
             let searchQuery = document.getElementById('clientSearchInput') ? document.getElementById('clientSearchInput').value.toLowerCase().trim() : "";
-            let clients = JSON.parse(localStorage.getItem('soni_clients') || '[]');
 
-            if(searchQuery) {
-                clients = clients.filter(c => c.username.toLowerCase().includes(searchQuery));
+            tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading clients from SoniExchange Firestore...</td></tr>`;
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "clients"));
+                let clients = [];
+
+                querySnapshot.forEach((doc) => {
+                    clients.push({ id: doc.id, ...doc.data() });
+                });
+
+                if(searchQuery) {
+                    clients = clients.filter(c => c.username && c.username.toLowerCase().includes(searchQuery));
+                }
+
+                if(clients.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No client accounts found in Firestore. Click 'Add Account' to create one.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = "";
+                clients.forEach((client) => {
+                    let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50 border-b border-gray-200">
+                            <td class="p-2 border-r border-gray-200">
+                                <span class="bg-[#3a3a3a] text-white px-2.5 py-1 rounded font-bold inline-block text-[11px]">${client.username}</span>
+                            </td>
+                            <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
+                            <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
+                            <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
+                            <td class="p-2 border-r border-gray-200">${formattedCr}</td>
+                            <td class="p-2 border-r border-gray-200">0</td>
+                            <td class="p-2 border-r border-gray-200">${client.accType || 'User'}</td>
+                            <td class="p-2 text-center whitespace-nowrap">
+                                <div class="inline-flex space-x-1">
+                                    <button class="action-btn">D</button>
+                                    <button class="action-btn">W</button>
+                                    <button class="action-btn">L</button>
+                                    <button class="action-btn">C</button>
+                                    <button class="action-btn">P</button>
+                                    <button class="action-btn">S</button>
+                                    <button class="action-btn">MORE</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error("Error loading clients: ", error);
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-500 font-bold">Failed to load clients. Check Firestore Rules/Permissions.</td></tr>`;
             }
-
-            if(clients.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No client accounts found. Click 'Add Account' to create one.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = "";
-            clients.forEach((client) => {
-                let formattedCr = (parseFloat(client.creditRef) || 0).toLocaleString();
-                tbody.innerHTML += `
-                    <tr class="hover:bg-gray-50 border-b border-gray-200">
-                        <td class="p-2 border-r border-gray-200">
-                            <span class="bg-[#3a3a3a] text-white px-2.5 py-1 rounded font-bold inline-block text-[11px]">${client.username}</span>
-                        </td>
-                        <td class="p-2 border-r border-gray-200 font-semibold">${formattedCr}</td>
-                        <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
-                        <td class="p-2 border-r border-gray-200 text-center"><input type="checkbox" checked class="accent-black w-3.5 h-3.5"></td>
-                        <td class="p-2 border-r border-gray-200">${formattedCr}</td>
-                        <td class="p-2 border-r border-gray-200">0</td>
-                        <td class="p-2 border-r border-gray-200">${client.accType || 'User'}</td>
-                        <td class="p-2 text-center whitespace-nowrap">
-                            <div class="inline-flex space-x-1">
-                                <button class="action-btn">D</button>
-                                <button class="action-btn">W</button>
-                                <button class="action-btn">L</button>
-                                <button class="action-btn">C</button>
-                                <button class="action-btn">P</button>
-                                <button class="action-btn">S</button>
-                                <button class="action-btn">MORE</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
+        };
     </script>
 </body>
 </html>
