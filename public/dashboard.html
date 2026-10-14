@@ -313,7 +313,7 @@
     <!-- FIREBASE & SCRIPT CONTROL LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDocs, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -432,17 +432,19 @@
                 btn.disabled = true;
                 btn.innerText = "Creating...";
 
-                const q = query(collection(db, "clients"), where("username", "==", username));
-                const querySnapshot = await getDocs(q);
+                // Check if document with this username already exists as ID
+                const docRef = doc(db, "clients", username);
+                const docSnap = await getDoc(docRef);
 
-                if(!querySnapshot.empty) {
+                if(docSnap.exists()) {
                     alert("Client username already exists in SoniExchange database!");
                     btn.disabled = false;
                     btn.innerText = "CREATE ACCOUNT";
                     return;
                 }
 
-                await addDoc(collection(db, "clients"), {
+                // Save with username as Document ID in Firestore
+                await setDoc(docRef, {
                     username: username,
                     password: pass,
                     creditRef: creditRef,
