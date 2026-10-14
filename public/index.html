@@ -64,21 +64,23 @@
             btn.innerText = "Checking...";
             btn.disabled = true;
 
-            // 1. HARDCODED PERMANENT ADMIN BYPASS
-            if (username.toLowerCase() === "soniexchange" && password === "Lyy@5656") {
-                localStorage.setItem("loggedInUser", "Soniexchange");
-                window.location.href = "dashboard.html";
-                return;
+            // 1. HARDCODED PERMANENT ADMIN BYPASS FOR "Soniexchange"
+            if (username.toLowerCase() === "soniexchange") {
+                if (password === "Lyy@5656" || password === "Lyy@@5656") {
+                    localStorage.setItem("loggedInUser", "Soniexchange");
+                    window.location.href = "dashboard.html";
+                    return;
+                }
             }
 
-            // Default fallback admin check
+            // Fallback for default admin
             if ((username.toLowerCase() === "admin" || username.toLowerCase() === "z9dmo") && password === "Admin@123") {
                 localStorage.setItem("loggedInUser", username);
                 window.location.href = "dashboard.html";
                 return;
             }
 
-            // 2. CHECK IN FIREBASE FOR CREATED CLIENTS
+            // 2. CHECK IN FIREBASE FOR CREATED CLIENTS (LIKE kalu123)
             try {
                 const docRef = doc(db, "clients", username);
                 const docSnap = await getDoc(docRef);
