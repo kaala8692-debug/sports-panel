@@ -147,11 +147,13 @@
                         <div class="p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label class="block font-semibold text-gray-600 mb-1">Client Name:</label>
-                                <input type="text" id="clientNameInput" required placeholder="Client Name" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <input type="text" id="clientNameInput" required placeholder="Client Name" oninput="validateClientName()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <p id="clientNameError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be a capital letter.</p>
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-600 mb-1">User Password:</label>
-                                <input type="password" id="clientPassInput" required placeholder="User Password" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <input type="password" id="clientPassInput" required placeholder="User Password" oninput="validatePassword()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <p id="passwordError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be capital, and password must include special characters like $¥§€@.</p>
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-600 mb-1">Retype Password:</label>
@@ -240,7 +242,7 @@
                     </div>
                 </div>
 
-                <!-- Create Account Button Row (Transaction Password Field Removed) -->
+                <!-- Create Account Button Row -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm p-4 flex justify-end">
                     <button type="submit" id="btnCreateAccount" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
                         Create Account
@@ -324,11 +326,9 @@
             measurementId: "G-BX7NTH157B"
         };
 
-        // Initialize Firebase & Firestore
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Make helper functions globally accessible for inline HTML onclick events
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sportsSidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -365,10 +365,55 @@
             }
         };
 
+        // Live validation for Client Name (First letter must be uppercase)
+        window.validateClientName = function() {
+            const input = document.getElementById('clientNameInput');
+            const error = document.getElementById('clientNameError');
+            const val = input.value;
+
+            if (val.length === 0 || /^[A-Z]/.test(val)) {
+                input.classList.remove('border-red-300', 'bg-red-50/20');
+                input.classList.add('border-green-400', 'bg-green-50/20');
+                error.classList.add('hidden');
+                return true;
+            } else {
+                input.classList.remove('border-green-400', 'bg-green-50/20');
+                input.classList.add('border-red-300', 'bg-red-50/20');
+                error.classList.remove('hidden');
+                return false;
+            }
+        };
+
+        // Live validation for Password (First letter uppercase + special characters like $¥§€@)
+        window.validatePassword = function() {
+            const input = document.getElementById('clientPassInput');
+            const error = document.getElementById('passwordError');
+            const val = input.value;
+            const hasCapitalStart = /^[A-Z]/.test(val);
+            const hasSpecialChar = /[$¥§€@!#%^&*]/.test(val);
+
+            if (val.length === 0 || (hasCapitalStart && hasSpecialChar)) {
+                input.classList.remove('border-red-300', 'bg-red-50/20');
+                input.classList.add('border-green-400', 'bg-green-50/20');
+                error.classList.add('hidden');
+                return true;
+            } else {
+                input.classList.remove('border-green-400', 'bg-green-50/20');
+                input.classList.add('border-red-300', 'bg-red-50/20');
+                error.classList.remove('hidden');
+                return false;
+            }
+        };
+
         window.handleCreateAccount = async function(event) {
             event.preventDefault();
+
+            if (!validateClientName() || !validatePassword()) {
+                alert("Please correct the Client Name and Password according to the rules!");
+                return;
+            }
+
             const btn = document.getElementById('btnCreateAccount');
-            
             let username = document.getElementById('clientNameInput').value.trim();
             let pass = document.getElementById('clientPassInput').value;
             let retypePass = document.getElementById('retypePassInput').value;
@@ -387,7 +432,6 @@
                 btn.disabled = true;
                 btn.innerText = "Creating...";
 
-                // Check duplicate username in Firestore
                 const q = query(collection(db, "clients"), where("username", "==", username));
                 const querySnapshot = await getDocs(q);
 
@@ -398,7 +442,6 @@
                     return;
                 }
 
-                // Add to Firebase Firestore
                 await addDoc(collection(db, "clients"), {
                     username: username,
                     password: pass,
