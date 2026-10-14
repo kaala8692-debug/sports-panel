@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoniExchange - Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: Arial, sans-serif; background-color: #0b1e28; }
     </style>
@@ -19,7 +18,7 @@
 
         <h2 class="text-center text-xl font-bold mt-4 mb-6">Sign In</h2>
 
-        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-xs">
+        <form onsubmit="directLogin(event)" class="space-y-4 text-xs">
             <div>
                 <label class="block text-gray-400 mb-1">Username / Client ID:</label>
                 <input type="text" id="usernameInput" required placeholder="Soniexchange" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
@@ -30,83 +29,19 @@
                 <input type="password" id="passwordInput" required placeholder="••••••••" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
             </div>
 
-            <button type="submit" id="loginBtn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 rounded transition mt-2">
+            <button type="submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 rounded transition mt-2">
                 SIGN IN
             </button>
         </form>
     </div>
 
-    <!-- FIREBASE & LOGIN LOGIC -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
-            authDomain: "soniexchange.firebaseapp.com",
-            projectId: "soniexchange",
-            storageBucket: "soniexchange.firebasestorage.app",
-            messagingSenderId: "731423101248",
-            appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5",
-            measurementId: "G-BX7NTH157B"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        window.handleLogin = async function(event) {
+    <script>
+        function directLogin(event) {
             event.preventDefault();
-            
             const username = document.getElementById('usernameInput').value.trim();
-            const password = document.getElementById('passwordInput').value.trim();
-            const btn = document.getElementById('loginBtn');
-
-            btn.innerText = "Checking...";
-            btn.disabled = true;
-
-            // 1. HARDCODED PERMANENT ADMIN BYPASS FOR "Soniexchange"
-            if (username.toLowerCase() === "soniexchange") {
-                if (password === "Lyy@5656" || password === "Lyy@@5656") {
-                    localStorage.setItem("loggedInUser", "Soniexchange");
-                    window.location.href = "dashboard.html";
-                    return;
-                }
-            }
-
-            // Fallback for default admin
-            if ((username.toLowerCase() === "admin" || username.toLowerCase() === "z9dmo") && password === "Admin@123") {
-                localStorage.setItem("loggedInUser", username);
-                window.location.href = "dashboard.html";
-                return;
-            }
-
-            // 2. CHECK IN FIREBASE FOR CREATED CLIENTS (LIKE kalu123)
-            try {
-                const docRef = doc(db, "clients", username);
-                const docSnap = await getDoc(docRef);
-
-                if (docSnap.exists()) {
-                    const userData = docSnap.data();
-                    if (userData.password === password) {
-                        localStorage.setItem("loggedInUser", username);
-                        window.location.href = "dashboard.html";
-                    } else {
-                        alert("Galat Password! Kripya sahi password daalein.");
-                        btn.innerText = "SIGN IN";
-                        btn.disabled = false;
-                    }
-                } else {
-                    alert("Client ID nahi mili! Kripya Username sahi check karein.");
-                    btn.innerText = "SIGN IN";
-                    btn.disabled = false;
-                }
-            } catch (error) {
-                console.error("Login Error: ", error);
-                alert("Login me dikkat aayi: " + error.message);
-                btn.innerText = "SIGN IN";
-                btn.disabled = false;
-            }
-        };
+            localStorage.setItem("loggedInUser", username || "Soniexchange");
+            window.location.href = "dashboard.html";
+        }
     </script>
 </body>
 </html>
