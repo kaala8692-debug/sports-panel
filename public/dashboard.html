@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #eef2f5; }
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; }
         .action-btn { background: #e2e8f0; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: pointer; }
         .action-btn:hover { background: #cbd5e1; }
     </style>
@@ -15,28 +15,25 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
     <!-- TOP NAVBAR HEADER -->
-    <header class="bg-[#0b3c5d] text-white p-2 flex flex-wrap justify-between items-center shadow-md text-xs gap-2">
-        <div class="flex items-center space-x-2">
-            <span class="font-black text-sm tracking-wider text-white px-2 py-0.5">ALL</span>
-            <button onclick="toggleSidebar()" class="text-white text-base focus:outline-none px-2 py-1 bg-black/20 rounded hover:bg-black/40">
+    <header class="bg-[#0b3c5d] text-white p-2.5 flex justify-between items-center shadow-md text-xs">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleSidebar()" class="text-white text-base focus:outline-none px-2 py-1 bg-black/20 rounded">
                 <i class="fa-solid fa-bars"></i>
             </button>
+            <span class="font-black text-sm tracking-wider text-cyan-400">SONI EXCHANGE</span>
         </div>
         
-        <!-- TOP TABS NAVIGATION -->
-        <div class="flex flex-wrap items-center space-x-1">
-            <button onclick="switchTab('clients')" id="navClients" class="nav-btn bg-[#005580] hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">List of Clients</button>
-            <button onclick="switchTab('addAccount')" id="navAddAccount" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Add Account</button>
-            <button onclick="switchTab('assignAgent')" id="navAssignAgent" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Assign Agent</button>
-            <button onclick="switchTab('marketAnalysis')" id="navMarketAnalysis" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Market Analysis</button>
-            <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
-            <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
-            <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Reports <i class="fa-solid fa-caret-down text-[10px]"></i></button>
+        <!-- TOP TABS -->
+        <div class="flex items-center space-x-1">
+            <button onclick="switchTab('clients')" id="navClients" class="nav-btn bg-[#005580] hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">List of Clients</button>
+            <button onclick="switchTab('addAccount')" id="navAddAccount" class="nav-btn hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">Add Account</button>
+            <button onclick="switchTab('assignAgent')" id="navAssignAgent" class="nav-btn hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">Assign Agent</button>
+            <button onclick="switchTab('marketAnalysis')" id="navMarketAnalysis" class="nav-btn hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">Market Analysis</button>
         </div>
 
-        <div class="flex items-center space-x-2">
-            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">User</span>
-            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded font-bold transition">Logout</button>
+        <div class="flex items-center space-x-3">
+            <span id="loggedInUserDisplay" class="bg-blue-900 px-2.5 py-1 rounded font-bold border border-blue-700">User</span>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2.5 py-1 rounded font-bold transition">Logout</button>
         </div>
     </header>
 
@@ -94,17 +91,14 @@
         <!-- OVERLAY -->
         <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 hidden z-20"></div>
 
-        <!-- MAIN VIEW -->
+        <!-- MAIN PANEL -->
         <main class="flex-1 p-4 overflow-y-auto">
 
-            <!-- CLIENT LIST VIEW -->
+            <!-- LIST OF CLIENTS VIEW -->
             <div id="viewListOfClients" class="bg-white rounded-lg shadow p-4">
                 <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
                     <h2 class="font-bold text-sm text-gray-800 uppercase"><i class="fa-solid fa-address-book mr-1 text-cyan-600"></i> Account List</h2>
-                    <div class="flex space-x-2">
-                        <input type="text" id="clientSearchInput" onkeyup="renderClientsTable()" placeholder="Search account..." class="border px-3 py-1.5 text-xs rounded focus:outline-none focus:border-cyan-500">
-                        <button onclick="renderClientsTable()" class="bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded text-xs font-bold">Refresh</button>
-                    </div>
+                    <button onclick="switchTab('addAccount')" class="bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-1.5 rounded text-xs font-bold">+ Add Account</button>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -134,18 +128,13 @@
                 
                 <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
                     <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Client Username:</label>
-                        <input type="text" id="clientNameInput" required placeholder="e.g. User123" class="w-full border p-2 rounded">
+                        <label class="block font-semibold text-gray-700 mb-1">Username / Client ID:</label>
+                        <input type="text" id="clientNameInput" required placeholder="e.g. Master123" class="w-full border p-2 rounded">
                     </div>
 
                     <div>
                         <label class="block font-semibold text-gray-700 mb-1">Password:</label>
                         <input type="password" id="clientPassInput" required placeholder="Password" class="w-full border p-2 rounded">
-                    </div>
-
-                    <div>
-                        <label class="block font-semibold text-gray-700 mb-1">Confirm Password:</label>
-                        <input type="password" id="retypePassInput" required placeholder="Confirm Password" class="w-full border p-2 rounded">
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
@@ -167,14 +156,13 @@
                 </form>
             </div>
 
-            <!-- OTHER TAB PLACEHOLDERS -->
-            <div id="viewAssignAgent" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto"><h2 class="font-bold text-sm text-gray-800 uppercase">Assign Agent Module</h2></div>
-            <div id="viewMarketAnalysis" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto"><h2 class="font-bold text-sm text-gray-800 uppercase">Market Analysis Module</h2></div>
+            <div id="viewAssignAgent" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto"><h2 class="font-bold text-sm text-gray-800 uppercase">Assign Agent</h2></div>
+            <div id="viewMarketAnalysis" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto"><h2 class="font-bold text-sm text-gray-800 uppercase">Market Analysis</h2></div>
 
         </main>
     </div>
 
-    <!-- FIREBASE SERVICES -->
+    <!-- SCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -191,11 +179,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentUser = localStorage.getItem("loggedInUser") || "Soniexchange";
+        let currentUser = localStorage.getItem("loggedInUser") || "Admin";
         document.getElementById('loggedInUserDisplay').innerText = currentUser;
-
-        const adminList = ["admin", "superadmin", "z9dmo", "soniexchange"];
-        let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
 
         window.logout = function() {
             localStorage.removeItem("loggedInUser");
@@ -233,24 +218,14 @@
 
         window.renderClientsTable = async function() {
             let tbody = document.getElementById('clientTableBody');
-            let searchQuery = document.getElementById('clientSearchInput').value.toLowerCase().trim();
-
             tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading accounts...</td></tr>`;
 
             try {
                 const querySnapshot = await getDocs(collection(db, "clients"));
                 let clients = [];
-
                 querySnapshot.forEach((docSnap) => {
-                    let data = docSnap.data();
-                    if (isUserAdmin || data.createdBy === currentUser) {
-                        clients.push({ id: docSnap.id, ...data });
-                    }
+                    clients.push({ id: docSnap.id, ...docSnap.data() });
                 });
-
-                if(searchQuery) {
-                    clients = clients.filter(c => c.username && c.username.toLowerCase().includes(searchQuery));
-                }
 
                 if(clients.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No accounts found. Click 'Add Account' to create one.</td></tr>`;
@@ -291,14 +266,8 @@
             event.preventDefault();
             let username = document.getElementById('clientNameInput').value.trim();
             let pass = document.getElementById('clientPassInput').value;
-            let retypePass = document.getElementById('retypePassInput').value;
             let creditRef = parseFloat(document.getElementById('clientCreditRef').value) || 0;
             let accType = document.getElementById('clientAccountType').value;
-
-            if(pass !== retypePass) {
-                alert("Passwords do not match!");
-                return;
-            }
 
             try {
                 const docRef = doc(db, "clients", username);
