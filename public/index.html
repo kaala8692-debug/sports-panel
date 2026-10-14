@@ -3,41 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soni Exchange - Login</title>
+    <title>SoniExchange - Sign In</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #0b3c5d; font-family: Arial, sans-serif; }
+        body { font-family: Arial, sans-serif; background-color: #0b1e28; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-sm bg-[#1d2731]/90 backdrop-blur-md rounded-2xl shadow-2xl p-6 text-white border border-gray-700">
-        <div class="w-16 h-16 bg-[#0b3c5d] rounded-full flex items-center justify-center mx-auto -mt-14 border-4 border-[#0b3c5d] shadow-lg">
-            <span class="text-2xl font-black text-white">S</span>
+    <div class="bg-[#102a3a] border border-gray-800 rounded-xl p-6 w-full max-w-sm text-white shadow-2xl relative">
+        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-[#0b1e28] rounded-full border border-gray-700 flex items-center justify-center text-xl font-bold text-gray-300">
+            S
         </div>
 
-        <h2 class="text-center font-bold text-lg mt-3 mb-6 tracking-wide">Sign In</h2>
+        <h2 class="text-center text-xl font-bold mt-4 mb-6">Sign In</h2>
 
-        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-xs">
             <div>
-                <label class="block text-xs font-semibold text-gray-300 mb-1">Username / Client ID:</label>
-                <input type="text" id="loginUsername" required placeholder="Enter Username" class="w-full px-3 py-2 bg-slate-800 border border-gray-600 rounded text-xs text-white focus:outline-none focus:border-cyan-400">
+                <label class="block text-gray-400 mb-1">Username / Client ID:</label>
+                <input type="text" id="usernameInput" required placeholder="Soniexchange" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-300 mb-1">Password:</label>
-                <input type="password" id="loginPassword" required placeholder="Enter Password" class="w-full px-3 py-2 bg-slate-800 border border-gray-600 rounded text-xs text-white focus:outline-none focus:border-cyan-400">
+                <label class="block text-gray-400 mb-1">Password:</label>
+                <input type="password" id="passwordInput" required placeholder="••••••••" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
             </div>
 
-            <button type="submit" id="btnLogin" class="w-full bg-[#0088cc] hover:bg-[#006699] font-bold py-2.5 rounded-lg text-xs uppercase tracking-wider shadow-lg transition">
-                Login &rarr;
+            <button type="submit" id="loginBtn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2.5 rounded transition mt-2">
+                SIGN IN
             </button>
         </form>
     </div>
 
+    <!-- FIREBASE & LOGIN LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
@@ -52,52 +54,55 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        window.handleLogin = async function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnLogin');
-            const usernameInput = document.getElementById('loginUsername'].value.trim();
-            const passwordInput = document.getElementById('loginPassword'].value.trim();
+        window.handleLogin = async function(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const btn = document.getElementById('loginBtn');
 
-            btn.disabled = true;
             btn.innerText = "Checking...";
+            btn.disabled = true;
 
-            if(usernameInput.toLowerCase() === "admin" && passwordInput === "Admin@123") {
-                localStorage.setItem("loggedInUser", "Admin");
+            // 1. HARDCODED PERMANENT ADMIN BYPASS
+            if (username.toLowerCase() === "soniexchange" && password === "Lyy@5656") {
+                localStorage.setItem("loggedInUser", "Soniexchange");
                 window.location.href = "dashboard.html";
                 return;
             }
 
+            // Default fallback admin check
+            if ((username.toLowerCase() === "admin" || username.toLowerCase() === "z9dmo") && password === "Admin@123") {
+                localStorage.setItem("loggedInUser", username);
+                window.location.href = "dashboard.html";
+                return;
+            }
+
+            // 2. CHECK IN FIREBASE FOR CREATED CLIENTS
             try {
-                let userData = null;
-                const docRef = doc(db, "clients", usernameInput);
+                const docRef = doc(db, "clients", username);
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    userData = docSnap.data();
-                } else {
-                    const q = query(collection(db, "clients"), where("username", "==", usernameInput));
-                    const querySnapshot = await getDocs(q);
-                    if (!querySnapshot.empty) {
-                        userData = querySnapshot.docs[0].data();
-                    }
-                }
-
-                if (userData) {
-                    if (userData.password === passwordInput) {
-                        localStorage.setItem("loggedInUser", usernameInput);
+                    const userData = docSnap.data();
+                    if (userData.password === password) {
+                        localStorage.setItem("loggedInUser", username);
                         window.location.href = "dashboard.html";
                     } else {
-                        alert("Galat Password! Sahi password daalein.");
+                        alert("Galat Password! Kripya sahi password daalein.");
+                        btn.innerText = "SIGN IN";
+                        btn.disabled = false;
                     }
                 } else {
                     alert("Client ID nahi mili! Kripya Username sahi check karein.");
+                    btn.innerText = "SIGN IN";
+                    btn.disabled = false;
                 }
-            } catch (err) {
-                console.error("Login Error: ", err);
-                alert("Login Error: " + err.message);
-            } finally {
+            } catch (error) {
+                console.error("Login Error: ", error);
+                alert("Login me dikkat aayi: " + error.message);
+                btn.innerText = "SIGN IN";
                 btn.disabled = false;
-                btn.innerText = "Login \u2192";
             }
         };
     </script>
