@@ -41,7 +41,7 @@
         </div>
 
         <div class="flex items-center space-x-2">
-            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">User</span>
+            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">Soniexchange</span>
             <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded font-bold transition">Logout</button>
         </div>
     </header>
@@ -213,10 +213,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentUser = localStorage.getItem("loggedInUser") || "User";
+        let currentUser = localStorage.getItem("loggedInUser") || "Soniexchange";
         document.getElementById('loggedInUserDisplay').innerText = currentUser;
 
-        const adminList = ["admin", "superadmin", "z9dmo", "lyy@5656"];
+        // Permanent Admin list with exact "Soniexchange" ID
+        const adminList = ["admin", "superadmin", "z9dmo", "soniexchange"];
         let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
 
         window.logout = function() {
