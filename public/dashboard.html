@@ -17,20 +17,28 @@
         const db = getFirestore(app);
 
         let currentUser = localStorage.getItem("loggedInUser") || "Admin"; 
-        let isUserAdmin = (currentUser.toLowerCase() === "admin" || currentUser.toLowerCase() === "superadmin" || currentUser.toLowerCase() === "z9dmo");
+        
+        // Super Admin check
+        const adminList = ["admin", "superadmin", "z9dmo"];
+        let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
 
         window.addEventListener('DOMContentLoaded', async () => {
-            if(!isUserAdmin) {
-                // Show Txn Pass Input box for Master/Super creating IDs
-                document.getElementById('txnPassContainer').classList.remove('hidden');
+            // Initial view load
+            if(typeof switchTab === 'function') {
+                switchTab('clients');
+            }
 
-                // Check First-Time Login Status in Firebase for regular users
+            if(!isUserAdmin) {
+                const txnContainer = document.getElementById('txnPassContainer');
+                if(txnContainer) txnContainer.classList.remove('hidden');
+
                 try {
                     const userDoc = await getDoc(doc(db, "clients", currentUser));
                     if(userDoc.exists()) {
                         const data = userDoc.data();
                         if(data.isPasswordChanged === false) {
-                            document.getElementById('changePasswordModal').classList.remove('hidden');
+                            const pwdModal = document.getElementById('changePasswordModal');
+                            if(pwdModal) pwdModal.classList.remove('hidden');
                         }
                     }
                 } catch(e) {
@@ -42,53 +50,65 @@
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sportsSidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
+            if(sidebar && overlay) {
+                if (sidebar.classList.contains('-translate-x-full')) {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('hidden');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('hidden');
+                }
             }
         };
 
         window.switchTab = function(tab) {
-            document.getElementById('viewWelcome').classList.add('hidden');
-            document.getElementById('viewListOfClients').classList.add('hidden');
-            document.getElementById('viewAddAccount').classList.add('hidden');
-            document.getElementById('viewMarketAnalysis').classList.add('hidden');
-            document.getElementById('viewAssignAgent').classList.add('hidden');
+            const vWelcome = document.getElementById('viewWelcome');
+            const vClients = document.getElementById('viewListOfClients');
+            const vAddAcc = document.getElementById('viewAddAccount');
+            const vMarket = document.getElementById('viewMarketAnalysis');
+            const vAssign = document.getElementById('viewAssignAgent');
+
+            if(vWelcome) vWelcome.classList.add('hidden');
+            if(vClients) vClients.classList.add('hidden');
+            if(vAddAcc) vAddAcc.classList.add('hidden');
+            if(vMarket) vMarket.classList.add('hidden');
+            if(vAssign) vAssign.classList.add('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-[#005580]'));
 
             if(tab === 'clients') {
-                document.getElementById('viewListOfClients').classList.remove('hidden');
-                document.getElementById('navClients').classList.add('bg-[#005580]');
+                if(vClients) vClients.classList.remove('hidden');
+                const navC = document.getElementById('navClients');
+                if(navC) navC.classList.add('bg-[#005580]');
                 renderClientsTable();
             } else if(tab === 'addAccount') {
-                document.getElementById('viewAddAccount').classList.remove('hidden');
+                if(vAddAcc) vAddAcc.classList.remove('hidden');
             } else if(tab === 'assignAgent') {
-                document.getElementById('viewAssignAgent').classList.remove('hidden');
-                document.getElementById('navAssignAgent').classList.add('bg-[#005580]');
+                if(vAssign) vAssign.classList.remove('hidden');
+                const navA = document.getElementById('navAssignAgent');
+                if(navA) navA.classList.add('bg-[#005580]');
             } else if(tab === 'marketAnalysis') {
-                document.getElementById('viewMarketAnalysis').classList.remove('hidden');
-                document.getElementById('navMarketAnalysis').classList.add('bg-[#005580]');
+                if(vMarket) vMarket.classList.remove('hidden');
+                const navM = document.getElementById('navMarketAnalysis');
+                if(navM) navM.classList.add('bg-[#005580]');
             }
         };
 
         window.validateClientName = function() {
             const input = document.getElementById('clientNameInput');
             const error = document.getElementById('clientNameError');
-            const val = input.value;
+            if(!input) return true;
 
+            const val = input.value;
             if (val.length === 0 || /^[A-Z]/.test(val)) {
                 input.classList.remove('border-red-300', 'bg-red-50/20');
                 input.classList.add('border-green-400', 'bg-green-50/20');
-                error.classList.add('hidden');
+                if(error) error.classList.add('hidden');
                 return true;
             } else {
                 input.classList.remove('border-green-400', 'bg-green-50/20');
                 input.classList.add('border-red-300', 'bg-red-50/20');
-                error.classList.remove('hidden');
+                if(error) error.classList.remove('hidden');
                 return false;
             }
         };
@@ -96,6 +116,8 @@
         window.validatePassword = function() {
             const input = document.getElementById('clientPassInput');
             const error = document.getElementById('passwordError');
+            if(!input) return true;
+
             const val = input.value;
             const hasCapitalStart = /^[A-Z]/.test(val);
             const hasSpecialChar = /[$¥§€@!#%^&*]/.test(val);
@@ -103,12 +125,12 @@
             if (val.length === 0 || (hasCapitalStart && hasSpecialChar)) {
                 input.classList.remove('border-red-300', 'bg-red-50/20');
                 input.classList.add('border-green-400', 'bg-green-50/20');
-                error.classList.add('hidden');
+                if(error) error.classList.add('hidden');
                 return true;
             } else {
                 input.classList.remove('border-green-400', 'bg-green-50/20');
                 input.classList.add('border-red-300', 'bg-red-50/20');
-                error.classList.remove('hidden');
+                if(error) error.classList.remove('hidden');
                 return false;
             }
         };
@@ -223,6 +245,8 @@
 
         window.renderClientsTable = async function() {
             let tbody = document.getElementById('clientTableBody');
+            if(!tbody) return;
+
             let searchQuery = document.getElementById('clientSearchInput') ? document.getElementById('clientSearchInput').value.toLowerCase().trim() : "";
 
             tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading accounts...</td></tr>`;
@@ -231,11 +255,10 @@
                 const querySnapshot = await getDocs(collection(db, "clients"));
                 let clients = [];
 
-                querySnapshot.forEach((doc) => {
-                    let data = doc.data();
-                    // ADMIN sees ALL accounts, Super/Master see only their created accounts
+                querySnapshot.forEach((docSnap) => {
+                    let data = docSnap.data();
                     if (isUserAdmin || data.createdBy === currentUser) {
-                        clients.push({ id: doc.id, ...data });
+                        clients.push({ id: docSnap.id, ...data });
                     }
                 });
 
