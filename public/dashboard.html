@@ -190,6 +190,12 @@
                                 <label class="block font-semibold text-gray-600 mb-1">Credit Reference:</label>
                                 <input type="number" id="clientCreditRef" value="0" placeholder="Credit Reference" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
                             </div>
+
+                            <!-- TRANSACTION PASSWORD FIELD (REQUIRED FOR NON-ADMIN / MASTER / SUPER) -->
+                            <div id="txnPassContainer" class="hidden">
+                                <label class="block font-semibold text-red-600 mb-1">Transaction Password (6-Digit):</label>
+                                <input type="password" id="clientTxnPassInput" maxlength="6" placeholder="Enter 6-digit Txn Code" class="w-full border border-red-300 rounded px-2.5 py-1.5 focus:outline-none bg-red-50/20">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -260,6 +266,62 @@
         </div>
     </main>
 
+    <!-- FIRST TIME LOGIN: CHANGE PASSWORD MODAL POPUP -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl max-w-md w-full p-6 text-center space-y-4">
+            <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
+                <i class="fa-solid fa-key"></i>
+            </div>
+            <h2 class="text-lg font-bold text-gray-800">First Time Login - Change Password</h2>
+            <p class="text-xs text-gray-500">Aapko apna pehla password badalna hoga. Kripya apna naya password dalein.</p>
+            
+            <form onsubmit="handleFirstTimePasswordChange(event)" class="space-y-3 text-left">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">New Password:</label>
+                    <input type="password" id="modalNewPassword" required class="w-full border border-gray-300 rounded px-3 py-2 text-xs focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Confirm New Password:</label>
+                    <input type="password" id="modalConfirmPassword" required class="w-full border border-gray-300 rounded px-3 py-2 text-xs focus:outline-none">
+                </div>
+                <button type="submit" id="btnSaveNewPass" class="w-full bg-[#0088cc] hover:bg-[#006699] text-white font-bold py-2 rounded text-xs">
+                    Update Password & Get Txn Password
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TRANSACTION PASSWORD DISPLAY SCREEN (EXACT SCREENSHOT LAYOUT) -->
+    <div id="txnPasswordDisplayScreen" class="fixed inset-0 bg-white hidden z-50 flex flex-col items-center justify-center p-4 text-center space-y-4 overflow-y-auto">
+        <div class="max-w-xl w-full space-y-3 p-6">
+            <h1 class="text-xl sm:text-2xl font-semibold text-green-600">Success! Your password has been updated successfully.</h1>
+            <p class="text-lg sm:text-xl font-bold text-gray-800">
+                Your transaction password is <span id="generatedTxnPass" class="text-blue-500 font-extrabold underline">278899</span>.
+            </p>
+            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                Remember this transaction password, from now on all transaction can be done only with this password and keep one thing in mind do not share this password with anyone.
+            </p>
+            <p class="text-xs sm:text-sm text-gray-500 font-semibold">Thank you, Team goexch9.com</p>
+
+            <div class="pt-4 border-t border-gray-200">
+                <h2 class="text-xl sm:text-2xl font-semibold text-green-600">Success! आपका पासवर्ड बदला जा चुका है।</h2>
+                <p class="text-lg sm:text-xl font-bold text-gray-800 mt-1">
+                    आपका लेनदेन पासवर्ड <span id="generatedTxnPassHindi" class="text-blue-500 font-extrabold underline">278899</span> है।
+                </p>
+                <p class="text-xs sm:text-sm text-gray-600 leading-relaxed mt-2">
+                    लेन-देन के पासवर्ड को याद रखें, अब से वेबसाइट के सभी हस्तांतरण इसके जरिए किए जा सकते हैं और एक बात का ध्यान रखें, इस पासवर्ड को किसी के साथ साझा न करें।
+                </p>
+                <p class="text-xs sm:text-sm text-gray-500 font-semibold mt-1">धन्यवाद, टीम goexch9.com</p>
+            </div>
+
+            <div class="pt-6">
+                <button onclick="window.location.href='index.html'" class="bg-slate-700 hover:bg-slate-800 text-white font-semibold text-xs px-8 py-2 rounded shadow">
+                    &larr; Back
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- LEFT SPORTS SIDEBAR DRAWER (39 SPORTS) -->
     <div id="sportsSidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 overflow-y-auto border-r border-gray-200">
         <div class="p-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center sticky top-0">
@@ -313,7 +375,7 @@
     <!-- FIREBASE & SCRIPT CONTROL LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDocs, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, updateDoc, getDocs, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -328,6 +390,29 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        let currentUser = localStorage.getItem("loggedInUser") || "Admin"; 
+        let isUserAdmin = currentUser.toLowerCase() === "admin";
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            if(!isUserAdmin) {
+                // Show Txn Pass Input box for Master/Super creating IDs
+                document.getElementById('txnPassContainer').classList.remove('hidden');
+
+                // Check First-Time Login Status in Firebase
+                try {
+                    const userDoc = await getDoc(doc(db, "clients", currentUser));
+                    if(userDoc.exists()) {
+                        const data = userDoc.data();
+                        if(!data.isPasswordChanged) {
+                            document.getElementById('changePasswordModal').classList.remove('hidden');
+                        }
+                    }
+                } catch(e) {
+                    console.error("Error checking user login status: ", e);
+                }
+            }
+        });
 
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sportsSidebar');
@@ -384,7 +469,7 @@
             }
         };
 
-        // Live validation for Password (First letter uppercase + special characters like $¥§€@)
+        // Live validation for Password
         window.validatePassword = function() {
             const input = document.getElementById('clientPassInput');
             const error = document.getElementById('passwordError');
@@ -405,12 +490,53 @@
             }
         };
 
+        window.handleFirstTimePasswordChange = async function(event) {
+            event.preventDefault();
+            const newPass = document.getElementById('modalNewPassword').value;
+            const confirmPass = document.getElementById('modalConfirmPassword').value;
+
+            if(newPass !== confirmPass) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            try {
+                // Generate Automatic 6-digit Transaction Password
+                const txnPass = Math.floor(100000 + Math.random() * 900000).toString();
+
+                await updateDoc(doc(db, "clients", currentUser), {
+                    password: newPass,
+                    transactionPassword: txnPass,
+                    isPasswordChanged: true
+                });
+
+                document.getElementById('changePasswordModal').classList.add('hidden');
+                document.getElementById('generatedTxnPass').innerText = txnPass;
+                document.getElementById('generatedTxnPassHindi').innerText = txnPass;
+                document.getElementById('txnPasswordDisplayScreen').classList.remove('hidden');
+
+            } catch (e) {
+                console.error("Error updating password: ", e);
+                alert("Error: " + e.message);
+            }
+        };
+
         window.handleCreateAccount = async function(event) {
             event.preventDefault();
 
             if (!validateClientName() || !validatePassword()) {
                 alert("Please correct the Client Name and Password according to the rules!");
                 return;
+            }
+
+            // Check Transaction Password for non-admin users
+            if(!isUserAdmin) {
+                const userTxnPass = document.getElementById('clientTxnPassInput').value.trim();
+                const userDoc = await getDoc(doc(db, "clients", currentUser));
+                if(!userDoc.exists() || userDoc.data().transactionPassword !== userTxnPass) {
+                    alert("Invalid 6-Digit Transaction Password!");
+                    return;
+                }
             }
 
             const btn = document.getElementById('btnCreateAccount');
@@ -432,7 +558,6 @@
                 btn.disabled = true;
                 btn.innerText = "Creating...";
 
-                // Check if document with this username already exists as ID
                 const docRef = doc(db, "clients", username);
                 const docSnap = await getDoc(docRef);
 
@@ -452,6 +577,9 @@
                     fullName: fullName,
                     city: city,
                     phone: phone,
+                    isPasswordChanged: false, // Default false for first-time login popup
+                    transactionPassword: "",
+                    createdBy: currentUser,
                     createdAt: serverTimestamp()
                 });
 
