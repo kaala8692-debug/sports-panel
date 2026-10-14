@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; }
+        body { font-family: Arial, sans-serif; background-color: #eef2f5; }
         .action-btn { background: #e2e8f0; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; cursor: pointer; }
         .action-btn:hover { background: #cbd5e1; }
     </style>
@@ -15,31 +15,40 @@
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
     <!-- TOP HEADER NAVBAR -->
-    <header class="bg-[#0b3c5d] text-white p-2.5 flex justify-between items-center shadow-md text-xs">
-        <div class="flex items-center space-x-3">
-            <button onclick="toggleSidebar()" class="text-white text-base focus:outline-none px-2 py-1 bg-black/20 rounded">
+    <header class="bg-[#0b3c5d] text-white p-2 flex flex-wrap justify-between items-center shadow-md text-xs gap-2">
+        <div class="flex items-center space-x-2">
+            <span class="font-black text-sm tracking-wider text-white px-2 py-0.5">ALL</span>
+            <button onclick="toggleSidebar()" class="text-white text-base focus:outline-none px-2 py-1 bg-black/20 rounded hover:bg-black/40">
                 <i class="fa-solid fa-bars"></i>
             </button>
-            <span class="font-black text-sm tracking-wider text-cyan-400">SONI EXCHANGE</span>
         </div>
         
-        <!-- TOP TABS -->
-        <div class="flex items-center space-x-1">
-            <button onclick="switchTab('clients')" id="navClients" class="nav-btn bg-[#005580] hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">List of Clients</button>
-            <button onclick="switchTab('addAccount')" id="navAddAccount" class="nav-btn hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">Add Account</button>
-            <button onclick="switchTab('assignAgent')" id="navAssignAgent" class="nav-btn hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">Assign Agent</button>
-            <button onclick="switchTab('marketAnalysis')" id="navMarketAnalysis" class="nav-btn hover:bg-[#004466] px-3 py-1.5 rounded font-bold transition">Market Analysis</button>
+        <!-- TOP NAVIGATION TABS -->
+        <div class="flex flex-wrap items-center space-x-1">
+            <button onclick="switchTab('clients')" id="navClients" class="nav-btn bg-[#005580] hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">List of Clients</button>
+            <button onclick="switchTab('addAccount')" id="navAddAccount" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Add Account</button>
+            <button onclick="switchTab('assignAgent')" id="navAssignAgent" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Assign Agent</button>
+            <button onclick="switchTab('marketAnalysis')" id="navMarketAnalysis" class="nav-btn hover:bg-[#004466] px-2.5 py-1 rounded font-bold transition">Market Analysis</button>
+            <div class="relative inline-block text-left">
+                <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
+            </div>
+            <div class="relative inline-block text-left">
+                <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Live Virtual Market <i class="fa-solid fa-caret-down text-[10px]"></i></button>
+            </div>
+            <div class="relative inline-block text-left">
+                <button class="px-2 py-1 hover:bg-[#004466] rounded font-bold">Reports <i class="fa-solid fa-caret-down text-[10px]"></i></button>
+            </div>
         </div>
 
-        <div class="flex items-center space-x-3">
-            <span id="loggedInUserDisplay" class="bg-blue-900 px-2.5 py-1 rounded font-bold border border-blue-700">User: Admin</span>
-            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2.5 py-1 rounded font-bold transition">Logout</button>
+        <div class="flex items-center space-x-2">
+            <span id="loggedInUserDisplay" class="bg-blue-900 px-2 py-1 rounded font-bold">29dmo</span>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-2 py-1 rounded font-bold transition">Logout</button>
         </div>
     </header>
 
     <div class="flex flex-1 relative overflow-hidden">
         
-        <!-- ORIGINAL SIDEBAR (39 SPORTS LIST WITH + ICONS) -->
+        <!-- SIDEBAR (39 SPORTS LIST WITH + ICONS AS PER SCREENSHOT) -->
         <aside id="sportsSidebar" class="w-64 bg-white text-gray-800 flex flex-col absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-2xl border-r">
             <div class="p-3 bg-[#0b3c5d] text-white flex justify-between items-center">
                 <span class="font-bold text-xs uppercase tracking-wider">Sports</span>
@@ -91,7 +100,7 @@
         <!-- OVERLAY -->
         <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 hidden z-20"></div>
 
-        <!-- MAIN PANEL VIEW -->
+        <!-- MAIN PANEL CONTENT -->
         <main class="flex-1 p-4 overflow-y-auto">
 
             <!-- TAB 1: LIST OF CLIENTS -->
@@ -205,7 +214,7 @@
         const db = getFirestore(app);
 
         let currentUser = localStorage.getItem("loggedInUser") || "Admin";
-        document.getElementById('loggedInUserDisplay').innerText = "User: " + currentUser;
+        document.getElementById('loggedInUserDisplay').innerText = currentUser;
 
         const adminList = ["admin", "superadmin", "z9dmo"];
         let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
