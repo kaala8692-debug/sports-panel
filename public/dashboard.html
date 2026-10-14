@@ -1,4 +1,181 @@
-    <!-- FIREBASE & SCRIPT CONTROL LOGIC -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoniExchange - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; }
+        .action-btn { background: #e2e8f0; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        .action-btn:hover { background: #cbd5e1; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- TOP HEADER -->
+    <header class="bg-[#0b3c5d] text-white p-3 flex justify-between items-center shadow-md">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleSidebar()" class="text-white text-lg focus:outline-none"><i class="fa-solid fa-bars"></i></button>
+            <h1 class="font-bold text-base tracking-wider">SoniExchange</h1>
+        </div>
+        <div class="flex items-center space-x-4 text-xs">
+            <span id="loggedInUserDisplay" class="bg-blue-900 px-2.5 py-1 rounded font-semibold">User: Admin</span>
+            <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded font-bold transition">Logout</button>
+        </div>
+    </header>
+
+    <div class="flex flex-1 relative overflow-hidden">
+        
+        <!-- SIDEBAR (39 Sports / Navigation) -->
+        <aside id="sportsSidebar" class="w-64 bg-[#1d2731] text-white flex flex-col absolute inset-y-0 left-0 transform -translate-x-full transition-transform duration-300 ease-in-out z-30 shadow-2xl">
+            <div class="p-3 bg-[#111822] flex justify-between items-center border-b border-gray-700">
+                <span class="font-bold text-xs uppercase tracking-wider text-cyan-400"><i class="fa-solid fa-trophy mr-1.5"></i> Navigation & Sports</span>
+                <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                <button onclick="switchTab('clients'); toggleSidebar();" id="navClients" class="nav-btn w-full text-left px-3 py-2 rounded text-xs hover:bg-slate-800 font-semibold flex items-center"><i class="fa-solid fa-users w-5 mr-2 text-cyan-400"></i> List of Clients</button>
+                <button onclick="switchTab('addAccount'); toggleSidebar();" class="nav-btn w-full text-left px-3 py-2 rounded text-xs hover:bg-slate-800 font-semibold flex items-center"><i class="fa-solid fa-user-plus w-5 mr-2 text-green-400"></i> Add Account</button>
+                <div class="border-t border-gray-700 my-2 pt-2 text-[10px] text-gray-400 uppercase font-bold px-2">Sports Categories</div>
+                <a href="#" class="block px-3 py-1.5 rounded text-xs text-gray-300 hover:bg-slate-800">Cricket</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-xs text-gray-300 hover:bg-slate-800">Football</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-xs text-gray-300 hover:bg-slate-800">Tennis</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-xs text-gray-300 hover:bg-slate-800">Basketball</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-xs text-gray-300 hover:bg-slate-800">Horse Racing</a>
+                <a href="#" class="block px-3 py-1.5 rounded text-xs text-gray-300 hover:bg-slate-800">Greyhound Racing</a>
+                <!-- Baaki sports aapke layout ke mutabiq -->
+            </div>
+        </aside>
+
+        <!-- SIDEBAR OVERLAY -->
+        <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 hidden z-20"></div>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="flex-1 p-4 overflow-y-auto">
+
+            <!-- VIEW: LIST OF CLIENTS -->
+            <div id="viewListOfClients" class="bg-white rounded-lg shadow p-4">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-2">
+                    <h2 class="font-bold text-sm text-gray-800 uppercase"><i class="fa-solid fa-address-book mr-1 text-cyan-600"></i> Account List</h2>
+                    <div class="flex space-x-2">
+                        <input type="text" id="clientSearchInput" onkeyup="renderClientsTable()" placeholder="Search username..." class="border px-3 py-1.5 text-xs rounded focus:outline-none focus:border-cyan-500">
+                        <button onclick="renderClientsTable()" class="bg-gray-200 hover:bg-gray-300 px-3 py-1.5 rounded text-xs font-bold">Refresh</button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="bg-gray-100 border-b border-gray-300 text-gray-700">
+                                <th class="p-2 border-r">Account</th>
+                                <th class="p-2 border-r">Credit Ref.</th>
+                                <th class="p-2 border-r text-center">Partnership</th>
+                                <th class="p-2 border-r text-center">Status</th>
+                                <th class="p-2 border-r">Balance</th>
+                                <th class="p-2 border-r">Exposure</th>
+                                <th class="p-2 border-r">Type</th>
+                                <th class="p-2 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientTableBody">
+                            <tr><td colspan="8" class="p-4 text-center text-gray-500">Loading accounts...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VIEW: ADD ACCOUNT -->
+            <div id="viewAddAccount" class="hidden bg-white rounded-lg shadow p-6 max-w-xl mx-auto">
+                <h2 class="font-bold text-sm text-gray-800 uppercase mb-4 border-b pb-2"><i class="fa-solid fa-user-plus mr-1 text-green-600"></i> Add New Account</h2>
+                
+                <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-4 text-xs">
+                    
+                    <!-- Txn Password verification for sub-accounts -->
+                    <div id="txnPassContainer" class="hidden bg-yellow-50 border border-yellow-300 p-3 rounded">
+                        <label class="block font-bold text-yellow-800 mb-1">Enter Your 6-Digit Transaction Password:</label>
+                        <input type="password" id="clientTxnPassInput" maxlength="6" placeholder="Enter 6-digit pin" class="w-full border p-2 rounded bg-white">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Client Username:</label>
+                        <input type="text" id="clientNameInput" oninput="validateClientName()" required placeholder="e.g. User123" class="w-full border p-2 rounded">
+                        <p id="clientNameError" class="text-red-500 text-[10px] mt-1 hidden">Must start with a capital letter.</p>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Password:</label>
+                        <input type="password" id="clientPassInput" oninput="validatePassword()" required placeholder="Password" class="w-full border p-2 rounded">
+                        <p id="passwordError" class="text-red-500 text-[10px] mt-1 hidden">Must start with a capital letter and include a special character.</p>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-gray-700 mb-1">Retype Password:</label>
+                        <input type="password" id="retypePassInput" required placeholder="Confirm Password" class="w-full border p-2 rounded">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Credit Reference:</label>
+                            <input type="number" id="clientCreditRef" value="0" class="w-full border p-2 rounded">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Account Type:</label>
+                            <select id="clientAccountType" class="w-full border p-2 rounded">
+                                <option value="User">User</option>
+                                <option value="Master">Master</option>
+                                <option value="Super">Super</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Full Name:</label>
+                            <input type="text" id="fullNameInput" placeholder="Name" class="w-full border p-2 rounded">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">City:</label>
+                            <input type="text" id="cityInput" placeholder="City" class="w-full border p-2 rounded">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-700 mb-1">Phone:</label>
+                            <input type="text" id="phoneInput" placeholder="Phone" class="w-full border p-2 rounded">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnCreateAccount" class="w-full bg-[#0088cc] hover:bg-[#006699] text-white font-bold py-2.5 rounded shadow transition">CREATE ACCOUNT</button>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- FIRST TIME PASSWORD CHANGE MODAL -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-white rounded-lg p-6 max-w-sm w-full text-xs shadow-2xl">
+            <h3 class="font-bold text-sm text-red-600 mb-2"><i class="fa-solid fa-lock mr-1"></i> First Time Password Change Required</h3>
+            <p class="text-gray-600 mb-4">Security ke liye apna naya password set karein.</p>
+            <form onsubmit="handleFirstTimePasswordChange(event)" class="space-y-3">
+                <input type="password" id="modalNewPassword" required placeholder="New Password" class="w-full border p-2 rounded">
+                <input type="password" id="modalConfirmPassword" required placeholder="Confirm New Password" class="w-full border p-2 rounded">
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-2 rounded">Update Password</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TRANSACTION PASSWORD DISPLAY SCREEN -->
+    <div id="txnPasswordDisplayScreen" class="fixed inset-0 bg-black/80 flex items-center justify-center hidden z-50 p-4 text-white">
+        <div class="bg-slate-900 border border-cyan-500 rounded-xl p-6 max-w-sm w-full text-center space-y-4">
+            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto text-lg"><i class="fa-solid fa-check"></i></div>
+            <h3 class="font-bold text-sm text-cyan-400">Transaction Password Generated!</h3>
+            <p class="text-xs text-gray-300">Aapka 6-digit transaction password ye hai. Isse sambhal kar rakhein:</p>
+            <div id="generatedTxnPass" class="text-2xl font-mono font-black bg-slate-800 py-3 rounded text-yellow-400 tracking-widest border border-gray-700"></div>
+            <button onclick="location.reload()" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-2 rounded text-xs">Continue to Dashboard</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE & SCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, updateDoc, getDocs, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -16,99 +193,50 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let currentUser = localStorage.getItem("loggedInUser") || "Admin"; 
-        
-        // Super Admin check
+        let currentUser = localStorage.getItem("loggedInUser") || "Admin";
+        document.getElementById('loggedInUserDisplay').innerText = "User: " + currentUser;
+
         const adminList = ["admin", "superadmin", "z9dmo"];
         let isUserAdmin = adminList.includes(currentUser.toLowerCase().trim());
 
-        window.addEventListener('DOMContentLoaded', async () => {
-            // Initial view load
-            if(typeof switchTab === 'function') {
-                switchTab('clients');
-            }
-
-            if(!isUserAdmin) {
-                const txnContainer = document.getElementById('txnPassContainer');
-                if(txnContainer) txnContainer.classList.remove('hidden');
-
-                try {
-                    const userDoc = await getDoc(doc(db, "clients", currentUser));
-                    if(userDoc.exists()) {
-                        const data = userDoc.data();
-                        if(data.isPasswordChanged === false) {
-                            const pwdModal = document.getElementById('changePasswordModal');
-                            if(pwdModal) pwdModal.classList.remove('hidden');
-                        }
-                    }
-                } catch(e) {
-                    console.error("Error checking user login status: ", e);
-                }
-            }
-        });
+        window.logout = function() {
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "index.html";
+        };
 
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sportsSidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            if(sidebar && overlay) {
-                if (sidebar.classList.contains('-translate-x-full')) {
-                    sidebar.classList.remove('-translate-x-full');
-                    overlay.classList.remove('hidden');
-                } else {
-                    sidebar.classList.add('-translate-x-full');
-                    overlay.classList.add('hidden');
-                }
-            }
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
         };
 
         window.switchTab = function(tab) {
-            const vWelcome = document.getElementById('viewWelcome');
-            const vClients = document.getElementById('viewListOfClients');
-            const vAddAcc = document.getElementById('viewAddAccount');
-            const vMarket = document.getElementById('viewMarketAnalysis');
-            const vAssign = document.getElementById('viewAssignAgent');
-
-            if(vWelcome) vWelcome.classList.add('hidden');
-            if(vClients) vClients.classList.add('hidden');
-            if(vAddAcc) vAddAcc.classList.add('hidden');
-            if(vMarket) vMarket.classList.add('hidden');
-            if(vAssign) vAssign.classList.add('hidden');
+            document.getElementById('viewListOfClients').classList.add('hidden');
+            document.getElementById('viewAddAccount').classList.add('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-[#005580]'));
 
             if(tab === 'clients') {
-                if(vClients) vClients.classList.remove('hidden');
-                const navC = document.getElementById('navClients');
-                if(navC) navC.classList.add('bg-[#005580]');
+                document.getElementById('viewListOfClients').classList.remove('hidden');
+                document.getElementById('navClients').classList.add('bg-[#005580]');
                 renderClientsTable();
             } else if(tab === 'addAccount') {
-                if(vAddAcc) vAddAcc.classList.remove('hidden');
-            } else if(tab === 'assignAgent') {
-                if(vAssign) vAssign.classList.remove('hidden');
-                const navA = document.getElementById('navAssignAgent');
-                if(navA) navA.classList.add('bg-[#005580]');
-            } else if(tab === 'marketAnalysis') {
-                if(vMarket) vMarket.classList.remove('hidden');
-                const navM = document.getElementById('navMarketAnalysis');
-                if(navM) navM.classList.add('bg-[#005580]');
+                document.getElementById('viewAddAccount').classList.remove('hidden');
             }
         };
 
         window.validateClientName = function() {
             const input = document.getElementById('clientNameInput');
             const error = document.getElementById('clientNameError');
-            if(!input) return true;
-
             const val = input.value;
             if (val.length === 0 || /^[A-Z]/.test(val)) {
-                input.classList.remove('border-red-300', 'bg-red-50/20');
-                input.classList.add('border-green-400', 'bg-green-50/20');
-                if(error) error.classList.add('hidden');
+                input.classList.remove('border-red-300', 'bg-red-50');
+                error.classList.add('hidden');
                 return true;
             } else {
-                input.classList.remove('border-green-400', 'bg-green-50/20');
-                input.classList.add('border-red-300', 'bg-red-50/20');
-                if(error) error.classList.remove('hidden');
+                input.classList.add('border-red-300', 'bg-red-50');
+                error.classList.remove('hidden');
                 return false;
             }
         };
@@ -116,138 +244,24 @@
         window.validatePassword = function() {
             const input = document.getElementById('clientPassInput');
             const error = document.getElementById('passwordError');
-            if(!input) return true;
-
             const val = input.value;
             const hasCapitalStart = /^[A-Z]/.test(val);
             const hasSpecialChar = /[$¥§€@!#%^&*]/.test(val);
 
             if (val.length === 0 || (hasCapitalStart && hasSpecialChar)) {
-                input.classList.remove('border-red-300', 'bg-red-50/20');
-                input.classList.add('border-green-400', 'bg-green-50/20');
-                if(error) error.classList.add('hidden');
+                input.classList.remove('border-red-300', 'bg-red-50');
+                error.classList.add('hidden');
                 return true;
             } else {
-                input.classList.remove('border-green-400', 'bg-green-50/20');
-                input.classList.add('border-red-300', 'bg-red-50/20');
-                if(error) error.classList.remove('hidden');
+                input.classList.add('border-red-300', 'bg-red-50');
+                error.classList.remove('hidden');
                 return false;
             }
         };
 
-        window.handleFirstTimePasswordChange = async function(event) {
-            event.preventDefault();
-            const newPass = document.getElementById('modalNewPassword').value;
-            const confirmPass = document.getElementById('modalConfirmPassword').value;
-
-            if(newPass !== confirmPass) {
-                alert("Passwords do not match!");
-                return;
-            }
-
-            try {
-                const txnPass = Math.floor(100000 + Math.random() * 900000).toString();
-
-                await updateDoc(doc(db, "clients", currentUser), {
-                    password: newPass,
-                    transactionPassword: txnPass,
-                    isPasswordChanged: true
-                });
-
-                document.getElementById('changePasswordModal').classList.add('hidden');
-                document.getElementById('generatedTxnPass').innerText = txnPass;
-                document.getElementById('generatedTxnPassHindi').innerText = txnPass;
-                document.getElementById('txnPasswordDisplayScreen').classList.remove('hidden');
-
-            } catch (e) {
-                console.error("Error updating password: ", e);
-                alert("Error: " + e.message);
-            }
-        };
-
-        window.handleCreateAccount = async function(event) {
-            event.preventDefault();
-
-            if (!validateClientName() || !validatePassword()) {
-                alert("Please correct the Client Name and Password according to the rules!");
-                return;
-            }
-
-            if(!isUserAdmin) {
-                const userTxnPass = document.getElementById('clientTxnPassInput').value.trim();
-                const userDoc = await getDoc(doc(db, "clients", currentUser));
-                if(!userDoc.exists() || userDoc.data().transactionPassword !== userTxnPass) {
-                    alert("Invalid 6-Digit Transaction Password!");
-                    return;
-                }
-            }
-
-            const btn = document.getElementById('btnCreateAccount');
-            let username = document.getElementById('clientNameInput').value.trim();
-            let pass = document.getElementById('clientPassInput').value;
-            let retypePass = document.getElementById('retypePassInput').value;
-            let creditRef = parseFloat(document.getElementById('clientCreditRef').value) || 0;
-            let accType = document.getElementById('clientAccountType').value;
-            let fullName = document.getElementById('fullNameInput').value.trim();
-            let city = document.getElementById('cityInput').value.trim();
-            let phone = document.getElementById('phoneInput').value.trim();
-
-            if(pass !== retypePass) {
-                alert("Passwords do not match!");
-                return;
-            }
-
-            try {
-                btn.disabled = true;
-                btn.innerText = "Creating...";
-
-                const docRef = doc(db, "clients", username);
-                const docSnap = await getDoc(docRef);
-
-                if(docSnap.exists()) {
-                    alert("Client username already exists in SoniExchange database!");
-                    btn.disabled = false;
-                    btn.innerText = "CREATE ACCOUNT";
-                    return;
-                }
-
-                await setDoc(docRef, {
-                    username: username,
-                    password: pass,
-                    creditRef: creditRef,
-                    accType: accType || 'User',
-                    fullName: fullName,
-                    city: city,
-                    phone: phone,
-                    isPasswordChanged: false, 
-                    transactionPassword: "",
-                    createdBy: currentUser,
-                    createdAt: serverTimestamp()
-                });
-
-                alert("Account '" + username + "' created successfully in Firestore!");
-                document.getElementById('addAccountForm').reset();
-                switchTab('clients');
-
-            } catch (error) {
-                console.error("Error creating account: ", error);
-                alert("Firebase Error: " + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "CREATE ACCOUNT";
-            }
-        };
-
-        window.resetSearch = function() {
-            document.getElementById('clientSearchInput').value = "";
-            renderClientsTable();
-        };
-
         window.renderClientsTable = async function() {
             let tbody = document.getElementById('clientTableBody');
-            if(!tbody) return;
-
-            let searchQuery = document.getElementById('clientSearchInput') ? document.getElementById('clientSearchInput').value.toLowerCase().trim() : "";
+            let searchQuery = document.getElementById('clientSearchInput').value.toLowerCase().trim();
 
             tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading accounts...</td></tr>`;
 
@@ -257,6 +271,7 @@
 
                 querySnapshot.forEach((docSnap) => {
                     let data = docSnap.data();
+                    // ADMIN sees all, Non-admin sees only their own created accounts
                     if (isUserAdmin || data.createdBy === currentUser) {
                         clients.push({ id: docSnap.id, ...data });
                     }
@@ -304,4 +319,77 @@
                 tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-500 font-bold">Failed to load accounts.</td></tr>`;
             }
         };
+
+        window.handleCreateAccount = async function(event) {
+            event.preventDefault();
+            if (!validateClientName() || !validatePassword()) {
+                alert("Please correct the Client Name and Password rules!");
+                return;
+            }
+
+            if(!isUserAdmin) {
+                const userTxnPass = document.getElementById('clientTxnPassInput').value.trim();
+                const userDoc = await getDoc(doc(db, "clients", currentUser));
+                if(!userDoc.exists() || userDoc.data().transactionPassword !== userTxnPass) {
+                    alert("Invalid 6-Digit Transaction Password!");
+                    return;
+                }
+            }
+
+            let username = document.getElementById('clientNameInput').value.trim();
+            let pass = document.getElementById('clientPassInput').value;
+            let retypePass = document.getElementById('retypePassInput').value;
+            let creditRef = parseFloat(document.getElementById('clientCreditRef').value) || 0;
+            let accType = document.getElementById('clientAccountType').value;
+
+            if(pass !== retypePass) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "clients", username);
+                const docSnap = await getDoc(docRef);
+
+                if(docSnap.exists()) {
+                    alert("Username already exists!");
+                    return;
+                }
+
+                await setDoc(docRef, {
+                    username: username,
+                    password: pass,
+                    creditRef: creditRef,
+                    accType: accType,
+                    isPasswordChanged: false,
+                    transactionPassword: "",
+                    createdBy: currentUser,
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Account created successfully!");
+                document.getElementById('addAccountForm').reset();
+                switchTab('clients');
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        };
+
+        // Initial Load Check
+        window.addEventListener('DOMContentLoaded', async () => {
+            switchTab('clients');
+            if(!isUserAdmin) {
+                document.getElementById('txnPassContainer').classList.remove('hidden');
+                try {
+                    const uDoc = await getDoc(doc(db, "clients", currentUser));
+                    if(uDoc.exists() && uDoc.data().isPasswordChanged === false) {
+                        document.getElementById('changePasswordModal').classList.remove('hidden');
+                    }
+                } catch(e) {
+                    console.error(e);
+                }
+            }
+        });
     </script>
+</body>
+</html>
