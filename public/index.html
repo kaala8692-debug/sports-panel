@@ -4,104 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soni Exchange - Login</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase App & Firestore CDN Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
     <style>
-        body { background-color: #0088cc; font-family: Arial, sans-serif; }
+        body {
+            background-color: #0b3c5d;
+            font-family: Arial, sans-serif;
+        }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- LOGIN CARD -->
-    <div id="loginCard" class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 relative mt-6">
-        <!-- Logo Circle -->
-        <div class="absolute -top-12 left-1/2 transform -translate-x-1/2">
-            <div class="w-20 h-20 rounded-full bg-slate-900 border-4 border-white flex items-center justify-center shadow-lg font-bold text-white text-2xl">
-                S
-            </div>
+    <!-- LOGIN CONTAINER -->
+    <div class="w-full max-w-sm bg-[#1d2731]/80 backdrop-blur-md rounded-2xl shadow-2xl p-6 text-white border border-gray-700 relative">
+        
+        <!-- LOGO ICON -->
+        <div class="w-16 h-16 bg-[#0b3c5d] rounded-full flex items-center justify-center mx-auto -mt-14 border-4 border-[#0b3c5d] shadow-lg">
+            <span class="text-2xl font-black text-white">S</span>
         </div>
 
-        <div class="pt-8 text-center space-y-4">
-            <h2 class="font-bold text-gray-700 text-base border-b pb-2 tracking-wide">Sign In</h2>
-            
-            <form onsubmit="handleLogin(event)" class="space-y-3 text-left text-xs">
-                <div>
-                    <label class="block font-semibold text-gray-600 mb-1">Username / Client ID:</label>
-                    <input type="text" id="loginUser" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500" placeholder="Username">
-                </div>
-                <div>
-                    <label class="block font-semibold text-gray-600 mb-1">Password:</label>
-                    <input type="password" id="loginPass" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500" placeholder="********">
-                </div>
-                <button type="submit" class="w-full bg-[#0077b3] hover:bg-[#006699] text-white font-bold py-2.5 rounded shadow transition text-sm">
-                    Login &rarr;
-                </button>
-            </form>
-        </div>
+        <h2 class="text-center font-bold text-lg mt-3 mb-6 tracking-wide">Sign In</h2>
+
+        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Username / Client ID:</label>
+                <input type="text" id="loginUsername" required placeholder="Enter Username" class="w-full px-3 py-2 bg-slate-800/80 border border-gray-600 rounded text-xs text-white focus:outline-none focus:border-cyan-400">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Password:</label>
+                <input type="password" id="loginPassword" required placeholder="Enter Password" class="w-full px-3 py-2 bg-slate-800/80 border border-gray-600 rounded text-xs text-white focus:outline-none focus:border-cyan-400">
+            </div>
+
+            <button type="submit" id="btnLogin" class="w-full bg-[#0088cc] hover:bg-[#006699] font-bold py-2.5 rounded-lg text-xs uppercase tracking-wider shadow-lg transition">
+                Login &rarr;
+            </button>
+        </form>
     </div>
 
-    <!-- CHANGE PASSWORD & TPIN POPUP MODAL -->
-    <div id="securityModal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-2xl text-xs space-y-4">
-            
-            <!-- Step 1: Change Password Form -->
-            <div id="stepChangePass">
-                <h3 class="font-bold text-gray-800 text-sm border-b pb-2 mb-3">Change Password Required</h3>
-                <p class="text-gray-600 mb-3">For security purposes, please update your password on your first login.</p>
-                
-                <form onsubmit="handlePasswordChange(event)" class="space-y-3">
-                    <div>
-                        <label class="block font-semibold text-gray-600 mb-1">New Password:</label>
-                        <input type="password" id="newPassInput" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none" placeholder="New Password">
-                    </div>
-                    <div>
-                        <label class="block font-semibold text-gray-600 mb-1">Confirm New Password:</label>
-                        <input type="password" id="confirmPassInput" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none" placeholder="Confirm Password">
-                    </div>
-                    <button type="submit" class="w-full bg-[#0077b3] text-white font-bold py-2 rounded shadow text-xs">
-                        Update Password & Generate TPIN
-                    </button>
-                </form>
-            </div>
+    <!-- FIREBASE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-            <!-- Step 2: TPIN Display Success Screen -->
-            <div id="stepShowTpin" class="hidden space-y-4 text-center">
-                <div class="text-green-700 font-bold text-sm">
-                    Your password has been updated successfully.
-                </div>
-                <div class="text-gray-800 text-xs leading-relaxed space-y-2">
-                    <p>Your transaction password is <span id="generatedTpinText" class="text-blue-600 font-bold text-base"></span>.</p>
-                    <p class="text-[11px] text-gray-600">
-                        Enter this transaction password, from now on all transaction of ID be done only with this password and keep one thing in mind, do not share this password with anyone.
-                    </p>
-                    <p class="font-bold text-gray-700">Thank you, Team allpanelexch.com</p>
-                </div>
-                
-                <div class="border-t pt-2 text-[10px] text-gray-500 text-left space-y-1">
-                    <p class="text-green-600 font-semibold">Success! आपका पासवर्ड बदला जा चुका है।</p>
-                    <p>आपका लेनदेन पासवर्ड <span id="generatedTpinTextHi" class="text-blue-600 font-bold"></span> है।</p>
-                    <p>लेन-देन के पासवर्ड को याद रखें, अब से वेबसाइट के सभी हस्तांतरण केवल इसी पासवर्ड से किए जा सकते हैं और एक बात का ध्यान रखें, इस पासवर्ड को किसी के साथ साझा न करें।</p>
-                    <p class="font-semibold text-gray-600">धन्यवाद, टीम allpanelexch.com</p>
-                </div>
-
-                <button onclick="closeTpinModal()" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-bold py-2 rounded shadow text-xs mt-3 flex items-center justify-center space-x-1">
-                    <span>&larr; Back</span>
-                </button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- SCRIPT CONTROL LOGIC WITH FIREBASE -->
-    <script>
-        // Initialize Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
             authDomain: "soniexchange.firebaseapp.com",
@@ -111,93 +56,52 @@
             appId: "1:731423101248:web:30a85f0bb04a7155ec2aa5",
             measurementId: "G-BX7NTH157B"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
 
-        let currentLoggingUser = "";
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        async function handleLogin(event) {
-            event.preventDefault();
-            let u = document.getElementById('loginUser').value.trim();
-            let p = document.getElementById('loginPass').value;
+        window.handleLogin = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const usernameInput = document.getElementById('loginUsername').value.trim();
+            const passwordInput = document.getElementById('loginPassword').value.trim();
 
-            // Admin login bypass
-            if((u === 'admin' && p === '123') || (u === 'Soniexchange')) {
-                window.location.href = 'dashboard.html';
+            btn.disabled = true;
+            btn.innerText = "Checking...";
+
+            // ADMIN DIRECT ACCESS
+            if(usernameInput.toLowerCase() === "admin" && passwordInput === "Admin@123") {
+                localStorage.setItem("loggedInUser", "Admin");
+                window.location.href = "dashboard.html";
                 return;
             }
 
             try {
-                // Fetch client from Firestore database
-                let docRef = db.collection("soni_clients").doc(u);
-                let doc = await docRef.get();
+                // Fetch direct Document by username (Doc ID: Kalu123)
+                const docRef = doc(db, "clients", usernameInput);
+                const docSnap = await getDoc(docRef);
 
-                if(doc.exists) {
-                    let client = doc.data();
-                    if(client.pass === p) {
-                        currentLoggingUser = u;
-                        // Check if client already changed password / has TPIN
-                        if(!client.hasChangedPass) {
-                            // Open password change modal
-                            document.getElementById('securityModal').classList.remove('hidden');
-                            document.getElementById('stepChangePass').classList.remove('hidden');
-                            document.getElementById('stepShowTpin').classList.add('hidden');
-                        } else {
-                            alert("Login Successful! Welcome " + u);
-                            // Normal client portal routing can happen here
-                        }
+                if (docSnap.exists()) {
+                    const userData = docSnap.data();
+                    
+                    if (userData.password === passwordInput) {
+                        localStorage.setItem("loggedInUser", usernameInput);
+                        // Redirect to Dashboard
+                        window.location.href = "dashboard.html";
                     } else {
-                        alert("Galat Password hai!");
+                        alert("Galat Password! Sahi password daalein.");
                     }
                 } else {
-                    alert("Client ID nahi mili!");
+                    alert("Client ID nahi mili! Kripya Username sahi check karein.");
                 }
-            } catch (error) {
-                console.error("Login error: ", error);
-                alert("Database connection error during login.");
+            } catch (err) {
+                console.error("Login Error: ", err);
+                alert("Login Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "Login \u2192";
             }
-        }
-
-        async function handlePasswordChange(event) {
-            event.preventDefault();
-            let newPass = document.getElementById('newPassInput').value;
-            let confirmPass = document.getElementById('confirmPassInput').value;
-
-            if(newPass !== confirmPass) {
-                alert("New passwords do not match!");
-                return;
-            }
-
-            // Generate random 6-digit TPIN
-            let randomTpin = Math.floor(100000 + Math.random() * 900000);
-
-            try {
-                // Update client data in Firestore database
-                let docRef = db.collection("soni_clients").doc(currentLoggingUser);
-                await docRef.update({
-                    pass: newPass,
-                    hasChangedPass: true,
-                    tpin: randomTpin
-                });
-
-                // Show TPIN in popup modal matching the reference screenshot
-                document.getElementById('generatedTpinText').innerText = randomTpin;
-                document.getElementById('generatedTpinTextHi').innerText = randomTpin;
-
-                document.getElementById('stepChangePass').classList.add('hidden');
-                document.getElementById('stepShowTpin').classList.remove('hidden');
-            } catch (error) {
-                console.error("Error updating password: ", error);
-                alert("Failed to update password in cloud database.");
-            }
-        }
-
-        function closeTpinModal() {
-            document.getElementById('securityModal').classList.add('hidden');
-            // Reset form and fields
-            document.getElementById('loginPass').value = "";
-            alert("Password updated and TPIN generated successfully. Please login with your new password.");
-        }
+        };
     </script>
 </body>
 </html>
