@@ -291,7 +291,6 @@
 
                 querySnapshot.forEach((docSnap) => {
                     let data = docSnap.data();
-                    // Fix: Agar account mein createdBy field nahi hai (purane accounts), toh admin ko saare dikhenge aur sub-account ko tabhi dikhenge jab match ho ya field missing na ho
                     if (isUserAdmin || data.createdBy === currentUser || !data.createdBy) {
                         clients.push({ id: docSnap.id, ...data });
                     }
