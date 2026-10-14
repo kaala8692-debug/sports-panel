@@ -2,47 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoniExchange - Sign In</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #0b1e28; }
-    </style>
+    <meta http-equiv="refresh" content="0; url=dashboard.html">
+    <title>Redirecting...</title>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-
-    <div class="bg-[#102a3a] border border-gray-800 rounded-xl p-6 w-full max-w-sm text-white shadow-2xl relative">
-        <div class="absolute -top-7 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-[#0b1e28] rounded-full border border-gray-700 flex items-center justify-center text-xl font-bold text-gray-300">
-            S
-        </div>
-
-        <h2 class="text-center text-xl font-bold mt-4 mb-6">Sign In</h2>
-
-        <form onsubmit="handleDirectLogin(event)" class="space-y-4 text-xs">
-            <div>
-                <label class="block text-gray-400 mb-1">Username / Client ID:</label>
-                <input type="text" id="usernameInput" required placeholder="Enter Username" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
-            </div>
-
-            <div>
-                <label class="block text-gray-400 mb-1">Password:</label>
-                <input type="password" id="passwordInput" placeholder="Enter Password" class="w-full bg-[#0b1e28] border border-gray-700 rounded p-2.5 text-white focus:outline-none focus:border-cyan-500">
-            </div>
-
-            <button type="submit" class="w-full bg-[#0088cc] hover:bg-[#006699] text-white font-bold py-2.5 rounded transition mt-2">
-                LOGIN →
-            </button>
-        </form>
-    </div>
-
+<body>
     <script>
-        function handleDirectLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('usernameInput').value.trim();
-            // Saari conditions hamesha ke liye hata di gayi hain, ab koi bhi ID daalo seedha dashboard khulega
-            localStorage.setItem("loggedInUser", username || "Soniexchange");
-            window.location.href = "dashboard.html";
-        }
+        // Seedha dashboard par bhejne ke liye
+        localStorage.setItem("loggedInUser", "Soniexchange");
+        window.location.href = "dashboard.html";
     </script>
 </body>
 </html>
