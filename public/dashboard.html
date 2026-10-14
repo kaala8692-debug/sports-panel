@@ -1,383 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Soni Exchange - Dashboard</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: Arial, Helvetica, sans-serif; background-color: #f8f9fa; color: #333; margin: 0; }
-        .top-navbar { background-color: #0088cc; color: white; font-size: 11px; }
-        .nav-btn { cursor: pointer; padding: 4px 8px; font-size: 11px; font-weight: 600; white-space: nowrap; color: white; display: inline-flex; align-items: center; border-radius: 2px; }
-        .nav-btn:hover, .nav-btn.active { background-color: #006699; }
-        .sidebar { transition: transform 0.3s ease-in-out; }
-        .tbl-header { background-color: #f2f2f2; color: #333; font-weight: bold; border-bottom: 2px solid #ccc; }
-        .action-btn { background-color: #4a4a4a; color: white; padding: 3px 6px; font-size: 10px; font-weight: bold; border-radius: 2px; }
-        .action-btn:hover { background-color: #333; }
-        .section-box-header { background-color: #2b3e50; color: white; font-weight: bold; padding: 6px 10px; font-size: 11px; }
-    </style>
-</head>
-<body class="relative min-h-screen flex flex-col bg-[#f8f9fa]">
-
-    <!-- TOP BLUE NAVBAR -->
-    <header class="top-navbar flex items-center justify-between px-2 py-1 shadow-sm sticky top-0 z-30">
-        <div class="flex items-center space-x-1 overflow-x-auto py-0.5">
-            <!-- SONI LOGO -->
-            <div class="flex items-center space-x-1 shrink-0 pr-2">
-                <div class="w-6 h-6 rounded-full bg-indigo-700 flex items-center justify-center font-bold text-xs text-white shadow">
-                    S
-                </div>
-                <span class="font-extrabold tracking-wider text-sm text-white">SONI</span>
-            </div>
-
-            <!-- 3-LINE MENU ICON FOR 39 SPORTS SIDEBAR -->
-            <button onclick="toggleSidebar()" class="text-white hover:text-yellow-300 text-sm px-1.5 focus:outline-none shrink-0" title="Open Sports Menu">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-            <!-- NAVIGATION BUTTONS -->
-            <nav class="flex items-center space-x-1 text-[11px] shrink-0">
-                <button id="navClients" onclick="switchTab('clients')" class="nav-btn">List of Clients</button>
-                <button id="navAssignAgent" onclick="switchTab('assignAgent')" class="nav-btn">Assign Agent</button>
-                <button id="navMarketAnalysis" onclick="switchTab('marketAnalysis')" class="nav-btn">Market Analysis</button>
-                <button class="nav-btn">Live Market <i class="fa-solid fa-caret-down text-[9px] ml-1"></i></button>
-                <button class="nav-btn">Live Virtual Market <i class="fa-solid fa-caret-down text-[9px] ml-1"></i></button>
-                <button class="nav-btn">Reports <i class="fa-solid fa-caret-down text-[9px] ml-1"></i></button>
-                <button class="nav-btn">Multi Login</button>
-            </nav>
-        </div>
-
-        <!-- RIGHT TOP: Z9dmo & SEARCH DROPDOWN -->
-        <div class="flex items-center space-x-2 text-[11px] shrink-0 ml-2">
-            <span class="bg-[#006699] text-white px-2 py-0.5 rounded font-semibold cursor-pointer">Z9dmo <i class="fa-solid fa-caret-down ml-0.5"></i></span>
-            <div class="relative flex items-center">
-                <input type="text" placeholder="All Client" class="px-2 py-0.5 text-[11px] text-gray-800 border border-gray-300 rounded-l focus:outline-none w-24 sm:w-32">
-                <button class="bg-gray-800 text-white px-2 py-1 rounded-r text-[10px]"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
-            <button onclick="window.location.href='index.html'" class="bg-red-600 hover:bg-red-700 text-white px-2 py-0.5 rounded font-bold text-[10px]">Logout</button>
-        </div>
-    </header>
-
-    <!-- MAIN BODY AREA -->
-    <main class="flex-1 p-2 sm:p-4 z-10 max-w-[1400px] w-full mx-auto">
-        
-        <!-- DEFAULT CLEAN/BLANK VIEW UPON LOGIN -->
-        <div id="viewWelcome" class="hidden"></div>
-
-        <!-- LIST OF CLIENTS VIEW -->
-        <div id="viewListOfClients" class="hidden bg-white p-3 sm:p-4 rounded border border-gray-200 shadow-sm space-y-3">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h1 class="text-base font-bold text-gray-800">Account List</h1>
-                <button onclick="switchTab('addAccount')" class="bg-[#0088cc] hover:bg-[#006699] text-white text-xs font-semibold px-3 py-1.5 rounded shadow">
-                    Add Account
-                </button>
-            </div>
-
-            <div class="flex items-center space-x-2">
-                <button class="bg-red-600 hover:bg-red-700 text-white text-[11px] font-bold px-2.5 py-1 rounded flex items-center space-x-1">
-                    <i class="fa-solid fa-file-pdf"></i> <span>PDF</span>
-                </button>
-                <button class="bg-green-600 hover:bg-green-700 text-white text-[11px] font-bold px-2.5 py-1 rounded flex items-center space-x-1">
-                    <i class="fa-solid fa-file-excel"></i> <span>Excel</span>
-                </button>
-            </div>
-
-            <div class="flex flex-wrap justify-between items-center text-xs gap-2 pt-1">
-                <div class="flex items-center space-x-1 text-gray-600">
-                    <span>Show</span>
-                    <select class="border border-gray-300 rounded px-1.5 py-0.5 text-xs focus:outline-none">
-                        <option>10</option>
-                        <option>25</option>
-                        <option>50</option>
-                    </select>
-                    <span>entries</span>
-                </div>
-
-                <div class="flex items-center space-x-1.5">
-                    <span class="text-gray-600 font-medium">Search:</span>
-                    <input type="text" id="clientSearchInput" placeholder="Search..." class="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none w-36 sm:w-48">
-                    <button onclick="renderClientsTable()" class="bg-[#0088cc] hover:bg-[#006699] text-white font-semibold px-3 py-1 rounded shadow">Load</button>
-                    <button onclick="resetSearch()" class="bg-slate-500 hover:bg-slate-600 text-white font-semibold px-3 py-1 rounded shadow">Reset</button>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto border border-gray-200 rounded">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="tbl-header text-gray-700">
-                            <th class="p-2 border-r border-gray-300 font-bold">User Name</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">CR</th>
-                            <th class="p-2 border-r border-gray-300 font-bold text-center">U st</th>
-                            <th class="p-2 border-r border-gray-300 font-bold text-center">B st</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">Exposure Limit</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">Default (%)</th>
-                            <th class="p-2 border-r border-gray-300 font-bold">Account Type</th>
-                            <th class="p-2 font-bold text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientTableBody" class="divide-y divide-gray-200 text-gray-800">
-                        <!-- Dynamic Rows -->
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="flex justify-end items-center space-x-1 text-xs pt-2">
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&laquo;</button>
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&lt;</button>
-                <button class="px-3 py-1 border border-[#0088cc] rounded bg-[#0088cc] text-white font-bold">1</button>
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&gt;</button>
-                <button class="px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-400 cursor-not-allowed">&raquo;</button>
-            </div>
-        </div>
-
-        <!-- ADD ACCOUNT FORM VIEW -->
-        <div id="viewAddAccount" class="hidden max-w-5xl mx-auto space-y-3">
-            <div class="flex justify-between items-center bg-white p-2.5 rounded border border-gray-200 shadow-sm text-xs">
-                <span class="font-bold text-gray-800 text-sm">Add Account</span>
-                <button onclick="switchTab('clients')" class="text-[#0088cc] font-semibold hover:underline">Back to Account List</button>
-            </div>
-
-            <form id="addAccountForm" onsubmit="handleCreateAccount(event)" class="space-y-3 text-xs">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="md:col-span-2 bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                        <div class="section-box-header">Personal Detail</div>
-                        <div class="p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Client Name:</label>
-                                <input type="text" id="clientNameInput" required placeholder="Client Name" oninput="validateClientName()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
-                                <p id="clientNameError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be a capital letter.</p>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">User Password:</label>
-                                <input type="password" id="clientPassInput" required placeholder="User Password" oninput="validatePassword()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
-                                <p id="passwordError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be capital, and password must include special characters like $¥§€@.</p>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Retype Password:</label>
-                                <input type="password" id="retypePassInput" required placeholder="Retype Password" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Full Name:</label>
-                                <input type="text" id="fullNameInput" placeholder="Full Name" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">City:</label>
-                                <input type="text" id="cityInput" placeholder="City" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Phone:</label>
-                                <input type="text" id="phoneInput" placeholder="Phone Number" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden h-fit">
-                        <div class="section-box-header">Account Detail</div>
-                        <div class="p-3 space-y-3">
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Account Type:</label>
-                                <select id="clientAccountType" class="w-full border border-gray-300 rounded px-2.5 py-1.5 bg-white focus:outline-none">
-                                    <option value="User">Select Account Type</option>
-                                    <option value="User">User</option>
-                                    <option value="Master">Master</option>
-                                    <option value="Super">Super</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block font-semibold text-gray-600 mb-1">Credit Reference:</label>
-                                <input type="number" id="clientCreditRef" value="0" placeholder="Credit Reference" class="w-full border border-gray-300 rounded px-2.5 py-1.5 focus:outline-none">
-                            </div>
-
-                            <!-- TRANSACTION PASSWORD FIELD (REQUIRED FOR NON-ADMIN / MASTER / SUPER) -->
-                            <div id="txnPassContainer" class="hidden">
-                                <label class="block font-semibold text-red-600 mb-1">Transaction Password (6-Digit):</label>
-                                <input type="password" id="clientTxnPassInput" maxlength="6" placeholder="Enter 6-digit Txn Code" class="w-full border border-red-300 rounded px-2.5 py-1.5 focus:outline-none bg-red-50/20">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                    <div class="section-box-header">Commission Settings</div>
-                    <div class="p-3">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-700 border-b">
-                                    <th class="p-2 border-r w-1/4 font-semibold">Upline</th>
-                                    <th class="p-2 w-3/4 font-semibold">0</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Downline</td>
-                                    <td class="p-2"><input type="text" value="0" class="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none"></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Our</td>
-                                    <td class="p-2 bg-gray-50"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="bg-white border border-gray-200 rounded shadow-sm overflow-hidden">
-                    <div class="section-box-header">Partnership</div>
-                    <div class="p-3">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-gray-100 text-gray-700 border-b">
-                                    <th class="p-2 border-r w-1/4 font-semibold">Upline</th>
-                                    <th class="p-2 w-3/4 font-semibold">0</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y">
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Downline</td>
-                                    <td class="p-2"><input type="text" value="0" class="w-full border border-gray-300 rounded px-2 py-1 focus:outline-none"></td>
-                                </tr>
-                                <tr>
-                                    <td class="p-2 border-r font-semibold text-gray-600">Our</td>
-                                    <td class="p-2 bg-gray-50"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Create Account Button Row -->
-                <div class="bg-white border border-gray-200 rounded shadow-sm p-4 flex justify-end">
-                    <button type="submit" id="btnCreateAccount" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
-                        Create Account
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- OTHER TABS -->
-        <div id="viewMarketAnalysis" class="hidden bg-white p-4 rounded border border-gray-200 shadow-sm text-center text-gray-500 text-xs">
-            Market Analysis Events & Live Odds.
-        </div>
-        <div id="viewAssignAgent" class="hidden bg-white p-4 rounded border border-gray-200 shadow-sm text-center text-gray-500 text-xs">
-            Assign Agent Module.
-        </div>
-    </main>
-
-    <!-- FIRST TIME LOGIN: CHANGE PASSWORD MODAL POPUP -->
-    <div id="changePasswordModal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg shadow-2xl max-w-md w-full p-6 text-center space-y-4">
-            <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">
-                <i class="fa-solid fa-key"></i>
-            </div>
-            <h2 class="text-lg font-bold text-gray-800">First Time Login - Change Password</h2>
-            <p class="text-xs text-gray-500">Aapko apna pehla password badalna hoga. Kripya apna naya password dalein.</p>
-            
-            <form onsubmit="handleFirstTimePasswordChange(event)" class="space-y-3 text-left">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">New Password:</label>
-                    <input type="password" id="modalNewPassword" required class="w-full border border-gray-300 rounded px-3 py-2 text-xs focus:outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-1">Confirm New Password:</label>
-                    <input type="password" id="modalConfirmPassword" required class="w-full border border-gray-300 rounded px-3 py-2 text-xs focus:outline-none">
-                </div>
-                <button type="submit" id="btnSaveNewPass" class="w-full bg-[#0088cc] hover:bg-[#006699] text-white font-bold py-2 rounded text-xs">
-                    Update Password & Get Txn Password
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- TRANSACTION PASSWORD DISPLAY SCREEN (EXACT SCREENSHOT LAYOUT) -->
-    <div id="txnPasswordDisplayScreen" class="fixed inset-0 bg-white hidden z-50 flex flex-col items-center justify-center p-4 text-center space-y-4 overflow-y-auto">
-        <div class="max-w-xl w-full space-y-3 p-6">
-            <h1 class="text-xl sm:text-2xl font-semibold text-green-600">Success! Your password has been updated successfully.</h1>
-            <p class="text-lg sm:text-xl font-bold text-gray-800">
-                Your transaction password is <span id="generatedTxnPass" class="text-blue-500 font-extrabold underline">278899</span>.
-            </p>
-            <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-                Remember this transaction password, from now on all transaction can be done only with this password and keep one thing in mind do not share this password with anyone.
-            </p>
-            <p class="text-xs sm:text-sm text-gray-500 font-semibold">Thank you, Team goexch9.com</p>
-
-            <div class="pt-4 border-t border-gray-200">
-                <h2 class="text-xl sm:text-2xl font-semibold text-green-600">Success! आपका पासवर्ड बदला जा चुका है।</h2>
-                <p class="text-lg sm:text-xl font-bold text-gray-800 mt-1">
-                    आपका लेनदेन पासवर्ड <span id="generatedTxnPassHindi" class="text-blue-500 font-extrabold underline">278899</span> है।
-                </p>
-                <p class="text-xs sm:text-sm text-gray-600 leading-relaxed mt-2">
-                    लेन-देन के पासवर्ड को याद रखें, अब से वेबसाइट के सभी हस्तांतरण इसके जरिए किए जा सकते हैं और एक बात का ध्यान रखें, इस पासवर्ड को किसी के साथ साझा न करें।
-                </p>
-                <p class="text-xs sm:text-sm text-gray-500 font-semibold mt-1">धन्यवाद, टीम goexch9.com</p>
-            </div>
-
-            <div class="pt-6">
-                <button onclick="window.location.href='index.html'" class="bg-slate-700 hover:bg-slate-800 text-white font-semibold text-xs px-8 py-2 rounded shadow">
-                    &larr; Back
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- LEFT SPORTS SIDEBAR DRAWER (39 SPORTS) -->
-    <div id="sportsSidebar" class="sidebar fixed top-0 left-0 w-64 h-full bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 overflow-y-auto border-r border-gray-200">
-        <div class="p-3 bg-gray-100 border-b border-gray-200 flex justify-between items-center sticky top-0">
-            <h3 class="font-bold text-gray-800 text-sm">Sports Menu</h3>
-            <button onclick="toggleSidebar()" class="text-gray-600 hover:text-red-600 text-lg font-bold px-2">&times;</button>
-        </div>
-        <ul class="text-xs text-gray-700 divide-y divide-gray-100">
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Football</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Tennis</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Mixed Martial Arts</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-bold text-blue-600"><span>Cricket</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Golf</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Boxing</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Beach Volleyball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Table Tennis</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Futsal</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Horse Racing</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>E Games</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Basketball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>MotoGP</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Chess</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Volleyball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Ice Hockey</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Badminton</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Cycling</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Motorbikes</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Athletics</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Basketball 3X3</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Sumo</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Virtual sports</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Handball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Politics</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Motor Sports</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Baseball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Rugby Union</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Rugby League</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Darts</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>American Football</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Snooker</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Soccer</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Esports</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Greyhound Racing</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Kabaddi</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Boat Racing</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Esoccer</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Wrestling</span> <span>+</span></li>
-        </ul>
-    </div>
-    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/40 hidden z-40"></div>
-
     <!-- FIREBASE & SCRIPT CONTROL LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, doc, setDoc, updateDoc, getDocs, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCPzmsyUrl1JvXR1HdszidJpewIcEnuzgo",
             authDomain: "soniexchange.firebaseapp.com",
@@ -392,19 +17,19 @@
         const db = getFirestore(app);
 
         let currentUser = localStorage.getItem("loggedInUser") || "Admin"; 
-        let isUserAdmin = currentUser.toLowerCase() === "admin";
+        let isUserAdmin = (currentUser.toLowerCase() === "admin" || currentUser.toLowerCase() === "superadmin" || currentUser.toLowerCase() === "z9dmo");
 
         window.addEventListener('DOMContentLoaded', async () => {
             if(!isUserAdmin) {
                 // Show Txn Pass Input box for Master/Super creating IDs
                 document.getElementById('txnPassContainer').classList.remove('hidden');
 
-                // Check First-Time Login Status in Firebase
+                // Check First-Time Login Status in Firebase for regular users
                 try {
                     const userDoc = await getDoc(doc(db, "clients", currentUser));
                     if(userDoc.exists()) {
                         const data = userDoc.data();
-                        if(!data.isPasswordChanged) {
+                        if(data.isPasswordChanged === false) {
                             document.getElementById('changePasswordModal').classList.remove('hidden');
                         }
                     }
@@ -450,7 +75,6 @@
             }
         };
 
-        // Live validation for Client Name (First letter must be uppercase)
         window.validateClientName = function() {
             const input = document.getElementById('clientNameInput');
             const error = document.getElementById('clientNameError');
@@ -469,7 +93,6 @@
             }
         };
 
-        // Live validation for Password
         window.validatePassword = function() {
             const input = document.getElementById('clientPassInput');
             const error = document.getElementById('passwordError');
@@ -501,7 +124,6 @@
             }
 
             try {
-                // Generate Automatic 6-digit Transaction Password
                 const txnPass = Math.floor(100000 + Math.random() * 900000).toString();
 
                 await updateDoc(doc(db, "clients", currentUser), {
@@ -529,7 +151,6 @@
                 return;
             }
 
-            // Check Transaction Password for non-admin users
             if(!isUserAdmin) {
                 const userTxnPass = document.getElementById('clientTxnPassInput').value.trim();
                 const userDoc = await getDoc(doc(db, "clients", currentUser));
@@ -568,7 +189,6 @@
                     return;
                 }
 
-                // Save with username as Document ID in Firestore
                 await setDoc(docRef, {
                     username: username,
                     password: pass,
@@ -577,7 +197,7 @@
                     fullName: fullName,
                     city: city,
                     phone: phone,
-                    isPasswordChanged: false, // Default false for first-time login popup
+                    isPasswordChanged: false, 
                     transactionPassword: "",
                     createdBy: currentUser,
                     createdAt: serverTimestamp()
@@ -605,14 +225,18 @@
             let tbody = document.getElementById('clientTableBody');
             let searchQuery = document.getElementById('clientSearchInput') ? document.getElementById('clientSearchInput').value.toLowerCase().trim() : "";
 
-            tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading clients from SoniExchange Firestore...</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-500 font-semibold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading accounts...</td></tr>`;
 
             try {
                 const querySnapshot = await getDocs(collection(db, "clients"));
                 let clients = [];
 
                 querySnapshot.forEach((doc) => {
-                    clients.push({ id: doc.id, ...doc.data() });
+                    let data = doc.data();
+                    // ADMIN sees ALL accounts, Super/Master see only their created accounts
+                    if (isUserAdmin || data.createdBy === currentUser) {
+                        clients.push({ id: doc.id, ...data });
+                    }
                 });
 
                 if(searchQuery) {
@@ -620,7 +244,7 @@
                 }
 
                 if(clients.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No client accounts found in Firestore. Click 'Add Account' to create one.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-gray-400">No accounts found. Click 'Add Account' to create one.</td></tr>`;
                     return;
                 }
 
@@ -653,10 +277,8 @@
                     `;
                 });
             } catch (error) {
-                console.error("Error loading clients: ", error);
-                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-500 font-bold">Failed to load clients. Check Firestore Rules/Permissions.</td></tr>`;
+                console.error("Error loading accounts: ", error);
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-500 font-bold">Failed to load accounts.</td></tr>`;
             }
         };
     </script>
-</body>
-</html>
