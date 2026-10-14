@@ -147,11 +147,13 @@
                         <div class="p-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <div>
                                 <label class="block font-semibold text-gray-600 mb-1">Client Name:</label>
-                                <input type="text" id="clientNameInput" required placeholder="Client Name" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <input type="text" id="clientNameInput" required placeholder="Client Name" oninput="validateClientName()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <p id="clientNameError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be a capital letter.</p>
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-600 mb-1">User Password:</label>
-                                <input type="password" id="clientPassInput" required placeholder="User Password" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <input type="password" id="clientPassInput" required placeholder="User Password" oninput="validatePassword()" class="w-full border border-red-300 bg-red-50/20 rounded px-2.5 py-1.5 focus:outline-none">
+                                <p id="passwordError" class="text-[10px] text-red-600 mt-1 font-medium">First letter must be capital, and password must include special characters like $¥§€@.</p>
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-600 mb-1">Retype Password:</label>
@@ -240,9 +242,9 @@
                     </div>
                 </div>
 
-                <!-- Create Account Button Row (Transaction Password Removed) -->
+                <!-- Create Account Button Row -->
                 <div class="bg-white border border-gray-200 rounded shadow-sm p-4 flex justify-end">
-                    <button type="submit" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
+                    <button type="submit" id="btnCreateAccount" class="bg-[#0088cc] hover:bg-[#006699] text-white font-bold px-6 py-2 rounded shadow text-xs uppercase tracking-wider">
                         Create Account
                     </button>
                 </div>
@@ -279,7 +281,4 @@
             <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Basketball</span> <span>+</span></li>
             <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>MotoGP</span> <span>+</span></li>
             <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Chess</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Volleyball</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Ice Hockey</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-medium"><span>Badminton</span> <span>+</span></li>
-            <li class="p-2.5 hover:bg-gray-50 flex justify-between cu
+            <li class="p-2.5 hover:bg-gray-50 flex justify-between cursor-pointer font-med
